@@ -11,7 +11,7 @@ class Shader {
         const char* source;
 
     public:
-        Shader(const std::string& name, GLenum type, const char* source);
+        Shader(const std::string &name, GLenum type, const char* source);
         ~Shader();
 
         std::string getName() const;

@@ -18,6 +18,5 @@ class Window {
         int getWidth() const;
         int getHeight() const;
         const char* getTitle();
-
         GLFWwindow* get();
 };

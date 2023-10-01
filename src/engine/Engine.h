@@ -10,29 +10,35 @@ class Engine {
         bool running = true;
         double lastTick = 0;
 
-        Scene* scene = nullptr;
-        EventHandler* eventHandler = nullptr;
-        ShaderHandler* shaderHandler = nullptr;
-        ModelHandler* modelHandler = nullptr;
+        Scene* scene;
+        EventHandler* eventHandler;
+        ShaderHandler* shaderHandler;
+        ModelHandler* modelHandler;
 
     public:
-        Engine() = default;
+        Engine();
         ~Engine();
 
         void init();
-        void createScene(int width, int height, const char* title);
-        void createShaders();
-        void createModels();
-
-        void setVersion(int major, int minor, bool forwardCompat, int profile);
-        void info();
-
         void run();
         void stop();
         bool isRunning() const;
+        float getDeltaTime() const;
 
+        void createScene(int width, int height, const char *title);
         Scene* getScene();
+
+        void createEventHandler(Window* window);
         EventHandler* getEventHandler();
+
+        void createShaders();
+        void createShaders(const std::string& folderPath);
         ShaderHandler* getShaderHandler();
+
+        void createModels();
+        void createModels(const std::string& folderPath);
         ModelHandler* getModelHandler();
+
+        void setVersion(int major, int minor, bool forwardCompat, int profile);
+        void info();
 };

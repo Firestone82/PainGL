@@ -14,7 +14,7 @@ Shader::Shader(const std::string& name, GLenum type, const char* source) {
         GLint infoLogLength;
         glGetShaderiv(this->shader, GL_INFO_LOG_LENGTH, &infoLogLength);
 
-        auto* infoLog = new GLchar[infoLogLength + 1];
+        auto *infoLog = new GLchar[infoLogLength + 1];
         glGetShaderInfoLog(this->shader, infoLogLength, nullptr, infoLog);
 
         fprintf(stderr, "[ERROR] Shader compilation failed: %s\n", infoLog);

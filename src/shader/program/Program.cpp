@@ -6,7 +6,7 @@ Program::Program() {
 }
 
 Program::~Program() {
-    for (auto shader : this->shaders) {
+    for (auto shader: this->shaders) {
         glDetachShader(this->program, shader->get());
         this->shaders.pop_back();
     }
@@ -14,12 +14,12 @@ Program::~Program() {
     glDeleteProgram(this->program);
 }
 
-void Program::attach(Shader *shader) {
+void Program::attach(Shader* shader) {
     this->shaders.push_back(shader);
     glAttachShader(this->program, shader->get());
 }
 
-void Program::setShaderVariableMatrix(const glm::mat4 &matrix, const std::string& variable) {
+void Program::setShaderVariableMatrix(const glm::mat4 &matrix, const std::string &variable) {
     GLint projectionMatrixLocation = glGetUniformLocation(this->program, variable.c_str());
     glUniformMatrix4fv(projectionMatrixLocation, 1, GL_FALSE, glm::value_ptr(matrix));
 }
@@ -33,7 +33,7 @@ void Program::link() {
         GLint infoLogLength;
         glGetProgramiv(this->program, GL_INFO_LOG_LENGTH, &infoLogLength);
 
-        auto* strInfoLog = new GLchar[infoLogLength + 1];
+        auto *strInfoLog = new GLchar[infoLogLength + 1];
         glGetProgramInfoLog(this->program, infoLogLength, nullptr, strInfoLog);
 
         fprintf(stderr, "Linker failure: %s\n", strInfoLog);

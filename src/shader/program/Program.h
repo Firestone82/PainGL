@@ -15,7 +15,8 @@ class Program {
         ~Program();
 
         void attach(Shader* shader);
-        void setShaderVariableMatrix(const glm::mat4& matrix, const std::string& variable);
+        void setShaderVariableMatrix(const glm::mat4 &matrix, const std::string& variable);
+
         void link();
         void use();
 

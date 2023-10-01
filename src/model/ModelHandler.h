@@ -9,12 +9,13 @@ class ModelHandler {
         std::vector<Model*> models;
 
     public:
-        ModelHandler();
+        ModelHandler() = default;
         ~ModelHandler();
 
-        void loadModelFile(const std::string& name, const std::string& path);
-        void loadModelVar(const std::string& name, const float* data, int dataSize, int vertexCount);
+        void loadModelFolder(const std::string &folderPath, const std::string& extension);
+        void loadModelFile(const std::string &name, const std::string &path);
+        void loadModelVariable(const std::string &name, const std::vector<float>& points, GLulong size);
 
         std::vector<Model*> getModels() const;
-        Model* getModel(const std::string& name) const;
+        Model* getModel(const std::string &name) const;
 };

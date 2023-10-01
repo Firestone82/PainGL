@@ -13,7 +13,7 @@ void Scene::renderEntity(RenderableEntity* entity) {
     this->entities.push_back(entity);
 }
 
-void Scene::draw(double deltaTime) {
+void Scene::draw(float deltaTime) {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
@@ -29,46 +29,37 @@ void Scene::draw(double deltaTime) {
             glm::vec3(0, 1, 0)  // Head is up (set to 0,-1,0 to look upside-down)
     );
 
-    for (auto& entity : this->entities) {
+    for (auto &entity: this->entities) {
         entity->draw(projection * view * entity->getTransformationMatrix());
     }
 
     glfwSwapBuffers(window->get());
 }
 
-void Scene::simulate(double deltaTime) {
-    for (auto& entity : this->entities) {
-        entity->setRotation(
-                entity->getRotation().x,
-                entity->getRotation().y + 90.0f * deltaTime,
-                entity->getRotation().z
-        );
+void Scene::simulate(float deltaTime) {
+    for (auto &entity: this->entities) {
+        entity->simulate(deltaTime);
     }
-
-//    std::cout << "Simulate.. " << deltaTime << std::endl;
 }
 
-float Scene::setFieldOfView(float fieldOfView) {
+void Scene::setFieldOfView(float fieldOfView) {
     this->fieldOfView = fieldOfView;
-    return this->fieldOfView;
 }
 
 float Scene::getFieldOfView() const {
     return this->fieldOfView;
 }
 
-float Scene::setAspectRatio(float aspectRatio) {
+void Scene::setAspectRatio(float aspectRatio) {
     this->aspectRatio = aspectRatio;
-    return this->aspectRatio;
 }
 
 float Scene::getAspectRatio() const {
     return this->aspectRatio;
 }
 
-glm::vec2 Scene::setNearFarPlane(glm::vec2 nearFarPlane) {
+void Scene::setNearFarPlane(glm::vec2 nearFarPlane) {
     this->nearFarPlane = nearFarPlane;
-    return this->nearFarPlane;
 }
 
 glm::vec2 Scene::getNearFarPlane() const {

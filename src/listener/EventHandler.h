@@ -13,21 +13,29 @@
 #include "event/WindowEvents.h"
 
 class EventHandler {
-    protected:
-        static std::vector<Listener*> listeners;
+protected:
+    static std::vector<Listener *> listeners;
 
-    public:
-        explicit EventHandler(GLFWwindow* window);
-        ~EventHandler() = default;
+public:
+    explicit EventHandler(GLFWwindow *window);
 
-        static void handleError(int error, const char* description);
-        static void handleKeyEvent(GLFWwindow* window, int key, int scancode, int action, int mods);
-        static void handleWindowFocusEvent(GLFWwindow* window, int focused);
-        static void handleWindowIconifyEvent(GLFWwindow* window, int iconified);
-        static void handleWindowCloseEvent(GLFWwindow* window);
-        static void handleWindowSizeEvent(GLFWwindow* window, int width, int height);
-        static void handleMousePositionEvent(GLFWwindow* window, double xpos, double ypos);
-        static void handleMouseButtonEvent(GLFWwindow* window, int button, int action, int mods);
+    ~EventHandler() = default;
 
-        void addListener(Listener* listener);
+    static void handleError(int error, const char *description);
+
+    static void handleKeyEvent(GLFWwindow *window, int key, int scancode, int action, int mods);
+
+    static void handleWindowFocusEvent(GLFWwindow *window, int focused);
+
+    static void handleWindowIconifyEvent(GLFWwindow *window, int iconified);
+
+    static void handleWindowCloseEvent(GLFWwindow *window);
+
+    static void handleWindowSizeEvent(GLFWwindow *window, int width, int height);
+
+    static void handleMousePositionEvent(GLFWwindow *window, double xpos, double ypos);
+
+    static void handleMouseButtonEvent(GLFWwindow *window, int button, int action, int mods);
+
+    void addListener(Listener *listener);
 };

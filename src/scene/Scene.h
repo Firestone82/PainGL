@@ -20,16 +20,16 @@ class Scene {
 
         void renderEntity(RenderableEntity* entity);
 
-        void draw(double deltaTime);
-        void simulate(double deltaTime);
+        void draw(float deltaTime);
+        void simulate(float deltaTime);
 
-        float setFieldOfView(float fieldOfView);
+        void setFieldOfView(float fieldOfView);
         float getFieldOfView() const;
 
-        float setAspectRatio(float aspectRatio);
+        void setAspectRatio(float aspectRatio);
         float getAspectRatio() const;
 
-        glm::vec2 setNearFarPlane(glm::vec2 nearFarPlane);
+        void setNearFarPlane(glm::vec2 nearFarPlane);
         glm::vec2 getNearFarPlane() const;
 
         Window* getWindow();

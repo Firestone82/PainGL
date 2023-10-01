@@ -1,6 +1,7 @@
 #pragma once
 
 #include <GL/glew.h>
+#include <vector>
 
 class VBO {
     private:
@@ -10,7 +11,7 @@ class VBO {
         VBO();
         ~VBO();
 
-        void setData(const float* data, GLint size, GLenum usage);
+        void setData(std::vector<float> points, GLint size, GLenum usage);
 
         void bind();
         GLuint get() const;

@@ -1,8 +1,8 @@
 #include "EventHandler.h"
 
-std::vector<Listener*> EventHandler::listeners;
+std::vector<Listener *> EventHandler::listeners;
 
-EventHandler::EventHandler(GLFWwindow* window) {
+EventHandler::EventHandler(GLFWwindow *window) {
     glfwSetErrorCallback(handleError);
     glfwSetKeyCallback(window, handleKeyEvent);
     glfwSetWindowFocusCallback(window, handleWindowFocusEvent);
@@ -17,6 +17,6 @@ void EventHandler::handleError(int error, const char *description) {
     std::cout << "Error: " << error << " - " << description << std::endl;
 }
 
-void EventHandler::addListener(Listener* listener) {
+void EventHandler::addListener(Listener *listener) {
     listeners.push_back(listener);
 }

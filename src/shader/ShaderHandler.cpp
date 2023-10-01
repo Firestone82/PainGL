@@ -1,22 +1,33 @@
 #include "ShaderHandler.h"
 
+#include <filesystem>
 #include <fstream>
 #include <sstream>
-
-ShaderHandler::ShaderHandler() {
-    // Empty
-}
 
 ShaderHandler::~ShaderHandler() {
     fprintf(stdout, "[DEBUG] Destroying %zu shaders\n", shaders.size());
 
-    for (auto& shader : shaders) {
+    for (auto &shader: shaders) {
         fprintf(stdout, "[DEBUG] - Shader %s destroyed\n", shader->getName().c_str());
         delete shader;
     }
 }
 
-void ShaderHandler::loadShaderVar(const std::string& name, const char* source, GLenum type) {
+void ShaderHandler::loadShaderFolder(const std::string &folderPath, const std::string &extension) {
+    fprintf(stdout, "[DEBUG] Loading shaders from \"%s\"\n", folderPath.c_str());
+
+    for (const auto &entry: std::filesystem::directory_iterator(folderPath)) {
+        if (entry.is_regular_file() && entry.path().extension() == extension) {
+            std::string shaderName = entry.path().stem().string();
+            std::string shaderPath = entry.path().string();
+
+            // TODO: Detect shader type from file
+//            loadShaderFile(shaderName, shaderPath, GL_VERTEX_SHADER);
+        }
+    }
+}
+
+void ShaderHandler::loadShaderVar(const std::string &name, const char *source, GLenum type) {
     fprintf(stdout, "[DEBUG] Loading shader \"%s\"\n", name.c_str());
 
     Shader* shader = new Shader(name, type, source);
@@ -36,10 +47,10 @@ void ShaderHandler::loadShaderFile(const std::string &name, const std::string &p
     stream << file.rdbuf();
     std::string source = stream.str();
 
-    Shader* shader = nullptr;
+    Shader *shader = nullptr;
     try {
         shader = new Shader(name, type, source.c_str());
-    } catch (const std::exception& e) {
+    } catch (const std::exception &e) {
         fprintf(stderr, "[ERROR]  - Failed to load shader \"%s\": %s\n", name.c_str(), e.what());
         return;
     }
@@ -55,7 +66,7 @@ std::vector<Shader*> ShaderHandler::getShaders() const {
 }
 
 Shader* ShaderHandler::getShader(const std::string &name) const {
-    for (auto shader : shaders) {
+    for (auto shader: shaders) {
         if (shader->getName() == name) {
             return shader;
         }
@@ -64,7 +75,7 @@ Shader* ShaderHandler::getShader(const std::string &name) const {
     return nullptr;
 }
 
-Program* ShaderHandler::createProgram(const std::string &fragment, const std::string &vertex) const {
+Program *ShaderHandler::createProgram(const std::string &fragment, const std::string &vertex) const {
     Program* program = new Program();
 
     program->attach(getShader(fragment));

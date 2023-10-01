@@ -3,53 +3,57 @@
 #include "../EventHandler.h"
 
 class WindowFocusListener : public Listener {
-    private:
-        std::function<void(GLFWwindow*, int)> callback;
+private:
+    std::function<void(GLFWwindow *, int)> callback;
 
-    public:
-        explicit WindowFocusListener(std::function<void(GLFWwindow*, int)> callback) : Listener(WINDOW_FOCUS_EVENT), callback(std::move(callback)) {};
-        ~WindowFocusListener() override = default;
+public:
+    explicit WindowFocusListener(std::function<void(GLFWwindow *, int)> callback) : Listener(WINDOW_FOCUS_EVENT), callback(std::move(callback)) {};
 
-        void handle(GLFWwindow* window, int focused) {
-            callback(window, focused);
-        }
+    ~WindowFocusListener() override = default;
+
+    void handle(GLFWwindow *window, int focused) {
+        callback(window, focused);
+    }
 };
 
 class WindowIconifyListener : public Listener {
-    private:
-        std::function<void(GLFWwindow*, int)> callback;
+private:
+    std::function<void(GLFWwindow *, int)> callback;
 
-    public:
-        explicit WindowIconifyListener(std::function<void(GLFWwindow*, int)> callback) : Listener(WINDOW_ICONIFY_EVENT), callback(std::move(callback)) {};
-        ~WindowIconifyListener() override = default;
+public:
+    explicit WindowIconifyListener(std::function<void(GLFWwindow *, int)> callback) : Listener(WINDOW_ICONIFY_EVENT), callback(std::move(callback)) {};
 
-        void handle(GLFWwindow* window, int iconified) {
-            callback(window, iconified);
-        }
+    ~WindowIconifyListener() override = default;
+
+    void handle(GLFWwindow *window, int iconified) {
+        callback(window, iconified);
+    }
 };
 
 class WindowCloseListener : public Listener {
-    private:
-        std::function<void(GLFWwindow*)> callback;
+private:
+    std::function<void(GLFWwindow *)> callback;
 
-    public:
-        explicit WindowCloseListener(std::function<void(GLFWwindow*)> callback) : Listener(WINDOW_CLOSE_EVENT), callback(std::move(callback)) {};
-        ~WindowCloseListener() override = default;
+public:
+    explicit WindowCloseListener(std::function<void(GLFWwindow *)> callback) : Listener(WINDOW_CLOSE_EVENT), callback(std::move(callback)) {};
 
-        void handle(GLFWwindow* window) {
-            callback(window);
-        }
+    ~WindowCloseListener() override = default;
+
+    void handle(GLFWwindow *window) {
+        callback(window);
+    }
 };
 
 class WindowSizeListener : public Listener {
-    private:
-        std::function<void(GLFWwindow*, int, int)> callback;
+private:
+    std::function<void(GLFWwindow *, int, int)> callback;
 
-    public:
-        explicit WindowSizeListener(std::function<void(GLFWwindow*, int, int)> callback) : Listener(WINDOW_RESIZE_EVENT), callback(std::move(callback)) {};
-        ~WindowSizeListener() override = default;
+public:
+    explicit WindowSizeListener(std::function<void(GLFWwindow *, int, int)> callback) : Listener(WINDOW_RESIZE_EVENT), callback(std::move(callback)) {};
 
-        void handle(GLFWwindow* window, int width, int height) {
-            callback(window, width, height);
-        }
+    ~WindowSizeListener() override = default;
+
+    void handle(GLFWwindow *window, int width, int height) {
+        callback(window, width, height);
+    }
 };

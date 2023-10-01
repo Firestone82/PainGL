@@ -10,13 +10,13 @@ struct point {
 };
 
 const point b[] = {
-        { { -.5f, -.5f, .5f, 1 }, { 1, 0, 0, 1 } },
-        { { -.5f, .5f, .5f, 1 }, { 0, 1, 0, 1 } },
-        { { .5f, .5f, .5f, 1 }, { 0, 0, 1, 1 } },
-        { { .5f, -.5f, .5f, 1 }, { 1, 1, 1, 1 } },
+        {{-.5f, -.5f, .5f, 1}, {1, 0, 0, 1}},
+        {{-.5f, .5f,  .5f, 1}, {0, 1, 0, 1}},
+        {{.5f,  .5f,  .5f, 1}, {0, 0, 1, 1}},
+        {{.5f,  -.5f, .5f, 1}, {1, 1, 1, 1}},
 };
 
-const char* vertex_shader =
+const char *vertex_shader =
         "#version 330\n"
         "layout(location=0) in vec4 position;"
         "layout(location=1) in vec4 vertex_Color;"
@@ -26,7 +26,7 @@ const char* vertex_shader =
         "     colorInput = vertex_Color;"
         "}";
 
-const char* fragment_shader =
+const char *fragment_shader =
         "#version 330\n"
         "in vec4 colorInput;"
         "out vec4 color;"
@@ -40,7 +40,7 @@ int main() {
         exit(EXIT_FAILURE);
     }
 
-    GLFWwindow* window = glfwCreateWindow(600, 600, "ZPG", NULL, NULL);
+    GLFWwindow *window = glfwCreateWindow(600, 600, "ZPG", NULL, NULL);
     glfwSetWindowPos(window, 720, 480);
     if (!window) {
         glfwTerminate();
@@ -84,8 +84,8 @@ int main() {
     glBindVertexArray(VAO); //bind the VAO
     glEnableVertexAttribArray(0); //enable vertex attributes
     glEnableVertexAttribArray(1); //enable vertex attributes
-    glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(b[0]), (GLvoid*)0);
-    glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(b[0]), (GLvoid*)(4*4));
+    glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(b[0]), (GLvoid *) 0);
+    glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(b[0]), (GLvoid *) (4 * 4));
 
 //    GLint status;
 //    glGetProgramiv(shaderProgram, GL_LINK_STATUS, &status);

@@ -9,9 +9,10 @@ class ShaderHandler {
         std::vector<Shader*> shaders;
 
     public:
-        ShaderHandler();
+        ShaderHandler() = default;
         ~ShaderHandler();
 
+        void loadShaderFolder(const std::string& folderPath, const std::string& extension);
         void loadShaderVar(const std::string& name, const char* source, GLenum type);
         void loadShaderFile(const std::string& name, const std::string& path, GLenum type);
 

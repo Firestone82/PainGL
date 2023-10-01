@@ -14,6 +14,7 @@ endif()
 find_package(glfw3 3.3 REQUIRED)
 find_package(OpenGL REQUIRED)
 find_package(GLEW REQUIRED)
+find_package(assimp REQUIRED)
 
 add_compile_options(
         -Wall
@@ -24,7 +25,7 @@ add_compile_options(
         -Wno-unused-function
         -Wno-missing-field-initializers
 )
-#
+
 add_executable(myApp
         src/main.cpp
         src/engine/Engine.cpp
@@ -36,6 +37,7 @@ add_executable(myApp
         src/listener/event/MouseEvents.cpp
         src/buffer/VBO.cpp
         src/buffer/VAO.cpp
+        src/buffer/EBO.cpp
         src/shader/shader/Shader.cpp
         src/shader/program/Program.cpp
         src/model/model/Model.cpp
@@ -46,6 +48,7 @@ add_executable(myApp
 target_link_libraries(myApp glfw)
 target_link_libraries(myApp OpenGL::GL)
 target_link_libraries(myApp GLEW::GLEW)
+target_link_libraries(myApp assimp::assimp)
 
 add_executable(myTestApp
         src/default.cpp)

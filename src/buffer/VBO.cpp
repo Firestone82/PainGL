@@ -10,8 +10,8 @@ VBO::~VBO() {
     this->vbo = 0;
 }
 
-void VBO::setData(const float* data, GLint size, GLenum usage) {
-    glBufferData(GL_ARRAY_BUFFER, size, data, usage);
+void VBO::setData(std::vector<float> points, GLint size, GLenum usage) {
+    glBufferData(GL_ARRAY_BUFFER, size, points.data(), usage);
 }
 
 void VBO::bind() {
