@@ -1,7 +1,7 @@
-//3
-//glDrawArrays(GL_TRIANGLES, 0, 3);
+#pragma once
+#include <vector>
 
-const float pyramid[18 * 6] = {
+const std::vector<float> pyramid = {
         // front
         -0.5f, -0.5f, 0.5f, 1.0f, 0.0f, 0.0f, // 0 (Red)
         0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 1.0f, // 1 (Blue)

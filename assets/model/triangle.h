@@ -1,7 +1,7 @@
-//3
-//glDrawArrays(GL_TRIANGLES, 0, 3);
+#pragma once
+#include <vector>
 
-const float triangle[6*3] = {
+const std::vector<float> triangle = {
         -0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f,
         0.5f , -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
         0.0f , 0.5f , 1.0f, 0.0f, 0.0f, 1.0f,
