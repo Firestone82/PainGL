@@ -2,6 +2,7 @@
 #include <GLFW/glfw3.h>
 
 #include "Engine.h"
+#include "../logger/Logger.h"
 
 #include "../../assets/model/header/sphere.h"
 #include "../../assets/model/header/suzi_flat.h"
@@ -31,7 +32,7 @@ Engine::~Engine() {
 
 void Engine::init() {
     if (!glfwInit()) {
-        fprintf(stderr, "ERROR: could not start GLFW3\n");
+        Logger::error("could not start GLFW3");
         exit(EXIT_FAILURE);
     }
 }
@@ -134,10 +135,11 @@ void Engine::info() {
     glfwGetVersion(&major, &minor, &revision);
 
     std::cout << std::endl;
-    std::cout << "OpenGL Version: " << glGetString(GL_VERSION) << std::endl;
-    std::cout << "Using GLEW: " << glewGetString(GLEW_VERSION) << std::endl;
-    std::cout << "Vendor: " << glGetString(GL_VENDOR) << std::endl;
-    std::cout << "Renderer: " << glGetString(GL_RENDERER) << std::endl;
-    std::cout << "GLSL: " << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
-    std::cout << "Using GLFW: " << major << "." << minor << "." << revision << std::endl << std::endl;
+    Logger::warning("OpenGL Version: %s", glGetString(GL_VERSION));
+    Logger::warning("Using GLEW: %s", glewGetString(GLEW_VERSION));
+    Logger::warning("Vendor: %s", glGetString(GL_VENDOR));
+    Logger::warning("Renderer: %s", glGetString(GL_RENDERER));
+    Logger::warning("GLSL: %s", glGetString(GL_SHADING_LANGUAGE_VERSION));
+    Logger::warning("Using GLFW: %d.%d.%d", major, minor, revision);
+    std::cout << std::endl;
 }

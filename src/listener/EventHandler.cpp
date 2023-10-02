@@ -1,4 +1,5 @@
 #include "EventHandler.h"
+#include "../logger/Logger.h"
 
 std::vector<Listener *> EventHandler::listeners;
 
@@ -14,7 +15,7 @@ EventHandler::EventHandler(GLFWwindow *window) {
 }
 
 void EventHandler::handleError(int error, const char *description) {
-    std::cout << "Error: " << error << " - " << description << std::endl;
+    Logger::error("Error: %d, StackTrace: %s", error, description);
 }
 
 void EventHandler::addListener(Listener *listener) {

@@ -1,4 +1,5 @@
 #include "Shader.h"
+#include "../../logger/Logger.h"
 
 Shader::Shader(const std::string& name, GLenum type, const char* source) {
     this->name = name;
@@ -17,7 +18,7 @@ Shader::Shader(const std::string& name, GLenum type, const char* source) {
         auto *infoLog = new GLchar[infoLogLength + 1];
         glGetShaderInfoLog(this->shader, infoLogLength, nullptr, infoLog);
 
-        fprintf(stderr, "[ERROR] Shader compilation failed: %s\n", infoLog);
+        Logger::error("Shader compilation failed: %s", infoLog);
         delete[] infoLog;
     }
 }

@@ -1,17 +1,24 @@
 #include "Logger.h"
 
-std::string Color::RED = "\033[31m";
-std::string Color::GREEN = "\033[32m";
-std::string Color::YELLOW = "\033[33m";
-std::string Color::BLUE = "\033[34m";
-std::string Color::MAGENTA = "\033[35m";
-std::string Color::CYAN = "\033[36m";
-std::string Color::WHITE = "\033[37m";
-std::string Color::RESET = "\033[0m";
+std::string prepare(std::string format) {
+    if (format.size() > 2 && (format[0] == '\\' && format[1] == 'n')) {
+        std::cout << std::endl;
+        format.erase(0, 2);
+    }
+
+    if (format[0] == '\n') {
+        std::cout << std::endl;
+        format.erase(0, 1);
+    }
+
+    return format;
+}
 
 void Logger::debug(std::string format, ...) {
     va_list args;
     va_start(args, format);
+
+    format = prepare(format);
 
     std::cout << Color::GREEN << "[DEBUG]" << " ";
     std::vprintf(format.c_str(), args);
@@ -24,7 +31,9 @@ void Logger::info(std::string format ...) {
     va_list args;
     va_start(args, format);
 
-    std::cout << Color::WHITE << "[INFO]" << " ";
+    format = prepare(format);
+
+    std::cout << Color::BRIGHT_WHITE << "[INFO]" << " ";
     std::vprintf(format.c_str(), args);
     std::cout << Color::RESET << std::endl;
 
@@ -35,7 +44,9 @@ void Logger::warning(std::string format, ...) {
     va_list args;
     va_start(args, format);
 
-    std::cout << Color::YELLOW << "[INFO]" << " ";
+    format = prepare(format);
+
+    std::cout << Color::BRIGHT_YELLOW << "[INFO]" << " ";
     std::vprintf(format.c_str(), args);
     std::cout << Color::RESET << std::endl;
 
@@ -46,7 +57,9 @@ void Logger::error(std::string format, ...) {
     va_list args;
     va_start(args, format);
 
-    std::cout << Color::RED << "[ERROR]" << " ";
+    format = prepare(format);
+
+    std::cout << Color::BRIGHT_RED << "[ERROR]" << " ";
     std::vprintf(format.c_str(), args);
     std::cout << Color::RESET << std::endl;
 

@@ -1,5 +1,6 @@
 #include "GL/glew.h"
 #include "Program.h"
+#include "../../logger/Logger.h"
 
 Program::Program() {
     this->program = glCreateProgram();
@@ -36,7 +37,7 @@ void Program::link() {
         auto *strInfoLog = new GLchar[infoLogLength + 1];
         glGetProgramInfoLog(this->program, infoLogLength, nullptr, strInfoLog);
 
-        fprintf(stderr, "Linker failure: %s\n", strInfoLog);
+        Logger::error("Linker failure: %s", strInfoLog);
         delete[] strInfoLog;
     }
 }

@@ -1,4 +1,5 @@
 #include "ModelHandler.h"
+#include "../logger/Logger.h"
 
 #include <filesystem>
 #include <assimp/Importer.hpp>
@@ -6,16 +7,16 @@
 #include <assimp/postprocess.h>
 
 ModelHandler::~ModelHandler() {
-    fprintf(stdout, "[DEBUG] Destroying %zu models\n", models.size());
+    Logger::info("\nDestroying %zu models", models.size());
 
     for (auto &model: models) {
-        fprintf(stdout, "[DEBUG] - Model %s destroyed\n", model->getName().c_str());
+        Logger::info(" - Model %s destroyed", model->getName().c_str());
         delete model;
     }
 }
 
 void ModelHandler::loadModelFolder(const std::string& folderPath, const std::string& extension) {
-    fprintf(stdout, "[DEBUG] Loading models from \"%s\"\n", folderPath.c_str());
+    Logger::info(R"(\nLoading models from "%s")", folderPath.c_str());
 
     for (const auto &entry: std::filesystem::directory_iterator(folderPath)) {
         if (entry.is_regular_file() && entry.path().extension() == extension) {
@@ -28,13 +29,13 @@ void ModelHandler::loadModelFolder(const std::string& folderPath, const std::str
 }
 
 void ModelHandler::loadModelFile(const std::string &name, const std::string &path) {
-    fprintf(stdout, "[DEBUG] Loading model \"%s\" from file \"%s\"\n", name.c_str(), path.c_str());
+    Logger::info(R"(Loading model "%s" from file "%s")", name.c_str(), path.c_str());
 
     Assimp::Importer importer;
     const aiScene *scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
 
     if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
-        fprintf(stderr, "[ERROR] Failed to load model \"%s\": %s\n", name.c_str(), importer.GetErrorString());
+        Logger::error(R"( -  Failed to load model "%s": %s)", name.c_str(), importer.GetErrorString());
         return;
     }
 
@@ -65,27 +66,27 @@ void ModelHandler::loadModelFile(const std::string &name, const std::string &pat
     try {
         model = new Model(name, points, indices, points.size());
     } catch (const std::exception &e) {
-        fprintf(stderr, "[ERROR]  - Failed to load model \"%s\": %s\n", name.c_str(), e.what());
+        Logger::error(R"( - Failed to load model "%s": %s)", name.c_str(), e.what());
         return;
     }
 
     models.push_back(model);
-    fprintf(stdout, "[DEBUG]  - Successfully loaded model. Size: %zu (%d)\n", points.size(), model->getVerticesCount());
+    Logger::info(" - Successfully loaded model. Size: %zu (%d)", points.size(), model->getVerticesCount());
 }
 
 void ModelHandler::loadModelVariable(const std::string &name, const std::vector<float>& points, GLulong size) {
-    fprintf(stdout, "[DEBUG] Loading model \"%s\"\n", name.c_str());
+    Logger::info(R"(Loading model "%s")", name.c_str());
 
     Model* model = nullptr;
     try {
         model = new Model(name, points, size);
     } catch (const std::exception &e) {
-        fprintf(stderr, "[ERROR]  - Failed to load model \"%s\": %s\n", name.c_str(), e.what());
+        Logger::error(R"( - Failed to load model "%s": %s)", name.c_str(), e.what());
         return;
     }
 
     models.push_back(model);
-    fprintf(stdout, "[DEBUG]  - Successfully loaded model. Size: %lu (%d)\n", size, model->getVerticesCount());
+    Logger::info(" - Successfully loaded model. Size: %lu (%d)", size, model->getVerticesCount());
 }
 
 std::vector<Model*> ModelHandler::getModels() const {

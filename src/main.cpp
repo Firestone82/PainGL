@@ -8,7 +8,7 @@ int main() {
     engine->createScene(640, 480, "PainGL: Project in ZPG");
     engine->createEventHandler(engine->getScene()->getWindow());
     engine->createModels("../assets/model");
-    engine->getModelHandler()->loadModelFile("suziSmoothObj", "../assets/model/suzi.obj");
+    engine->getModelHandler()->loadModelFile("suziSmoothObj", "../assets/model/object/suzi.obj");
     engine->createShaders("../assets/shader");
 
     engine->getEventHandler()->addListener(new KeyListener([=](GLFWwindow *window, int key, int scancode, int action, int mods) {
@@ -39,7 +39,6 @@ int main() {
     engine->info();
     engine->run();
 
-    fprintf(stdout, "\n[DEBUG] Shutting down engine.\n");
     delete engine;
 
     exit(EXIT_SUCCESS);

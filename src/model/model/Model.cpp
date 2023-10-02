@@ -48,8 +48,10 @@ Model::~Model() {
     delete vbo;
     this->vbo = nullptr;
 
-    delete ebo;
-    this->ebo = nullptr;
+    if (this->object) {
+        delete ebo;
+        this->ebo = nullptr;
+    }
 }
 
 std::string Model::getName() const {

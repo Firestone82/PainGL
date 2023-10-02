@@ -43,7 +43,7 @@ add_executable(myApp
         src/model/model/Model.cpp
         src/scene/entity/RenderableEntity.cpp
         src/shader/ShaderHandler.cpp
-        src/model/ModelHandler.cpp)
+        src/model/ModelHandler.cpp src/logger/Logger.h src/logger/Logger.cpp)
 
 target_link_libraries(myApp glfw)
 target_link_libraries(myApp OpenGL::GL)

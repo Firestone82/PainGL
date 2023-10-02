@@ -118,8 +118,6 @@ void RenderableEntity::draw(glm::mat4 modelViewProjection) {
 
     if (this->model->hasIndices()) {
         this->model->getEBO()->bind();
-        fprintf(stdout, "Drawing %d with indices\n", this->model->getVerticesCount());
-
         glDrawElements(GL_TRIANGLES, this->model->getVerticesCount(), GL_UNSIGNED_INT, nullptr);
     } else {
         glDrawArrays(GL_TRIANGLES, 0, this->model->getVerticesCount());
