@@ -7,9 +7,9 @@ int main() {
 
     engine->createScene(640, 480, "PainGL: Project in ZPG");
     engine->createEventHandler(engine->getScene()->getWindow());
-    engine->createModels();
+    engine->createModels("../assets/model");
     engine->getModelHandler()->loadModelFile("suziSmoothObj", "../assets/model/suzi.obj");
-    engine->createShaders();
+    engine->createShaders("../assets/shader");
 
     engine->getEventHandler()->addListener(new KeyListener([=](GLFWwindow *window, int key, int scancode, int action, int mods) {
         // Exit engine on ESCAPE key press
