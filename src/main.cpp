@@ -7,8 +7,8 @@ int main() {
 
     engine->createScene(640, 480, "PainGL: Project in ZPG");
     engine->createEventHandler(engine->getScene()->getWindow());
-    engine->createModels("../assets/model");
-    engine->getModelHandler()->loadModelFile("suziSmoothObj", "../assets/model/object/suzi.obj");
+    engine->createGUI(engine->getScene()->getWindow());
+    engine->createModels("../assets/model/object");
     engine->createShaders("../assets/shader");
 
     engine->getEventHandler()->addListener(new Listener<KeyPressEvent>([=](KeyPressEvent* event) {

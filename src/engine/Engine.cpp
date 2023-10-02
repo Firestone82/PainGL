@@ -18,6 +18,9 @@ Engine::~Engine() {
     delete this->scene;
     this->scene = nullptr;
 
+    delete this->gui;
+    this->gui = nullptr;
+
     delete this->eventHandler;
     this->eventHandler = nullptr;
 
@@ -96,6 +99,14 @@ void Engine::createEventHandler(Window* window) {
 
 EventHandler* Engine::getEventHandler() {
     return this->eventHandler;
+}
+
+void Engine::createGUI(Window* window) {
+    this->gui = new GUI(window);
+}
+
+GUI* Engine::getGUI() {
+    return this->gui;
 }
 
 void Engine::createShaders(const std::string& folderPath) {

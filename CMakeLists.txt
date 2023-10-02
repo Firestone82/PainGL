@@ -43,7 +43,15 @@ add_executable(myApp
         src/model/model/Model.cpp
         src/scene/entity/RenderableEntity.cpp
         src/shader/ShaderHandler.cpp
-        src/model/ModelHandler.cpp src/logger/Logger.h src/logger/Logger.cpp)
+        src/model/ModelHandler.cpp
+        src/logger/Logger.cpp
+        src/gui/imgui/backend/imgui_impl_glfw.cpp
+        src/gui/imgui/backend/imgui_impl_opengl3.cpp
+        src/gui/imgui/imgui.cpp
+        src/gui/imgui/imgui_widgets.cpp
+        src/gui/imgui/imgui_tables.cpp
+        src/gui/imgui/imgui_demo.cpp
+        src/gui/imgui/imgui_draw.cpp src/gui/GUI.cpp)
 
 target_link_libraries(myApp glfw)
 target_link_libraries(myApp OpenGL::GL)

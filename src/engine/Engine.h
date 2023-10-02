@@ -31,6 +31,9 @@ class Engine {
         void createEventHandler(Window* window);
         EventHandler* getEventHandler();
 
+        void createGUI(Window* window);
+        GUI* getGUI();
+
         void createShaders(const std::string& folderPath);
         ShaderHandler* getShaderHandler();
 
