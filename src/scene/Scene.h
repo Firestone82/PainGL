@@ -20,8 +20,8 @@ class Scene {
 
         void renderEntity(RenderableEntity* entity);
 
-        void draw(float deltaTime);
-        void simulate(float deltaTime);
+        void draw(double deltaTime);
+        void simulate(double deltaTime);
 
         void setFieldOfView(float fieldOfView);
         float getFieldOfView() const;

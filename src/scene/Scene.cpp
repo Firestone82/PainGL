@@ -13,7 +13,7 @@ void Scene::renderEntity(RenderableEntity* entity) {
     this->entities.push_back(entity);
 }
 
-void Scene::draw(float deltaTime) {
+void Scene::draw(double deltaTime) {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
@@ -36,7 +36,7 @@ void Scene::draw(float deltaTime) {
     glfwSwapBuffers(window->get());
 }
 
-void Scene::simulate(float deltaTime) {
+void Scene::simulate(double deltaTime) {
     for (auto &entity: this->entities) {
         entity->simulate(deltaTime);
     }

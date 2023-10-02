@@ -16,7 +16,7 @@ class RenderableEntity {
         glm::vec3 rotationVector = glm::vec3(0.0f);
         glm::vec3 scaleVector = glm::vec3(1.0f);
 
-        std::function<void(RenderableEntity*, float)> simulateFunction = nullptr;
+        std::function<void(RenderableEntity*, double)> simulateFunction = nullptr;
 
         explicit RenderableEntity(const std::string& name);
 
@@ -41,7 +41,7 @@ class RenderableEntity {
         void setScale(float x, float y, float z);
         glm::vec3 getScale() const;
 
-        void simulate(float deltaTime);
+        void simulate(double deltaTime);
         void draw(glm::mat4 modelView);
 
         class Builder {

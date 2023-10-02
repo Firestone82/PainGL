@@ -42,7 +42,7 @@ void Engine::run() {
 
     while (this->running) {
         this->running = !glfwWindowShouldClose(scene->getWindow()->get());
-        float deltaTime = getDeltaTime();
+        double deltaTime = getDeltaTime();
 
         glfwPollEvents();
         scene->simulate(deltaTime);

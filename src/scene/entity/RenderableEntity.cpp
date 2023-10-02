@@ -105,7 +105,7 @@ glm::vec3 RenderableEntity::getScale() const {
     return this->scaleVector;
 }
 
-void RenderableEntity::simulate(float deltaTime) {
+void RenderableEntity::simulate(double deltaTime) {
     if (this->simulateFunction != nullptr) {
         this->simulateFunction(this, deltaTime);
     }
