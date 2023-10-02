@@ -11,11 +11,16 @@ int main() {
     engine->getModelHandler()->loadModelFile("suziSmoothObj", "../assets/model/object/suzi.obj");
     engine->createShaders("../assets/shader");
 
-    engine->getEventHandler()->addListener(new KeyListener([=](GLFWwindow *window, int key, int scancode, int action, int mods) {
+    engine->getEventHandler()->addListener(new Listener<KeyPressEvent>([=](KeyPressEvent* event) {
         // Exit engine on ESCAPE key press
-        if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
+        if (event->getKey() == GLFW_KEY_ESCAPE && event->getAction() == GLFW_PRESS) {
             engine->stop();
         }
+    }));
+
+    engine->getEventHandler()->addListener(new Listener<WindowCloseEvent>([=](WindowCloseEvent* event) {
+        // Exit engine on window close
+        engine->stop();
     }));
 
     engine->getScene()->renderEntity(

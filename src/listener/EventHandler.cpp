@@ -1,23 +1,46 @@
 #include "EventHandler.h"
 #include "../logger/Logger.h"
 
-std::vector<Listener *> EventHandler::listeners;
+std::vector<ListenerBase*> EventHandler::listeners;
 
-EventHandler::EventHandler(GLFWwindow *window) {
-    glfwSetErrorCallback(handleError);
-    glfwSetKeyCallback(window, handleKeyEvent);
-    glfwSetWindowFocusCallback(window, handleWindowFocusEvent);
-    glfwSetWindowIconifyCallback(window, handleWindowIconifyEvent);
-    glfwSetWindowCloseCallback(window, handleWindowCloseEvent);
-    glfwSetWindowSizeCallback(window, handleWindowSizeEvent);
-    glfwSetCursorPosCallback(window, handleMousePositionEvent);
-    glfwSetMouseButtonCallback(window, handleMouseButtonEvent);
+EventHandler::EventHandler(GLFWwindow* window) {
+    glfwSetKeyCallback(window, [](GLFWwindow* window, int key, int scancode, int action, int mods) {
+        EventHandler::callEvent(new KeyPressEvent(key, scancode, action, mods));
+    });
+
+    glfwSetCursorPosCallback(window, [](GLFWwindow* window, double xpos, double ypos) {
+        EventHandler::callEvent(new MousePositionEvent(xpos, ypos));
+    });
+
+    glfwSetMouseButtonCallback(window, [](GLFWwindow* window, int button, int action, int mods) {
+        EventHandler::callEvent(new MouseButtonEvent(button, action, mods));
+    });
+
+    glfwSetWindowFocusCallback(window, [](GLFWwindow* window, int focused) {
+        EventHandler::callEvent(new WindowFocusEvent(focused));
+    });
+
+    glfwSetWindowIconifyCallback(window, [](GLFWwindow* window, int iconified) {
+        EventHandler::callEvent(new WindowIconifyEvent(iconified));
+    });
+
+    glfwSetWindowCloseCallback(window, [](GLFWwindow* window) {
+        EventHandler::callEvent(new WindowCloseEvent());
+    });
+
+    glfwSetWindowSizeCallback(window, [](GLFWwindow* window, int width, int height) {
+        EventHandler::callEvent(new WindowResizeEvent(width, height));
+    });
+
+    glfwSetErrorCallback([](int error, const char* description) {
+        Logger::error("GLFW Error: " + std::to_string(error) + " - " + std::string(description));
+    });
 }
 
-void EventHandler::handleError(int error, const char *description) {
-    Logger::error("Error: %d, StackTrace: %s", error, description);
-}
+EventHandler::~EventHandler() {
+    for (auto& listener : listeners) {
+        delete listener;
+    }
 
-void EventHandler::addListener(Listener *listener) {
-    listeners.push_back(listener);
+    listeners.clear();
 }
