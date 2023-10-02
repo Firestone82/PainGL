@@ -10,6 +10,12 @@
 #include "../../assets/model/header/triangle.h"
 #include "../../assets/model/header/pyramid.h"
 
+Engine* Engine::instance_ = nullptr;
+
+Engine::Engine() {
+    Engine::instance_ = this;
+}
+
 Engine::~Engine() {
     delete this->scene;
     this->scene = nullptr;
@@ -160,4 +166,8 @@ void Engine::info() {
     Logger::warning("GLSL: %s", glGetString(GL_SHADING_LANGUAGE_VERSION));
     Logger::warning("Using GLFW: %d.%d.%d", major, minor, revision);
     std::cout << std::endl;
+}
+
+Engine* Engine::getInstance() {
+    return Engine::instance_;
 }

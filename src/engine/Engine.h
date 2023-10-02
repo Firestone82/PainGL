@@ -9,6 +9,8 @@
 
 class Engine {
     private:
+        static Engine* instance_;
+
         bool running = true;
         double deltaTime = 0;
         double lastTime = 0;
@@ -20,7 +22,7 @@ class Engine {
         ModelHandler* modelHandler;
 
     public:
-        Engine() = default;
+        Engine();
         ~Engine();
 
         void init();
@@ -48,4 +50,6 @@ class Engine {
 
         void setVersion(int major, int minor, bool forwardCompat, int profile);
         void info();
+
+        static Engine* getInstance();
 };

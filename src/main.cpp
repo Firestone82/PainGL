@@ -27,7 +27,7 @@ int main() {
     }));
 
     engine->getScene()->renderEntity(
-            RenderableEntity::createEntity("Suzi Object")
+            RenderableEntity::createEntity("Backpack")
                     ->setModel(engine->getModelHandler()->getModel("backpack"))
                     ->setShaderProgram(engine->getShaderHandler()->createProgram("fragmentShader", "vertexShader"))
                     ->setSimulateFunction([=](RenderableEntity* entity, float deltaTime) {
@@ -35,6 +35,32 @@ int main() {
                         entity->setRotation(rotation.x, rotation.y + (45.0f * deltaTime), rotation.z);
                     })
                     ->setScale(0.25f)
+                    ->build()
+    );
+
+    engine->getScene()->renderEntity(
+            RenderableEntity::createEntity("M4")
+                    ->setModel(engine->getModelHandler()->getModel("m4"))
+                    ->setShaderProgram(engine->getShaderHandler()->createProgram("fragmentShader", "vertexShader"))
+                    ->setSimulateFunction([=](RenderableEntity* entity, float deltaTime) {
+                        auto rotation = entity->getRotation();
+                        entity->setRotation(rotation.x, rotation.y + (45.0f * deltaTime), rotation.z);
+                    })
+                    ->setPosition(-2.0f, 0.0f, 0.0f)
+                    ->setScale(0.25f)
+                    ->build()
+    );
+
+    engine->getScene()->renderEntity(
+            RenderableEntity::createEntity("Suzi")
+                    ->setModel(engine->getModelHandler()->getModel("suzi"))
+                    ->setShaderProgram(engine->getShaderHandler()->createProgram("fragmentShader", "vertexShader"))
+                    ->setSimulateFunction([=](RenderableEntity* entity, float deltaTime) {
+                        auto rotation = entity->getRotation();
+                        entity->setRotation(rotation.x, rotation.y + (45.0f * deltaTime), rotation.z);
+                    })
+                    ->setPosition(2.0f, 0.0f, 0.0f)
+                    ->setScale(0.50f)
                     ->build()
     );
 

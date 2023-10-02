@@ -33,4 +33,5 @@ class Scene {
         glm::vec2 getNearFarPlane() const;
 
         Window* getWindow();
+        const std::vector<RenderableEntity*>& getEntities();
 };

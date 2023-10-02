@@ -66,3 +66,7 @@ glm::vec2 Scene::getNearFarPlane() const {
 Window* Scene::getWindow() {
     return this->window;
 }
+
+const std::vector<RenderableEntity*>& Scene::getEntities() {
+    return this->entities;
+}
