@@ -1,15 +1,14 @@
 #pragma once
 
 class Listener {
-protected:
-    EventType type;
+    protected:
+        EventType type;
 
-public:
-    explicit Listener(EventType type) : type(type) {};
+    public:
+        explicit Listener(EventType type) : type(type) {};
+        virtual ~Listener() = default;
 
-    virtual ~Listener() = default;
-
-    EventType getType() const {
-        return type;
-    };
+        EventType getType() const {
+            return type;
+        };
 };
