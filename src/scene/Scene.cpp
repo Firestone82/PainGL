@@ -1,5 +1,6 @@
 #include "Scene.h"
-#include <glm/gtc/matrix_transform.hpp>
+#include "../gui/imgui/imgui.h"
+#include "../engine/Engine.h"
 
 Scene::Scene(int width, int height, const char* title) {
     this->window = new Window(width, height, title);
@@ -13,9 +14,7 @@ void Scene::renderEntity(RenderableEntity* entity) {
     this->entities.push_back(entity);
 }
 
-void Scene::draw(double deltaTime) {
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
+void Scene::draw() {
     // Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
     glm::mat4 projection = glm::perspective(
             glm::radians(this->fieldOfView),
@@ -32,11 +31,9 @@ void Scene::draw(double deltaTime) {
     for (auto &entity: this->entities) {
         entity->draw(projection * view * entity->getTransformationMatrix());
     }
-
-    glfwSwapBuffers(window->get());
 }
 
-void Scene::simulate(double deltaTime) {
+void Scene::tick(double deltaTime) {
     for (auto &entity: this->entities) {
         entity->simulate(deltaTime);
     }

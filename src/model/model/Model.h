@@ -15,13 +15,12 @@ class Model {
         VBO* vbo;
         EBO* ebo;
 
-        std::vector<float> data;
+        std::vector<float> points;
         std::vector<unsigned int> indices;
-        GLint size;
 
     public:
-        Model(const std::string &name, const std::vector<float>& data, GLint size);
-        Model(const std::string &name, const std::vector<float>& data, const std::vector<unsigned int>& indices, GLint size);
+        Model(const std::string &name, const std::vector<float> &points);
+        Model(const std::string &name, const std::vector<float> &points, const std::vector<unsigned int> &indices);
         ~Model();
 
         std::string getName() const;
@@ -31,8 +30,7 @@ class Model {
         VBO* getVBO() const;
         EBO* getEBO() const;
 
-        std::vector<float> getData() const;
-        GLint getSize() const;
-
-        GLsizei getVerticesCount() const;
+        std::vector<float> getPoints() const;
+        std::vector<unsigned int> getIndices() const;
+        GLsizei getSize() const;
 };

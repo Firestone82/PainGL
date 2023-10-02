@@ -1,7 +1,9 @@
 #pragma once
 
+
 #include "../scene/Scene.h"
 #include "../listener/EventHandler.h"
+#include "../gui/GUI.h"
 #include "../shader/ShaderHandler.h"
 #include "../model/ModelHandler.h"
 
@@ -12,6 +14,7 @@ class Engine {
         double lastTime = 0;
 
         Scene* scene;
+        GUI* gui;
         EventHandler* eventHandler;
         ShaderHandler* shaderHandler;
         ModelHandler* modelHandler;

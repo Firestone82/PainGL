@@ -34,5 +34,7 @@ class EventHandler {
                     listener->notify(event);
                 }
             }
+
+            delete event;
         }
 };

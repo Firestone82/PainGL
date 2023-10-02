@@ -1,14 +1,13 @@
 #include "Model.h"
 #include <GL/glew.h>
 
-Model::Model(const std::string &name, const std::vector<float>& data, GLint size) {
-    this->data = data;
-    this->size = size;
+Model::Model(const std::string &name, const std::vector<float> &data) {
+    this->points = data;
     this->name = name;
 
     vbo = new VBO();
     vbo->bind();
-    vbo->setData(data, size, GL_STATIC_DRAW);
+    vbo->setData(data, data.size() * sizeof(float), GL_STATIC_DRAW);
 
     vao = new VAO();
     vao->bind();
@@ -18,20 +17,19 @@ Model::Model(const std::string &name, const std::vector<float>& data, GLint size
     vao->setVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(data[0]) * 6, (GLvoid *) (3 * sizeof(float)));
 }
 
-Model::Model(const std::string &name, const std::vector<float> &data, const std::vector<unsigned int>& indices, GLint size) {
-    this->data = data;
+Model::Model(const std::string &name, const std::vector<float> &data, const std::vector<unsigned int> &indices) {
+    this->points = data;
     this->indices = indices;
-    this->size = size;
     this->name = name;
     this->object = true;
 
     vbo = new VBO();
     vbo->bind();
-    vbo->setData(data, size, GL_STATIC_DRAW);
+    vbo->setData(data, data.size() * sizeof(float), GL_STATIC_DRAW);
 
     ebo = new EBO();
     ebo->bind();
-    ebo->setData(indices, size, GL_STATIC_DRAW);
+    ebo->setData(indices, indices.size() * sizeof(unsigned int), GL_STATIC_DRAW);
 
     vao = new VAO();
     vao->bind();
@@ -74,14 +72,18 @@ EBO* Model::getEBO() const {
     return this->ebo;
 }
 
-std::vector<float> Model::getData() const {
-    return this->data;
+std::vector<float> Model::getPoints() const {
+    return this->points;
 }
 
-GLint Model::getSize() const {
-    return this->size;
+std::vector<unsigned int> Model::getIndices() const {
+    return this->indices;
 }
 
-GLsizei Model::getVerticesCount() const {
-    return this->size;
+GLsizei Model::getSize() const {
+    if (this->object) {
+        return static_cast<GLsizei>(this->indices.size() * sizeof(unsigned int));
+    }
+
+    return static_cast<GLsizei>(this->points.size() * sizeof(float));
 }

@@ -32,9 +32,6 @@ add_executable(myApp
         src/scene/window/Window.cpp
         src/scene/Scene.cpp
         src/listener/EventHandler.cpp
-        src/listener/event/KeyEvents.cpp
-        src/listener/event/WindowEvents.cpp
-        src/listener/event/MouseEvents.cpp
         src/buffer/VBO.cpp
         src/buffer/VAO.cpp
         src/buffer/EBO.cpp

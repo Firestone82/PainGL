@@ -58,23 +58,9 @@ glm::vec3 RenderableEntity::getPosition() const {
 void RenderableEntity::setRotation(float x, float y, float z) {
     this->rotationVector = glm::vec3(x, y, z);
 
-    if (this->rotationVector.x > 360.0f) {
-        this->rotationVector.x = 0.0f;
-    } else if (this->rotationVector.x < 0.0f) {
-        this->rotationVector.x = 360.0f;
-    }
-
-    if (this->rotationVector.y > 360.0f) {
-        this->rotationVector.y = 0.0f;
-    } else if (this->rotationVector.y < 0.0f) {
-        this->rotationVector.y = 360.0f;
-    }
-
-    if (this->rotationVector.z > 360.0f) {
-        this->rotationVector.z = 0.0f;
-    } else if (this->rotationVector.z < 0.0f) {
-        this->rotationVector.z = 360.0f;
-    }
+    this->rotationVector.x = fmod(this->rotationVector.x, 360.0f);
+    this->rotationVector.y = fmod(this->rotationVector.y, 360.0f);
+    this->rotationVector.z = fmod(this->rotationVector.z, 360.0f);
 }
 
 glm::vec3 RenderableEntity::getRotation() const {
@@ -118,9 +104,9 @@ void RenderableEntity::draw(glm::mat4 modelViewProjection) {
 
     if (this->model->hasIndices()) {
         this->model->getEBO()->bind();
-        glDrawElements(GL_TRIANGLES, this->model->getVerticesCount(), GL_UNSIGNED_INT, nullptr);
+        glDrawElements(GL_TRIANGLES, this->model->getSize(), GL_UNSIGNED_INT, nullptr);
     } else {
-        glDrawArrays(GL_TRIANGLES, 0, this->model->getVerticesCount());
+        glDrawArrays(GL_TRIANGLES, 0, this->model->getSize());
     }
 }
 

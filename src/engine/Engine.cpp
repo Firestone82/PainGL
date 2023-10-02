@@ -10,10 +10,6 @@
 #include "../../assets/model/header/triangle.h"
 #include "../../assets/model/header/pyramid.h"
 
-Engine::Engine() {
-    this->lastTick = 0;
-}
-
 Engine::~Engine() {
     delete this->scene;
     this->scene = nullptr;
@@ -41,17 +37,21 @@ void Engine::init() {
 }
 
 void Engine::run() {
-    lastTick = glfwGetTime();
-
     while (this->running) {
-        this->running = !glfwWindowShouldClose(scene->getWindow()->get());
-        double deltaTime = getDeltaTime();
-
         glfwPollEvents();
-        scene->simulate(deltaTime);
-        scene->draw(deltaTime);
 
-        lastTick = glfwGetTime();
+        this->running = !glfwWindowShouldClose(scene->getWindow()->get());
+        calculateDeltaTime();
+
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        this->gui->handle();
+
+        this->scene->tick(this->deltaTime);
+        this->scene->draw();
+        this->gui->render();
+
+        this->gui->clear();
+        glfwSwapBuffers(scene->getWindow()->get());
     }
 }
 
@@ -130,11 +130,11 @@ void Engine::createModels(const std::string& folderPath) {
     this->modelHandler = new ModelHandler();
     this->modelHandler->loadModelFolder(folderPath,".obj");
 
-    this->modelHandler->loadModelVariable("suziFlat", suziFlat, suziFlat.size() * sizeof(float));
-    this->modelHandler->loadModelVariable("suziSmooth", suziSmooth, suziSmooth.size() * sizeof(float));
-    this->modelHandler->loadModelVariable("sphere", sphere, sphere.size() * sizeof(float));
-    this->modelHandler->loadModelVariable("triangle", triangle, triangle.size() * sizeof(float));
-    this->modelHandler->loadModelVariable("pyramid", pyramid, pyramid.size() * sizeof(float));
+//    this->modelHandler->loadModelVariable("suziFlat", suziFlat);
+//    this->modelHandler->loadModelVariable("suziSmooth", suziSmooth);
+//    this->modelHandler->loadModelVariable("sphere", sphere);
+//    this->modelHandler->loadModelVariable("triangle", triangle);
+//    this->modelHandler->loadModelVariable("pyramid", pyramid);
 }
 
 ModelHandler* Engine::getModelHandler() {
