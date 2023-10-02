@@ -63,12 +63,19 @@ bool Engine::isRunning() const {
     return this->running;
 }
 
+void Engine::calculateDeltaTime() {
+    double temp = lastTime;
+    lastTime = glfwGetTime();
+    deltaTime = lastTime - temp;
+}
+
 double Engine::getDeltaTime() const {
-    return (glfwGetTime() - lastTick) * 1e4;
+    return this->deltaTime;
 }
 
 void Engine::createScene(int width, int height, const char *title) {
     this->scene = new Scene(width, height, title);
+    this->scene->setAspectRatio((float) width / (float) height);
 
     // Start GLEW extension handler
     glewExperimental = GL_TRUE;
