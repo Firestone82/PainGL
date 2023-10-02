@@ -3,11 +3,11 @@
 
 #include "Engine.h"
 
-#include "../../assets/model/sphere.h"
-#include "../../assets/model/suzi_flat.h"
-#include "../../assets/model/suzi_smooth.h"
-#include "../../assets/model/triangle.h"
-#include "../../assets/model/pyramid.h"
+#include "../../assets/model/header/sphere.h"
+#include "../../assets/model/header/suzi_flat.h"
+#include "../../assets/model/header/suzi_smooth.h"
+#include "../../assets/model/header/triangle.h"
+#include "../../assets/model/header/pyramid.h"
 
 Engine::Engine() {
     this->lastTick = 0;
@@ -59,8 +59,8 @@ bool Engine::isRunning() const {
     return this->running;
 }
 
-float Engine::getDeltaTime() const {
-    return static_cast<float>((glfwGetTime() - lastTick) * 1e4);
+double Engine::getDeltaTime() const {
+    return (glfwGetTime() - lastTick) * 1e4;
 }
 
 void Engine::createScene(int width, int height, const char *title) {
@@ -97,33 +97,25 @@ EventHandler* Engine::getEventHandler() {
     return this->eventHandler;
 }
 
-void Engine::createShaders() {
-    this->shaderHandler = new ShaderHandler();
-    this->shaderHandler->loadShaderFile("vertexShader", "../assets/shader/vertexShader.frag", GL_VERTEX_SHADER);
-    this->shaderHandler->loadShaderFile("fragmentShader", "../assets/shader/fragmentShader.frag", GL_FRAGMENT_SHADER);
-}
-
 void Engine::createShaders(const std::string& folderPath) {
     this->shaderHandler = new ShaderHandler();
     this->shaderHandler->loadShaderFolder(folderPath, ".frag");
+    this->shaderHandler->loadShaderFolder(folderPath, ".vert");
 }
 
 ShaderHandler* Engine::getShaderHandler() {
     return this->shaderHandler;
 }
 
-void Engine::createModels() {
+void Engine::createModels(const std::string& folderPath) {
     this->modelHandler = new ModelHandler();
+    this->modelHandler->loadModelFolder(folderPath,".obj");
+
     this->modelHandler->loadModelVariable("suziFlat", suziFlat, suziFlat.size() * sizeof(float));
     this->modelHandler->loadModelVariable("suziSmooth", suziSmooth, suziSmooth.size() * sizeof(float));
     this->modelHandler->loadModelVariable("sphere", sphere, sphere.size() * sizeof(float));
     this->modelHandler->loadModelVariable("triangle", triangle, triangle.size() * sizeof(float));
     this->modelHandler->loadModelVariable("pyramid", pyramid, pyramid.size() * sizeof(float));
-}
-
-void Engine::createModels(const std::string& folderPath) {
-    this->modelHandler = new ModelHandler();
-    this->modelHandler->loadModelFolder(folderPath,".obj");
 }
 
 ModelHandler* Engine::getModelHandler() {

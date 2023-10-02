@@ -23,7 +23,7 @@ class Engine {
         void run();
         void stop();
         bool isRunning() const;
-        float getDeltaTime() const;
+        double getDeltaTime() const;
 
         void createScene(int width, int height, const char *title);
         Scene* getScene();
@@ -31,11 +31,9 @@ class Engine {
         void createEventHandler(Window* window);
         EventHandler* getEventHandler();
 
-        void createShaders();
         void createShaders(const std::string& folderPath);
         ShaderHandler* getShaderHandler();
 
-        void createModels();
         void createModels(const std::string& folderPath);
         ModelHandler* getModelHandler();
 
