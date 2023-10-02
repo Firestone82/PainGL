@@ -10,13 +10,12 @@
 #include "../../assets/model/header/triangle.h"
 #include "../../assets/model/header/pyramid.h"
 
-Engine::Engine() {
-    this->lastTick = 0;
-}
-
 Engine::~Engine() {
     delete this->scene;
     this->scene = nullptr;
+
+    delete this->gui;
+    this->gui = nullptr;
 
     delete this->eventHandler;
     this->eventHandler = nullptr;
@@ -38,17 +37,21 @@ void Engine::init() {
 }
 
 void Engine::run() {
-    lastTick = glfwGetTime();
-
     while (this->running) {
-        this->running = !glfwWindowShouldClose(scene->getWindow()->get());
-        double deltaTime = getDeltaTime();
-
         glfwPollEvents();
-        scene->simulate(deltaTime);
-        scene->draw(deltaTime);
 
-        lastTick = glfwGetTime();
+        this->running = !glfwWindowShouldClose(scene->getWindow()->get());
+        calculateDeltaTime();
+
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        this->gui->handle();
+
+        this->scene->tick(this->deltaTime);
+        this->scene->draw();
+        this->gui->render();
+
+        this->gui->clear();
+        glfwSwapBuffers(scene->getWindow()->get());
     }
 }
 
@@ -60,12 +63,19 @@ bool Engine::isRunning() const {
     return this->running;
 }
 
+void Engine::calculateDeltaTime() {
+    double temp = lastTime;
+    lastTime = glfwGetTime();
+    deltaTime = lastTime - temp;
+}
+
 double Engine::getDeltaTime() const {
-    return (glfwGetTime() - lastTick) * 1e4;
+    return this->deltaTime;
 }
 
 void Engine::createScene(int width, int height, const char *title) {
     this->scene = new Scene(width, height, title);
+    this->scene->setAspectRatio((float) width / (float) height);
 
     // Start GLEW extension handler
     glewExperimental = GL_TRUE;
@@ -88,14 +98,22 @@ void Engine::createEventHandler(Window* window) {
     this->eventHandler = new EventHandler(window->get());
 
     // Window resize listener
-    this->eventHandler->addListener(new WindowSizeListener([=](GLFWwindow *window, int width, int height) {
-        glViewport(0, 0, width, height);
-        this->scene->setAspectRatio((float) width / (float) height);
+    this->eventHandler->addListener(new Listener<WindowResizeEvent>([=](WindowResizeEvent* event) {
+        glViewport(0, 0, event->getWidth(), event->getHeight());
+        this->scene->setAspectRatio((float) event->getWidth() / (float) event->getHeight());
     }));
 }
 
 EventHandler* Engine::getEventHandler() {
     return this->eventHandler;
+}
+
+void Engine::createGUI(Window* window) {
+    this->gui = new GUI(window);
+}
+
+GUI* Engine::getGUI() {
+    return this->gui;
 }
 
 void Engine::createShaders(const std::string& folderPath) {
@@ -112,11 +130,11 @@ void Engine::createModels(const std::string& folderPath) {
     this->modelHandler = new ModelHandler();
     this->modelHandler->loadModelFolder(folderPath,".obj");
 
-    this->modelHandler->loadModelVariable("suziFlat", suziFlat, suziFlat.size() * sizeof(float));
-    this->modelHandler->loadModelVariable("suziSmooth", suziSmooth, suziSmooth.size() * sizeof(float));
-    this->modelHandler->loadModelVariable("sphere", sphere, sphere.size() * sizeof(float));
-    this->modelHandler->loadModelVariable("triangle", triangle, triangle.size() * sizeof(float));
-    this->modelHandler->loadModelVariable("pyramid", pyramid, pyramid.size() * sizeof(float));
+//    this->modelHandler->loadModelVariable("suziFlat", suziFlat);
+//    this->modelHandler->loadModelVariable("suziSmooth", suziSmooth);
+//    this->modelHandler->loadModelVariable("sphere", sphere);
+//    this->modelHandler->loadModelVariable("triangle", triangle);
+//    this->modelHandler->loadModelVariable("pyramid", pyramid);
 }
 
 ModelHandler* Engine::getModelHandler() {

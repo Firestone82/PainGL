@@ -14,7 +14,7 @@ class ModelHandler {
 
         void loadModelFolder(const std::string &folderPath, const std::string& extension);
         void loadModelFile(const std::string &name, const std::string &path);
-        void loadModelVariable(const std::string &name, const std::vector<float>& points, GLulong size);
+        void loadModelVariable(const std::string &name, const std::vector<float>& points);
 
         std::vector<Model*> getModels() const;
         Model* getModel(const std::string &name) const;

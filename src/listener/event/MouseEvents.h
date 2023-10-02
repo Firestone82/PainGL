@@ -1,31 +1,43 @@
 #pragma once
 
-#include "../EventHandler.h"
+#include "../structure/Event.h"
+#include "../structure/EventType.h"
 
-class MousePositionListener : public Listener {
-private:
-    std::function<void(GLFWwindow *, double, double)> callback;
+class MousePositionEvent : public Event {
+    private:
+        double x;
+        double y;
 
-public:
-    explicit MousePositionListener(std::function<void(GLFWwindow *, double, double)> callback) : Listener(MOUSE_POSITION_EVENT), callback(std::move(callback)) {};
+    public:
+        MousePositionEvent(double x, double y) : Event(EventType::MOUSE_POSITION), x(x), y(y) {}
 
-    ~MousePositionListener() override = default;
+        double getX() const {
+            return x;
+        }
 
-    void handle(GLFWwindow *window, double xpos, double ypos) {
-        callback(window, xpos, ypos);
-    }
+        double getY() const {
+            return y;
+        }
 };
 
-class MouseButtonListener : public Listener {
-private:
-    std::function<void(GLFWwindow *, int, int, int)> callback;
+class MouseButtonEvent : public Event {
+    private:
+        int button;
+        int action;
+        int mods;
 
-public:
-    explicit MouseButtonListener(std::function<void(GLFWwindow *, int, int, int)> callback) : Listener(MOUSE_BUTTON_EVENT), callback(std::move(callback)) {};
+    public:
+        MouseButtonEvent(int button, int action, int mods) : Event(EventType::MOUSE_BUTTON), button(button), action(action), mods(mods) {}
 
-    ~MouseButtonListener() override = default;
+        int getButton() const {
+            return button;
+        }
 
-    void handle(GLFWwindow *window, int button, int action, int mods) {
-        callback(window, button, action, mods);
-    }
+        int getAction() const {
+            return action;
+        }
+
+        int getMods() const {
+            return mods;
+        }
 };

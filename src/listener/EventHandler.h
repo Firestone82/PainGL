@@ -9,33 +9,32 @@
 
 #include "structure/EventType.h"
 #include "structure/Listener.h"
-#include "event/KeyEvents.h"
+#include "structure/Event.h"
+
+#include "event/KeyboardEvents.h"
+#include "event/MouseEvents.h"
 #include "event/WindowEvents.h"
 
 class EventHandler {
-protected:
-    static std::vector<Listener *> listeners;
+    private:
+        static std::vector<ListenerBase*> listeners;
 
-public:
-    explicit EventHandler(GLFWwindow *window);
+    public:
+        explicit EventHandler(GLFWwindow* window);
+        ~EventHandler();
 
-    ~EventHandler() = default;
+        template<typename EventType>
+        void addListener(Listener<EventType>* listener) {
+            listeners.push_back(listener);
+        }
 
-    static void handleError(int error, const char *description);
+        static void callEvent(Event* event) {
+            for (auto& listener : listeners) {
+                if (listener->getEventType() == std::type_index(typeid(*event))) {
+                    listener->notify(event);
+                }
+            }
 
-    static void handleKeyEvent(GLFWwindow *window, int key, int scancode, int action, int mods);
-
-    static void handleWindowFocusEvent(GLFWwindow *window, int focused);
-
-    static void handleWindowIconifyEvent(GLFWwindow *window, int iconified);
-
-    static void handleWindowCloseEvent(GLFWwindow *window);
-
-    static void handleWindowSizeEvent(GLFWwindow *window, int width, int height);
-
-    static void handleMousePositionEvent(GLFWwindow *window, double xpos, double ypos);
-
-    static void handleMouseButtonEvent(GLFWwindow *window, int button, int action, int mods);
-
-    void addListener(Listener *listener);
+            delete event;
+        }
 };
