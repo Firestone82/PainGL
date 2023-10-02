@@ -21,8 +21,8 @@ void ShaderHandler::loadShaderFolder(const std::string &folderPath, const std::s
             std::string shaderName = entry.path().stem().string();
             std::string shaderPath = entry.path().string();
 
-            // TODO: Detect shader type from file
-//            loadShaderFile(shaderName, shaderPath, GL_VERTEX_SHADER);
+            GLenum shaderType = extension == ".vert" ? GL_VERTEX_SHADER : GL_FRAGMENT_SHADER;
+            loadShaderFile(shaderName, shaderPath, shaderType);
         }
     }
 }
@@ -30,8 +30,16 @@ void ShaderHandler::loadShaderFolder(const std::string &folderPath, const std::s
 void ShaderHandler::loadShaderVar(const std::string &name, const char *source, GLenum type) {
     fprintf(stdout, "[DEBUG] Loading shader \"%s\"\n", name.c_str());
 
-    Shader* shader = new Shader(name, type, source);
+    Shader* shader = nullptr;
+    try {
+        shader = new Shader(name, type, source);
+    } catch (const std::exception &e) {
+        fprintf(stderr, "[ERROR]  - Failed to load shader \"%s\": %s\n", name.c_str(), e.what());
+        return;
+    }
+
     shaders.push_back(shader);
+    fprintf(stdout, "[DEBUG]  - Successfully loaded shader.\n");
 }
 
 void ShaderHandler::loadShaderFile(const std::string &name, const std::string &path, GLenum type) {
