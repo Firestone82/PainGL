@@ -23,10 +23,18 @@ void GUI::handle() {
 }
 
 void GUI::render() {
+    int height = Engine::getInstance()->getScene()->getWindow()->getHeight();
+
     ImGui::Begin("Frames", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoSavedSettings);
     ImGui::SetWindowPos(ImVec2(15, 15));
     ImGui::Text("Frame Rate: %0.2f", ImGui::GetIO().Framerate);
     ImGui::Text("Frame Time: %0.2f ms", 1000.0f / ImGui::GetIO().Framerate);
+    ImGui::End();
+
+    ImGui::Begin("Author", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoSavedSettings);
+    ImGui::SetWindowPos(ImVec2(15, height-65));
+    ImGui::Text("Author: Pavel Mikula, MIK0486");
+    ImGui::Text("Version: 1.0.0");
     ImGui::End();
 
     // WATAFAK KDO TO NAPSAL, TO JE MOC FANCY

@@ -15,8 +15,12 @@ class Window {
         Window(int width, int height, const char* title);
         ~Window();
 
+        void setWidth(int width);
         int getWidth() const;
+
+        void setHeight(int height);
         int getHeight() const;
+
         const char* getTitle();
         GLFWwindow* get();
 };

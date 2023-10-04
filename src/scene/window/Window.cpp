@@ -22,8 +22,16 @@ Window::~Window() {
     this->window = nullptr;
 }
 
+void Window::setWidth(int width) {
+    this->width = width;
+}
+
 int Window::getWidth() const {
     return this->width;
+}
+
+void Window::setHeight(int height) {
+    this->height = height;
 }
 
 int Window::getHeight() const {

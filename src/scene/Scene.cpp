@@ -1,5 +1,4 @@
 #include "Scene.h"
-#include "../gui/imgui/imgui.h"
 #include "../engine/Engine.h"
 
 Scene::Scene(int width, int height, const char* title) {

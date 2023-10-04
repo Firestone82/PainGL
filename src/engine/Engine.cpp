@@ -107,6 +107,8 @@ void Engine::createEventHandler(Window* window) {
     this->eventHandler->addListener(new Listener<WindowResizeEvent>([=](WindowResizeEvent* event) {
         glViewport(0, 0, event->getWidth(), event->getHeight());
         this->scene->setAspectRatio((float) event->getWidth() / (float) event->getHeight());
+        this->scene->getWindow()->setWidth(event->getWidth());
+        this->scene->getWindow()->setHeight(event->getHeight());
     }));
 }
 
