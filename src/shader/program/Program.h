@@ -19,6 +19,4 @@ class Program {
 
         void link();
         void use();
-
-        GLuint get() const;
 };

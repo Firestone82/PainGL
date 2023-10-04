@@ -45,7 +45,3 @@ void Program::link() {
 void Program::use() {
     glUseProgram(this->program);
 }
-
-GLuint Program::get() const {
-    return this->program;
-}

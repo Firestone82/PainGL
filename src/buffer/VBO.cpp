@@ -17,7 +17,3 @@ void VBO::setData(std::vector<float> points, GLulong size, GLenum usage) {
 void VBO::bind() {
     glBindBuffer(GL_ARRAY_BUFFER, this->vbo);
 }
-
-GLuint VBO::get() const {
-    return this->vbo;
-}

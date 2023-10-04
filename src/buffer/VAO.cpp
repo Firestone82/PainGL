@@ -20,8 +20,3 @@ void VAO::setVertexAttribPointer(int index, int size, GLenum type, GLboolean nor
 void VAO::bind() {
     glBindVertexArray(this->vao);
 }
-
-GLuint VAO::get() const {
-    return this->vao;
-}
-

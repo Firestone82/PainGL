@@ -17,7 +17,3 @@ void EBO::setData(std::vector<unsigned int> points, GLulong size, GLenum usage) 
 void EBO::bind() {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->ebo);
 }
-
-GLuint EBO::get() const {
-    return this->ebo;
-}
