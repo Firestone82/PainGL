@@ -19,4 +19,6 @@ class Program {
 
         void link();
         void use();
+
+        std::string toString();
 };

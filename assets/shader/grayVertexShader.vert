@@ -9,5 +9,5 @@ out vec3 fragColor;
 
 void main() {
     gl_Position =  projectionMatrix * viewMatrix * modelMatrix * vec4(inputPosition, 1.0);
-    fragColor = inputColor;
+    fragColor = vec3(200, 200, 200);
 }

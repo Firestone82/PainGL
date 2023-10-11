@@ -45,3 +45,18 @@ void Program::link() {
 void Program::use() {
     glUseProgram(this->program);
 }
+
+std::string Program::toString() {
+    std::string result = "";
+
+    for (auto shader: this->shaders) {
+        result += shader->getName() + ",";
+    }
+
+    std::string::size_type pos = result.find_last_of(",");
+    if (pos != std::string::npos) {
+        result.erase(pos, 1);
+    }
+
+    return result;
+}

@@ -2,8 +2,9 @@
 
 #include <utility>
 #include <stdexcept>
+#include <cmath>
 
-RenderableEntity::RenderableEntity(const std::string &name) {
+RenderableEntity::RenderableEntity(const std::string& name) {
     this->name = name;
 }
 
@@ -30,65 +31,46 @@ Program* RenderableEntity::getShaderProgram() const {
     return this->shaderProgram;
 }
 
-glm::mat4 RenderableEntity::getTransformationMatrix() const {
-    glm::mat4 modelMatrix = glm::mat4(1.0f);
-
-    // Set position
-    modelMatrix = glm::translate(modelMatrix, positionVector);
-
-    // Rotate model
-    modelMatrix = glm::rotate(modelMatrix, glm::radians(rotationVector.x), glm::vec3(1.0f, 0.0f, 0.0f));
-    modelMatrix = glm::rotate(modelMatrix, glm::radians(rotationVector.y), glm::vec3(0.0f, 1.0f, 0.0f));
-    modelMatrix = glm::rotate(modelMatrix, glm::radians(rotationVector.z), glm::vec3(0.0f, 0.0f, 1.0f));
-
-    // Scale model
-    modelMatrix = glm::scale(modelMatrix, scaleVector);
-
-    return modelMatrix;
+Transformation* RenderableEntity::getTransformation() {
+    return &this->transformation;
 }
 
-void RenderableEntity::setPosition(float x, float y, float z) {
-    this->positionVector = glm::vec3(x, y, z);
+void RenderableEntity::calculateTransformationMatrix() {
+    matrix = transformation.resultMatrix();
 }
 
-glm::vec3 RenderableEntity::getPosition() const {
-    return this->positionVector;
+glm::mat4 RenderableEntity::getTransformationMatrix() {
+    return this->matrix;
 }
 
-void RenderableEntity::setRotation(float x, float y, float z) {
-    this->rotationVector = glm::vec3(x, y, z);
+glm::vec3 RenderableEntity::getPosition() {
+    glm::mat4 mat = getTransformationMatrix();
 
-    this->rotationVector.x = fmod(this->rotationVector.x, 360.0f);
-    this->rotationVector.y = fmod(this->rotationVector.y, 360.0f);
-    this->rotationVector.z = fmod(this->rotationVector.z, 360.0f);
+    return {
+        mat[3][0],
+        mat[3][1],
+        mat[3][2]
+    };
 }
 
-glm::vec3 RenderableEntity::getRotation() const {
-    return this->rotationVector;
+glm::vec3 RenderableEntity::getRotation() {
+    glm::mat4 mat = getTransformationMatrix();
+
+    return {
+        glm::degrees(static_cast<float>(atan2(mat[2][1], mat[2][2]))),
+        glm::degrees(static_cast<float>(atan2(mat[2][0], sqrt(pow(mat[2][1], 2) + pow(mat[2][2], 2))))),
+        glm::degrees(static_cast<float>(atan2(mat[1][0], mat[0][0])))
+    };
 }
 
-void RenderableEntity::setScale(float x, float y, float z) {
-    this->scaleVector = glm::vec3(x, y, z);
+glm::vec3 RenderableEntity::getScale() {
+    glm::mat4 mat = getTransformationMatrix();
 
-    if (this->scaleVector.x < 0.0f) {
-        this->scaleVector.x = 0.0f;
-    }
-
-    if (this->scaleVector.y < 0.0f) {
-        this->scaleVector.y = 0.0f;
-    }
-
-    if (this->scaleVector.z < 0.0f) {
-        this->scaleVector.z = 0.0f;
-    }
-}
-
-void RenderableEntity::setScale(float scale) {
-    this->setScale(scale, scale, scale);
-}
-
-glm::vec3 RenderableEntity::getScale() const {
-    return this->scaleVector;
+    return {
+        static_cast<float>(sqrt(pow(mat[0][0], 2) + pow(mat[0][1], 2) + pow(mat[0][2], 2))),
+        static_cast<float>(sqrt(pow(mat[1][0], 2) + pow(mat[1][1], 2) + pow(mat[1][2], 2))),
+        static_cast<float>(sqrt(pow(mat[2][0], 2) + pow(mat[2][1], 2) + pow(mat[2][2], 2)))
+    };
 }
 
 void RenderableEntity::simulate(double deltaTime) {
@@ -97,9 +79,11 @@ void RenderableEntity::simulate(double deltaTime) {
     }
 }
 
-void RenderableEntity::draw(glm::mat4 modelViewProjection) {
+void RenderableEntity::draw(glm::mat4 viewMatrix, glm::mat4 projectionMatrix) {
     this->shaderProgram->use();
-    this->shaderProgram->setShaderVariableMatrix(modelViewProjection, "mvp");
+    this->shaderProgram->setShaderVariableMatrix(this->matrix, "modelMatrix");
+    this->shaderProgram->setShaderVariableMatrix(viewMatrix, "viewMatrix");
+    this->shaderProgram->setShaderVariableMatrix(projectionMatrix, "projectionMatrix");
     this->model->getVAO()->bind();
 
     if (this->model->hasIndices()) {
@@ -126,23 +110,8 @@ RenderableEntity::Builder* RenderableEntity::Builder::setShaderProgram(Program* 
     return this;
 }
 
-RenderableEntity::Builder* RenderableEntity::Builder::setPosition(float x, float y, float z) {
-    this->renderableEntity->positionVector = glm::vec3(x, y, z);
-    return this;
-}
-
-RenderableEntity::Builder* RenderableEntity::Builder::setRotation(float x, float y, float z) {
-    this->renderableEntity->rotationVector = glm::vec3(x, y, z);
-    return this;
-}
-
-RenderableEntity::Builder* RenderableEntity::Builder::setScale(float scale) {
-    this->renderableEntity->scaleVector = glm::vec3(scale, scale, scale);
-    return this;
-}
-
-RenderableEntity::Builder* RenderableEntity::Builder::setScale(float x, float y, float z) {
-    this->renderableEntity->scaleVector = glm::vec3(x, y, z);
+RenderableEntity::Builder* RenderableEntity::Builder::setTransformation(Transform::Composite* composite) {
+    this->renderableEntity->transformation.setTransformation(composite);
     return this;
 }
 

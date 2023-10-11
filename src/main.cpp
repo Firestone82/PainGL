@@ -8,59 +8,67 @@ int main() {
     Engine* engine = new Engine();
     engine->init();
 
-    engine->createScene(1280, 720, "PainGL: Project in ZPG");
+    engine->createScene(800, 800, "Oh, PainGL: Project in ZPG");
     engine->createEventHandler(engine->getScene()->getWindow());
     engine->createGUI(engine->getScene()->getWindow());
     engine->createModels("../assets/model/object");
     engine->createShaders("../assets/shader");
 
-    // Exit engine on ESCAPE key press
-    engine->getEventHandler()->addListener(new Listener<KeyPressEvent>([=](KeyPressEvent* event) {
-        if (event->getKey() == GLFW_KEY_ESCAPE && event->getAction() == GLFW_PRESS) {
-            engine->stop();
-        }
-    }));
-
-    // Exit engine on window close
-    engine->getEventHandler()->addListener(new Listener<WindowCloseEvent>([=](WindowCloseEvent* event) {
-        engine->stop();
-    }));
+    static float y = 0.0f;
+    static float x = 0.0f;
 
     engine->getScene()->renderEntity(
-            RenderableEntity::createEntity("Backpack")
-                    ->setModel(engine->getModelHandler()->getModel("backpack"))
-                    ->setShaderProgram(engine->getShaderHandler()->createProgram("fragmentShader", "vertexShader"))
-                    ->setSimulateFunction([=](RenderableEntity* entity, float deltaTime) {
-                        auto rotation = entity->getRotation();
-                        entity->setRotation(rotation.x, rotation.y + (45.0f * deltaTime), rotation.z);
-                    })
-                    ->setScale(0.25f)
-                    ->build()
-    );
-
-    engine->getScene()->renderEntity(
-            RenderableEntity::createEntity("M4")
-                    ->setModel(engine->getModelHandler()->getModel("m4"))
-                    ->setShaderProgram(engine->getShaderHandler()->createProgram("fragmentShader", "vertexShader"))
-                    ->setSimulateFunction([=](RenderableEntity* entity, float deltaTime) {
-                        auto rotation = entity->getRotation();
-                        entity->setRotation(rotation.x, rotation.y + (45.0f * deltaTime), rotation.z);
-                    })
-                    ->setPosition(-2.0f, 0.0f, 0.0f)
-                    ->setScale(0.25f)
-                    ->build()
-    );
+            RenderableEntity::createEntity("Sphere")
+                     ->setModel(engine->getModelHandler()->getModel("sphere"))
+                     ->setShaderProgram(engine->getShaderHandler()->createProgram("fragmentShader", "vertexShader"))
+                     ->setSimulateFunction([=](RenderableEntity* entity, float deltaTime) {
+                         entity->getTransformation()->setTransformation(new Transform::Composite({
+							 new Transform::Composite({
+								 new Transform::Rotation(0.0f, x, 0.0f),
+								 new Transform::Translate(0.0f, 1.0f, 2.0f),
+							 }),
+							 new Transform::Scale(0.5f),
+							 new Transform::Rotation(0.0f, x, 0.0f),
+                         }));
+                         x += 1;
+                     })
+                     ->build());
 
     engine->getScene()->renderEntity(
             RenderableEntity::createEntity("Suzi")
-                    ->setModel(engine->getModelHandler()->getModel("suzi"))
-                    ->setShaderProgram(engine->getShaderHandler()->createProgram("fragmentShader", "vertexShader"))
-                    ->setSimulateFunction([=](RenderableEntity* entity, float deltaTime) {
-                        auto rotation = entity->getRotation();
-                        entity->setRotation(rotation.x, rotation.y + (45.0f * deltaTime), rotation.z);
-                    })
-                    ->setPosition(2.0f, 0.0f, 0.0f)
-                    ->setScale(0.50f)
+                     ->setModel(engine->getModelHandler()->getModel("suzi"))
+                     ->setShaderProgram(engine->getShaderHandler()->createProgram("fragmentShader", "vertexShader"))
+                     ->setSimulateFunction([=](RenderableEntity* entity, float deltaTime) {
+                         entity->getTransformation()->setTransformation(new Transform::Composite({
+							 new Transform::Composite({
+								 new Transform::Rotation(0.0f, x, 0.0f),
+								 new Transform::Translate(0.0f, 1.0f, 2.0f),
+							 }),
+							 new Transform::Composite({
+								 new Transform::Rotation(0.0f, y, 0.0f),
+								 new Transform::Translate(0.0f, 1.0f, 2.0f),
+							}),
+							new Transform::Scale(0.5f),
+							new Transform::Rotation(0.0f, y, 0.0f),
+                         }));
+                         y += 1;
+                     })
+                     ->build());
+
+    engine->getScene()->renderEntity(
+            RenderableEntity::createEntity("grid20m20x20")
+                    ->setModel(engine->getModelHandler()->getModel("grid20m20x20"))
+                    ->setShaderProgram(engine->getShaderHandler()->createProgram("fragmentShader", "grayVertexShader"))
+                    ->build()
+    );
+
+    engine->getScene()->renderEntity(
+            RenderableEntity::createEntity("stred")
+                    ->setModel(engine->getModelHandler()->getModel("sphere"))
+                    ->setShaderProgram(engine->getShaderHandler()->createProgram("fragmentShader", "grayVertexShader"))
+                    ->setTransformation(new Transform::Composite({
+                        new Transform::Scale(0.1f),
+                    }))
                     ->build()
     );
 

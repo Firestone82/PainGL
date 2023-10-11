@@ -48,16 +48,12 @@ add_executable(myApp
         src/gui/imgui/imgui_widgets.cpp
         src/gui/imgui/imgui_tables.cpp
         src/gui/imgui/imgui_demo.cpp
-        src/gui/imgui/imgui_draw.cpp src/gui/GUI.cpp)
+        src/gui/imgui/imgui_draw.cpp
+        src/gui/GUIHandler.cpp
+        src/scene/camera/Camera.cpp
+        src/scene/camera/Camera.h src/scene/transform/Transformation.cpp)
 
 target_link_libraries(myApp glfw)
 target_link_libraries(myApp OpenGL::GL)
 target_link_libraries(myApp GLEW::GLEW)
 target_link_libraries(myApp assimp::assimp)
-
-add_executable(myTestApp
-        src/default.cpp)
-
-target_link_libraries(myTestApp glfw)
-target_link_libraries(myTestApp OpenGL::GL)
-target_link_libraries(myTestApp GLEW::GLEW)

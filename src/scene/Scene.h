@@ -12,7 +12,7 @@ class Scene {
 
         float fieldOfView = 45.0f;
         float aspectRatio = 4.0f / 3.0f;
-        glm::vec2 nearFarPlane = glm::vec2(0.1f, 100.0f);
+        glm::vec2 nearFarPlane = glm::vec2(0.01f, 100.0f);
 
     public:
         Scene(int width, int height, const char* title);

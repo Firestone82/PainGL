@@ -1,0 +1,369 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AemProjectConfiguration">
+    <option name="wasInitialized" value="true" />
+  </component>
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="CMakePresetLoader">{
+  &quot;useNewFormat&quot;: true
+}</component>
+  <component name="CMakeReloadState">
+    <option name="reloaded" value="true" />
+  </component>
+  <component name="CMakeRunConfigurationManager">
+    <generated>
+      <config projectName="ProjectZPG" targetName="myApp" />
+    </generated>
+  </component>
+  <component name="CMakeSettings">
+    <configurations>
+      <configuration PROFILE_NAME="Debug" ENABLED="true" CONFIG_NAME="Debug" />
+      <configuration PROFILE_NAME="Release" ENABLED="true" CONFIG_NAME="Release" />
+    </configurations>
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="c85e2223-f601-4ed1-a99a-ddff4e4b1862" name="Changes" comment="Minor improvements">
+      <change afterPath="$PROJECT_DIR$/assets/model/object/grid20m20x20.obj" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/shader/whiteVertexShader.vert" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/scene/transform/Transform.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/scene/transform/Transformation.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/default.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/engine/Engine.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/engine/Engine.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui/GUI.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/GUI.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/ModelHandler.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/ModelHandler.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/scene/Scene.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/scene/Scene.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/scene/Scene.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/scene/Scene.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/scene/entity/RenderableEntity.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/scene/entity/RenderableEntity.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/scene/entity/RenderableEntity.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/scene/entity/RenderableEntity.h" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ClangdSettings">
+    <option name="clangTidyViaClangd" value="false" />
+    <option name="formatViaClangd" value="false" />
+    <option name="clangWarnings" value="-Wno-unused-variable,-Wno-infinite-recursion,-Wno-array-bounds,-Werror=implicit-function-declaration,-Wno-shadow-field-in-constructor-modified,-Wno-shadow-ivar,-Wuninitialized,-Wunused-label,-Wunused-lambda-capture,-Wno-shadow" />
+  </component>
+  <component name="DarkyenusTimeTracker">
+    <option name="totalTimeSeconds" value="177230" />
+  </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Debug" />
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$USER_HOME$/AppData/Local/Msys2/mingw64/include/GL/glew.h" root0="SKIP_INSPECTION" />
+  </component>
+  <component name="ProjectApplicationVersion">
+    <option name="ide" value="CLion" />
+    <option name="majorVersion" value="2023" />
+    <option name="minorVersion" value="2.2" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 0
+}</component>
+  <component name="ProjectId" id="2Vbne9zn8qRqWfEzqABguXHEVWc" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.cidr.known.project.marker": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "WebServerToolWindowFactoryState": "true",
+    "cf.first.check.clang-format": "false",
+    "cidr.known.project.marker": "true",
+    "git-widget-placeholder": "master",
+    "ignore.virus.scanning.warn.message": "true",
+    "last_opened_file_path": "C:/Users/Pavel/OneDrive - VSB-TUO/Skola/Vysoka/5-Semestr/ZPG/Project/assets/model/object",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "CPPToolchains",
+    "structure.view.defaults.are.configured": "true",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Pavel\OneDrive - VSB-TUO\Skola\Vysoka\5-Semestr\ZPG\Project\assets\model\object" />
+      <recent name="C:\Users\Pavel\OneDrive - VSB-TUO\Skola\Vysoka\5-Semestr\ZPG\Project\assets\model" />
+      <recent name="C:\Users\Pavel\OneDrive - VSB-TUO\Skola\Vysoka\5-Semestr\ZPG\Project\assets\shader" />
+      <recent name="C:\Users\Pavel\OneDrive - VSB-TUO\Skola\Vysoka\5-Semestr\ZPG\Project\src\buffer" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Pavel\OneDrive - VSB-TUO\Skola\Vysoka\5-Semestr\ZPG\Project\src\gui\imgui" />
+      <recent name="C:\Users\Pavel\OneDrive - VSB-TUO\Skola\Vysoka\5-Semestr\ZPG\Project\src\gui\backend" />
+      <recent name="C:\Users\Pavel\OneDrive - VSB-TUO\Skola\Vysoka\5-Semestr\ZPG\Project\src\gui" />
+      <recent name="C:\Users\Pavel\OneDrive - VSB-TUO\Skola\Vysoka\5-Semestr\ZPG\Project\assets\model\object" />
+      <recent name="C:\Users\Pavel\OneDrive - VSB-TUO\Skola\Vysoka\5-Semestr\ZPG\Project\assets\model\headers" />
+    </key>
+  </component>
+  <component name="RunManager" selected="CMake Application.myApp External">
+    <configuration name="myApp External" type="CMakeRunConfiguration" factoryName="Application" activateToolWindowBeforeRun="false" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="true" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ProjectZPG" TARGET_NAME="myApp" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="ProjectZPG" RUN_TARGET_NAME="myApp">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="myApp" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ProjectZPG" TARGET_NAME="myApp" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="ProjectZPG" RUN_TARGET_NAME="myApp">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="CMake Application.myApp" />
+      <item itemvalue="CMake Application.myApp External" />
+    </list>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="c85e2223-f601-4ed1-a99a-ddff4e4b1862" name="Changes" comment="" />
+      <created>1695113740089</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1695113740089</updated>
+      <workItem from="1695113742235" duration="1521000" />
+      <workItem from="1695115308549" duration="3291000" />
+      <workItem from="1695119705668" duration="450000" />
+      <workItem from="1695132057766" duration="169000" />
+      <workItem from="1695664621284" duration="1569000" />
+      <workItem from="1695666277111" duration="50000" />
+      <workItem from="1695718474612" duration="6160000" />
+      <workItem from="1695726983210" duration="3406000" />
+      <workItem from="1695909116550" duration="761000" />
+      <workItem from="1695909894540" duration="518000" />
+      <workItem from="1695910429857" duration="3775000" />
+      <workItem from="1695926882087" duration="7358000" />
+      <workItem from="1695934922122" duration="1209000" />
+      <workItem from="1695975814032" duration="1355000" />
+      <workItem from="1695981383468" duration="2615000" />
+      <workItem from="1695997109863" duration="4224000" />
+      <workItem from="1696001388235" duration="24702000" />
+      <workItem from="1696060239946" duration="39162000" />
+      <workItem from="1696166206408" duration="1326000" />
+      <workItem from="1696176292736" duration="12583000" />
+      <workItem from="1696252883677" duration="24911000" />
+      <workItem from="1696278633655" duration="866000" />
+      <workItem from="1696317230830" duration="214000" />
+      <workItem from="1696322136417" duration="5561000" />
+      <workItem from="1696334489359" duration="232000" />
+      <workItem from="1696335302902" duration="66000" />
+      <workItem from="1696436786194" duration="337000" />
+      <workItem from="1696446727539" duration="82000" />
+      <workItem from="1696622191413" duration="2076000" />
+      <workItem from="1696666763219" duration="3937000" />
+      <workItem from="1696670760739" duration="8451000" />
+      <workItem from="1696700324770" duration="8356000" />
+      <workItem from="1696708784584" duration="112000" />
+      <workItem from="1696708984352" duration="4277000" />
+      <workItem from="1696760553709" duration="5915000" />
+      <workItem from="1696781556757" duration="4639000" />
+      <workItem from="1696835721746" duration="11246000" />
+      <workItem from="1696851958673" duration="1768000" />
+      <workItem from="1696872170989" duration="396000" />
+      <workItem from="1696876185746" duration="30000" />
+      <workItem from="1696876269649" duration="153000" />
+      <workItem from="1696876466294" duration="296000" />
+    </task>
+    <task id="LOCAL-00001" summary="Changed array into vector">
+      <created>1696177883402</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1696177883402</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Added EBO buffer">
+      <created>1696187734458</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1696187734458</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Code refactoring">
+      <created>1696189155245</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1696189155245</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Moved header models into folder">
+      <created>1696256453638</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1696256453638</updated>
+    </task>
+    <task id="LOCAL-00005" summary="Moved object models into folder">
+      <created>1696256467849</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1696256467849</updated>
+    </task>
+    <task id="LOCAL-00006" summary="Changed extension of shader">
+      <created>1696256486940</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1696256486940</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Added Logger pattern">
+      <created>1696256542434</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1696256542434</updated>
+    </task>
+    <task id="LOCAL-00008" summary="Refactoring">
+      <created>1696256561151</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1696256561151</updated>
+    </task>
+    <task id="LOCAL-00009" summary="Refactoring">
+      <created>1696256567729</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1696256567729</updated>
+    </task>
+    <task id="LOCAL-00010" summary="Refactoring">
+      <created>1696256578719</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1696256578719</updated>
+    </task>
+    <task id="LOCAL-00011" summary="Refactoring">
+      <created>1696256584856</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1696256584856</updated>
+    </task>
+    <task id="LOCAL-00012" summary="Refactored prints into Logger pattern.">
+      <created>1696258824405</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1696258824405</updated>
+    </task>
+    <task id="LOCAL-00013" summary="Fixed deltaTime conversion.">
+      <created>1696258910201</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1696258910201</updated>
+    </task>
+    <task id="LOCAL-00014" summary="Reworked Event Handler">
+      <created>1696265184658</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1696265184658</updated>
+    </task>
+    <task id="LOCAL-00015" summary="Fixed wrong data type">
+      <created>1696265408994</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1696265408994</updated>
+    </task>
+    <task id="LOCAL-00016" summary="Created GUI">
+      <created>1696272600150</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1696272600150</updated>
+    </task>
+    <task id="LOCAL-00017" summary="Fixed delta time callculation">
+      <created>1696272634201</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1696272634201</updated>
+    </task>
+    <task id="LOCAL-00018" summary="Minor improvments">
+      <created>1696272650030</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1696272650030</updated>
+    </task>
+    <task id="LOCAL-00019" summary="Added new table">
+      <created>1696277939879</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1696277939879</updated>
+    </task>
+    <task id="LOCAL-00020" summary="Removed getters.">
+      <created>1696436898509</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1696436898509</updated>
+    </task>
+    <task id="LOCAL-00021" summary="Minor improvements">
+      <created>1696436921346</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1696436921346</updated>
+    </task>
+    <option name="localTasksCounter" value="22" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="UnknownFeatures">
+    <option featureType="com.intellij.fileTypeFactory" implementationName="*.obj" />
+    <option featureType="com.intellij.fileTypeFactory" implementationName="*.model" />
+    <option featureType="com.intellij.fileTypeFactory" implementationName="*.frag" />
+  </component>
+  <component name="VCPKGProject">
+    <isAutomaticEditVcpkgJson value="false" />
+    <isAutomaticCheckingOnLaunch value="false" />
+    <isAutomaticFoundErrors value="true" />
+    <isAutomaticFoundErrors value="true" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Changed array into vector" />
+    <MESSAGE value="Added EBO buffer" />
+    <MESSAGE value="Code refactoring" />
+    <MESSAGE value="Moved header models into folder" />
+    <MESSAGE value="Moved object models into folder" />
+    <MESSAGE value="Changed extension of shader" />
+    <MESSAGE value="Added Logger pattern" />
+    <MESSAGE value="Refactoring" />
+    <MESSAGE value="Refactored prints into Logger pattern." />
+    <MESSAGE value="Fixed deltaTime conversion." />
+    <MESSAGE value="Reworked Event Handler" />
+    <MESSAGE value="Fixed wrong data type" />
+    <MESSAGE value="Created GUI" />
+    <MESSAGE value="Fixed delta time callculation" />
+    <MESSAGE value="Minor improvments" />
+    <MESSAGE value="Added new table" />
+    <MESSAGE value="Removed getters." />
+    <MESSAGE value="Minor improvements" />
+    <option name="LAST_COMMIT_MESSAGE" value="Minor improvements" />
+  </component>
+</project>

@@ -1,9 +1,8 @@
 #pragma once
 
-
 #include "../scene/Scene.h"
 #include "../listener/EventHandler.h"
-#include "../gui/GUI.h"
+#include "../gui/GUIHandler.h"
 #include "../shader/ShaderHandler.h"
 #include "../model/ModelHandler.h"
 
@@ -16,7 +15,7 @@ class Engine {
         double lastTime = 0;
 
         Scene* scene;
-        GUI* gui;
+        GUIHandler* guiHandler;
         EventHandler* eventHandler;
         ShaderHandler* shaderHandler;
         ModelHandler* modelHandler;
@@ -40,7 +39,7 @@ class Engine {
         EventHandler* getEventHandler();
 
         void createGUI(Window* window);
-        GUI* getGUI();
+        GUIHandler* getGUIHandler();
 
         void createShaders(const std::string& folderPath);
         ShaderHandler* getShaderHandler();

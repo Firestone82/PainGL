@@ -4,11 +4,10 @@
 #include "Engine.h"
 #include "../logger/Logger.h"
 
-#include "../../assets/model/header/sphere.h"
-#include "../../assets/model/header/suzi_flat.h"
-#include "../../assets/model/header/suzi_smooth.h"
-#include "../../assets/model/header/triangle.h"
+#include "../../assets/model/header/plain.h"
 #include "../../assets/model/header/pyramid.h"
+#include "../../assets/model/header/sphere.h"
+#include "../../assets/model/header/triangle.h"
 
 Engine* Engine::instance_ = nullptr;
 
@@ -20,8 +19,8 @@ Engine::~Engine() {
     delete this->scene;
     this->scene = nullptr;
 
-    delete this->gui;
-    this->gui = nullptr;
+    delete this->guiHandler;
+    this->guiHandler = nullptr;
 
     delete this->eventHandler;
     this->eventHandler = nullptr;
@@ -32,12 +31,16 @@ Engine::~Engine() {
     delete this->shaderHandler;
     this->shaderHandler = nullptr;
 
+    delete this->guiHandler;
+    this->guiHandler = nullptr;
+
+    Engine::instance_ = nullptr;
     glfwTerminate();
 }
 
 void Engine::init() {
     if (!glfwInit()) {
-        Logger::error("could not start GLFW3");
+        Logger::error("Could not start GLFW3.");
         exit(EXIT_FAILURE);
     }
 }
@@ -50,13 +53,13 @@ void Engine::run() {
         calculateDeltaTime();
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        this->gui->handle();
+        this->guiHandler->handle();
 
         this->scene->tick(this->deltaTime);
         this->scene->draw();
-        this->gui->render();
+        this->guiHandler->render();
 
-        this->gui->clear();
+        this->guiHandler->clear();
         glfwSwapBuffers(scene->getWindow()->get());
     }
 }
@@ -79,7 +82,7 @@ double Engine::getDeltaTime() const {
     return this->deltaTime;
 }
 
-void Engine::createScene(int width, int height, const char *title) {
+void Engine::createScene(int width, int height, const char* title) {
     this->scene = new Scene(width, height, title);
     this->scene->setAspectRatio((float) width / (float) height);
 
@@ -110,6 +113,18 @@ void Engine::createEventHandler(Window* window) {
         this->scene->getWindow()->setWidth(event->getWidth());
         this->scene->getWindow()->setHeight(event->getHeight());
     }));
+
+    // Exit engine on ESCAPE key press
+    this->eventHandler->addListener(new Listener<KeyPressEvent>([=](KeyPressEvent* event) {
+        if (event->getKey() == GLFW_KEY_ESCAPE && event->getAction() == GLFW_PRESS) {
+            Engine::getInstance()->stop();
+        }
+    }));
+
+    // Exit engine on window close
+    this->eventHandler->addListener(new Listener<WindowCloseEvent>([=](WindowCloseEvent* event) {
+        Engine::getInstance()->stop();
+    }));
 }
 
 EventHandler* Engine::getEventHandler() {
@@ -117,11 +132,11 @@ EventHandler* Engine::getEventHandler() {
 }
 
 void Engine::createGUI(Window* window) {
-    this->gui = new GUI(window);
+    this->guiHandler = new GUIHandler(window);
 }
 
-GUI* Engine::getGUI() {
-    return this->gui;
+GUIHandler* Engine::getGUIHandler() {
+    return this->guiHandler;
 }
 
 void Engine::createShaders(const std::string& folderPath) {
@@ -138,11 +153,10 @@ void Engine::createModels(const std::string& folderPath) {
     this->modelHandler = new ModelHandler();
     this->modelHandler->loadModelFolder(folderPath,".obj");
 
-//    this->modelHandler->loadModelVariable("suziFlat", suziFlat);
-//    this->modelHandler->loadModelVariable("suziSmooth", suziSmooth);
-//    this->modelHandler->loadModelVariable("sphere", sphere);
-//    this->modelHandler->loadModelVariable("triangle", triangle);
-//    this->modelHandler->loadModelVariable("pyramid", pyramid);
+    this->modelHandler->loadModelVariable("plain", plain);
+    this->modelHandler->loadModelVariable("pyramid", pyramid);
+    this->modelHandler->loadModelVariable("sphere", sphere);
+    this->modelHandler->loadModelVariable("triangle", triangle);
 }
 
 ModelHandler* Engine::getModelHandler() {

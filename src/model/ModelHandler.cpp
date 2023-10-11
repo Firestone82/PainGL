@@ -62,7 +62,7 @@ void ModelHandler::loadModelFile(const std::string &name, const std::string &pat
         }
     }
 
-    Model* model = nullptr;
+    Model *model = nullptr;
     try {
         model = new Model(name, points, indices);
     } catch (const std::exception &e) {
@@ -74,7 +74,7 @@ void ModelHandler::loadModelFile(const std::string &name, const std::string &pat
     Logger::info(" - Successfully loaded model. Size: %zu (%dB)", model->getPoints().size(), model->getSize());
 }
 
-void ModelHandler::loadModelVariable(const std::string &name, const std::vector<float>& points) {
+void ModelHandler::loadModelVariable(const std::string &name, const std::vector<float> &points) {
     Logger::info(R"(Loading model "%s")", name.c_str());
 
     Model* model = nullptr;

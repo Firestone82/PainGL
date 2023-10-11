@@ -6,10 +6,10 @@
 #include "imgui/backend/imgui_impl_glfw.h"
 #include "imgui/backend/imgui_impl_opengl3.h"
 
-class GUI {
+class GUIHandler {
     public:
-        explicit GUI(Window* window);
-        ~GUI();
+        explicit GUIHandler(Window* window);
+        ~GUIHandler();
 
         void handle();
         void render();

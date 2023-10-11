@@ -1,5 +1,4 @@
 #include "Scene.h"
-#include "../engine/Engine.h"
 
 Scene::Scene(int width, int height, const char* title) {
     this->window = new Window(width, height, title);
@@ -14,26 +13,27 @@ void Scene::renderEntity(RenderableEntity* entity) {
 }
 
 void Scene::draw() {
-    // Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
+    // Projection matrix
     glm::mat4 projection = glm::perspective(
-            glm::radians(this->fieldOfView),
-            this->aspectRatio,
-            this->nearFarPlane.x, this->nearFarPlane.y);
+            glm::radians(this->fieldOfView),           // 45° Field of View
+            this->aspectRatio,                                // 4:3 ratio
+            this->nearFarPlane.x, this->nearFarPlane.y); // display range : 0.1 unit <-> 100 units
 
     // Camera matrix
     glm::mat4 view = glm::lookAt(
-            glm::vec3(0, 0, 4), // Camera is at (4,3,-3), in World Space
-            glm::vec3(0, 0, 0), // and looks at the origin
-            glm::vec3(0, 1, 0)  // Head is up (set to 0,-1,0 to look upside-down)
+            glm::vec3(0.003, 15, 0), // Camera is at (4,3,-3), in World Space
+            glm::vec3(0, 0, 0),    // and looks at the origin
+            glm::vec3(0, 1, 0)        // Head is up (set to 0,-1,0 to look upside-down)
     );
 
-    for (auto &entity: this->entities) {
-        entity->draw(projection * view * entity->getTransformationMatrix());
+    for (const auto &entity: this->entities) {
+        entity->calculateTransformationMatrix();
+        entity->draw(view, projection);
     }
 }
 
 void Scene::tick(double deltaTime) {
-    for (auto &entity: this->entities) {
+    for (const auto &entity: this->entities) {
         entity->simulate(deltaTime);
     }
 }

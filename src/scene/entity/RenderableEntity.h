@@ -2,9 +2,19 @@
 
 #include "../../model/model/Model.h"
 #include "../../shader/program/Program.h"
+#include "../transform/Transformation.h"
 #include <string>
 #include <glm/glm.hpp>
 #include <functional>
+
+#include <glm/vec3.hpp> // glm::vec3
+#include <glm/vec4.hpp> // glm::vec4
+#include <glm/mat4x4.hpp> // glm::mat4
+#include <glm/gtc/matrix_transform.hpp> // glm::translate, glm::rotate, glm::scale, glm::perspective
+#include <glm/gtc/type_ptr.hpp> // glm::value_ptr
+
+#include <utility>
+#include <vector>
 
 class RenderableEntity {
     private:
@@ -12,9 +22,8 @@ class RenderableEntity {
         Model* model = nullptr;
         Program* shaderProgram = nullptr;
 
-        glm::vec3 positionVector = glm::vec3(0.0f);
-        glm::vec3 rotationVector = glm::vec3(0.0f);
-        glm::vec3 scaleVector = glm::vec3(1.0f);
+        Transformation transformation = Transformation();
+        glm::mat4 matrix = glm::mat4(1.0f);
 
         std::function<void(RenderableEntity*, double)> simulateFunction = nullptr;
 
@@ -29,20 +38,16 @@ class RenderableEntity {
         Model* getModel() const;
         Program* getShaderProgram() const;
 
-        glm::mat4 getTransformationMatrix() const;
+        Transformation* getTransformation();
+        void calculateTransformationMatrix();
+        glm::mat4 getTransformationMatrix();
 
-        void setPosition(float x, float y, float z);
-        glm::vec3 getPosition() const;
-
-        void setRotation(float x, float y, float z);
-        glm::vec3 getRotation() const;
-
-        void setScale(float scale);
-        void setScale(float x, float y, float z);
-        glm::vec3 getScale() const;
+        glm::vec3 getPosition();
+        glm::vec3 getRotation();
+        glm::vec3 getScale();
 
         void simulate(double deltaTime);
-        void draw(glm::mat4 modelView);
+        void draw(glm::mat4 viewMatrix, glm::mat4 projectionMatrix);
 
         class Builder {
             private:
@@ -54,11 +59,7 @@ class RenderableEntity {
                 Builder* setModel(Model* model);
                 Builder* setShaderProgram(Program* shaderProgram);
 
-                Builder* setPosition(float x, float y, float z);
-                Builder* setRotation(float x, float y, float z);
-                Builder* setScale(float scale);
-                Builder* setScale(float x, float y, float z);
-
+                Builder* setTransformation(Transform::Composite* composite);
                 Builder* setSimulateFunction(std::function<void(RenderableEntity*, float)> simulateFunction);
 
                 RenderableEntity* build();
