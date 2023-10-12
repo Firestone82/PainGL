@@ -21,6 +21,9 @@ class Window {
         void setHeight(int height);
         int getHeight() const;
 
+		bool shouldClose() const;
+		void swapBuffers();
+
         const char* getTitle();
         GLFWwindow* get();
 };

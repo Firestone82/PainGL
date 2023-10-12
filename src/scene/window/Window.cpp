@@ -38,6 +38,14 @@ int Window::getHeight() const {
     return this->height;
 }
 
+bool Window::shouldClose() const {
+	return glfwWindowShouldClose(this->window);
+}
+
+void Window::swapBuffers() {
+	glfwSwapBuffers(this->window);
+}
+
 const char *Window::getTitle() {
     return this->title;
 }

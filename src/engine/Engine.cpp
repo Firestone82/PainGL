@@ -49,7 +49,7 @@ void Engine::run() {
     while (this->running) {
         glfwPollEvents();
 
-        this->running = !glfwWindowShouldClose(scene->getWindow()->get());
+        this->running = !this->scene->getWindow()->shouldClose();
         calculateDeltaTime();
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -60,7 +60,7 @@ void Engine::run() {
         this->guiHandler->render();
 
         this->guiHandler->clear();
-        glfwSwapBuffers(scene->getWindow()->get());
+        this->scene->getWindow()->swapBuffers();
     }
 }
 
