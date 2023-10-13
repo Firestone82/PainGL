@@ -1,4 +1,4 @@
-#include "EBO.h"
+#include "buffer/EBO.h"
 
 EBO::EBO() {
     this->ebo = 0;
