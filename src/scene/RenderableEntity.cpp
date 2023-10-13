@@ -1,4 +1,4 @@
-#include "RenderableEntity.h"
+#include "scene/RenderableEntity.h"
 
 #include <utility>
 #include <stdexcept>

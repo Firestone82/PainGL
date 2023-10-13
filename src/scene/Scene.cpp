@@ -1,4 +1,4 @@
-#include "Scene.h"
+#include "scene/Scene.h"
 
 Scene::Scene(int width, int height, const char* title) {
     this->windowHandler = new WindowHandler(width, height, title);

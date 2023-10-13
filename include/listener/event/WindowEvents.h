@@ -1,14 +1,14 @@
 #pragma once
 
-#include "../structure/Event.h"
-#include "../structure/EventType.h"
+#include "listener/structure/Event.h"
+#include "listener/structure/EventType.h"
 
 class WindowFocusEvent : public Event {
     private:
         bool focused;
 
     public:
-        WindowFocusEvent(bool focused) : Event(EventType::WINDOW_FOCUS), focused(focused) {}
+        explicit WindowFocusEvent(bool focused) : Event(EventType::WINDOW_FOCUS), focused(focused) {}
 
         bool isFocused() const {
             return focused;
@@ -20,7 +20,7 @@ class WindowIconifyEvent : public Event {
         bool iconified;
 
     public:
-        WindowIconifyEvent(bool iconified) : Event(EventType::WINDOW_ICONIFY), iconified(iconified) {}
+        explicit WindowIconifyEvent(bool iconified) : Event(EventType::WINDOW_ICONIFY), iconified(iconified) {}
 
         bool isIconified() const {
             return iconified;

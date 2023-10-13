@@ -1,5 +1,5 @@
-#include "ModelHandler.h"
-#include "../logger/Logger.h"
+#include "model/ModelHandler.h"
+#include "Logger.h"
 
 #include <filesystem>
 #include <assimp/Importer.hpp>

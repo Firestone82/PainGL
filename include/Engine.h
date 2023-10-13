@@ -1,10 +1,10 @@
 #pragma once
 
-#include "../scene/Scene.h"
-#include "../listener/EventHandler.h"
+#include "scene/Scene.h"
+#include "listener/EventHandler.h"
 #include "GUIHandler.h"
-#include "../shader/ShaderHandler.h"
-#include "../model/ModelHandler.h"
+#include "shader/ShaderHandler.h"
+#include "model/ModelHandler.h"
 
 class Engine {
     private:

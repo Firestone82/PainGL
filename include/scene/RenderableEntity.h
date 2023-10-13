@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../../model/model/Model.h"
-#include "../../shader/program/Program.h"
-#include "../transform/Transformation.h"
+#include "model/Model.h"
+#include "shader/Program.h"
+#include "Transformation.h"
 #include <string>
 #include <glm/glm.hpp>
 #include <functional>

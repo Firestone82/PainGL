@@ -1,5 +1,5 @@
 #include "GUIHandler.h"
-#include "../engine/Engine.h"
+#include "Engine.h"
 
 float topPadding = 15.0f;
 

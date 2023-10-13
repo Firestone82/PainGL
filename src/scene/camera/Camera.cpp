@@ -1,5 +1,5 @@
-#include "Camera.h"
-#include "../../../logger/Logger.h"
+#include "scene/camera/Camera.h"
+#include "Logger.h"
 
 #include <glm/glm.hpp>
 

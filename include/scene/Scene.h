@@ -1,8 +1,8 @@
 #pragma once
 
-#include "window/WindowHandler.h"
-#include "entity/RenderableEntity.h"
-#include "camera/CameraHandler.h"
+#include "scene/WindowHandler.h"
+#include "scene/RenderableEntity.h"
+#include "scene/camera/CameraHandler.h"
 #include <vector>
 #include <glm/glm.hpp>
 

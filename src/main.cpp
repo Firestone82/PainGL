@@ -1,5 +1,5 @@
-#include "engine/Engine.h"
-#include "logger/Logger.h"
+#include "Engine.h"
+#include "Logger.h"
 #include <iostream>
 
 int main() {

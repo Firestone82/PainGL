@@ -2,7 +2,7 @@
 #include <GLFW/glfw3.h>
 
 #include "Engine.h"
-#include "../logger/Logger.h"
+#include "Logger.h"
 
 #include "../../assets/model/header/plain.h"
 #include "../../assets/model/header/pyramid.h"

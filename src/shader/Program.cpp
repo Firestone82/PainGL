@@ -1,6 +1,6 @@
 #include "GL/glew.h"
-#include "Program.h"
-#include "../../logger/Logger.h"
+#include "shader/Program.h"
+#include "Logger.h"
 
 Program::Program() {
     this->program = glCreateProgram();

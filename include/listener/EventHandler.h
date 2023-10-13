@@ -12,11 +12,11 @@
 #include "structure/Listener.h"
 #include "structure/Event.h"
 
-#include "event/KeyboardEvents.h"
-#include "event/MouseEvents.h"
-#include "event/WindowEvents.h"
+#include "listener/event/KeyboardEvents.h"
+#include "listener/event/MouseEvents.h"
+#include "listener/event/WindowEvents.h"
 
-#include "input/Input.h"
+#include "Input.h"
 
 class EventHandler {
     private:

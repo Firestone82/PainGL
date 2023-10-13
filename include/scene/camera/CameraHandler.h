@@ -1,6 +1,6 @@
 #pragma once
 
-#include "camera/Camera.h"
+#include "Camera.h"
 
 class CameraHandler {
 	private:

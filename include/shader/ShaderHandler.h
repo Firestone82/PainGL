@@ -1,7 +1,7 @@
 #pragma once
 
 #include "shader/Shader.h"
-#include "program/Program.h"
+#include "Program.h"
 #include <vector>
 
 class ShaderHandler {

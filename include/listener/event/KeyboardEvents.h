@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../structure/Event.h"
-#include "../structure/EventType.h"
+#include "listener/structure/Event.h"
+#include "listener/structure/EventType.h"
 
 class KeyPressEvent : public Event {
     private:
@@ -11,8 +11,7 @@ class KeyPressEvent : public Event {
         int mods;
 
     public:
-        KeyPressEvent(int key, int scancode, int action, int mods)
-            : Event(EventType::KEY_PRESS), key(key), scancode(scancode), action(action), mods(mods) {}
+        KeyPressEvent(int key, int scancode, int action, int mods) : Event(EventType::KEY_PRESS), key(key), scancode(scancode), action(action), mods(mods) {}
 
         int getKey() const {
             return key;

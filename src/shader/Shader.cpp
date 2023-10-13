@@ -1,5 +1,5 @@
-#include "Shader.h"
-#include "../../logger/Logger.h"
+#include "shader/Shader.h"
+#include "Logger.h"
 
 Shader::Shader(const std::string& name, GLenum type, const char* source) {
     this->name = name;

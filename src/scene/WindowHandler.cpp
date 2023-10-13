@@ -1,6 +1,6 @@
-#include "WindowHandler.h"
-#include "../../listener/EventHandler.h"
-#include "../../logger/Logger.h"
+#include "scene/WindowHandler.h"
+#include "listener/EventHandler.h"
+#include "Logger.h"
 
 #include <glm/vec2.hpp>
 

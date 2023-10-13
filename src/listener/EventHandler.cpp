@@ -1,5 +1,5 @@
-#include "EventHandler.h"
-#include "../logger/Logger.h"
+#include "listener/EventHandler.h"
+#include "Logger.h"
 
 std::vector<ListenerBase*> EventHandler::listeners;
 

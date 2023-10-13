@@ -1,4 +1,4 @@
-#include "Model.h"
+#include "model/Model.h"
 #include <GL/glew.h>
 
 Model::Model(const std::string &name, const std::vector<float> &data) {

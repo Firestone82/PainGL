@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../src/scene/window/WindowHandler.h"
+#include "scene/WindowHandler.h"
 
 #include "imgui/imgui.h"
 #include "imgui/backend/imgui_impl_glfw.h"

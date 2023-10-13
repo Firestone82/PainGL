@@ -1,6 +1,6 @@
-#include "CameraHandler.h"
-#include "../../logger/Logger.h"
-#include "../../engine/Engine.h"
+#include "scene/camera/CameraHandler.h"
+#include "Logger.h"
+#include "Engine.h"
 
 #include <GL/glew.h>
 

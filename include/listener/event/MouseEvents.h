@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../structure/Event.h"
-#include "../structure/EventType.h"
+#include "listener/structure/Event.h"
+#include "listener/structure/EventType.h"
 
 #include <GL/glew.h>
 #include <glm/vec2.hpp>
