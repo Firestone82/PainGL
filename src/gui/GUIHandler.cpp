@@ -1,15 +1,84 @@
 #include "GUIHandler.h"
 #include "../engine/Engine.h"
 
+void drawFrames() {
+	int frameFlags = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoSavedSettings;
+	ImGui::Begin("Frames", nullptr, frameFlags);
+	ImGui::SetWindowPos(ImVec2(15, 15));
+
+	ImGui::Text("Frame Rate: %0.2f fps", ImGui::GetIO().Framerate);
+	ImGui::Text("Frame Time: %0.3f ms", 1000.0f / ImGui::GetIO().Framerate);
+	ImGui::Text("Delta Time: %0.5f ns", Engine::getInstance()->getDeltaTime());
+
+	ImGui::End();
+}
+
+void drawCrosshair() {
+	float height = Engine::getInstance()->getScene()->getWindowHandler()->getHeight();
+	float width = Engine::getInstance()->getScene()->getWindowHandler()->getWidth();
+
+	int crosshairFlags = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoMouseInputs;
+	ImGui::Begin("Crosshair", nullptr, crosshairFlags);
+	ImGui::SetWindowPos(ImVec2(width / 2 - 5, height / 2 - 5));
+
+	ImGui::Text("X");
+
+	ImGui::End();
+}
+
+void drawAuthor() {
+	int authorFlags = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoSavedSettings;
+	ImGui::Begin("Author", nullptr, authorFlags);
+	ImGui::SetWindowPos(ImVec2(15, Engine::getInstance()->getScene()->getWindowHandler()->getHeight() - ImGui::GetWindowHeight() - 15));
+
+	ImGui::Text("Author: Pavel Mikula, MIK0486");
+	ImGui::Text("Version: 1.0.0");
+
+	ImGui::End();
+}
+
+void drawCamera() {
+	Engine* engine = Engine::getInstance();
+	Camera* camera = engine->getScene()->getCameraHandler()->getCamera();
+
+	int environmentFlags = ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoSavedSettings | (engine->getScene()->getWindowHandler()->isCursorEnabled() ? 0 : ImGuiWindowFlags_NoMouseInputs);
+	ImGui::Begin("Camera", nullptr, environmentFlags);
+	ImGui::SetWindowPos(ImVec2(engine->getScene()->getWindowHandler()->getWidth() - ImGui::GetWindowWidth() - 15, 15));
+
+	if (ImGui::BeginTable("cameraTable", 4, ImGuiTableFlags_SizingStretchSame | ImGuiTableFlags_BordersOuter | ImGuiTableFlags_BordersV | ImGuiTableFlags_ContextMenuInBody)) {
+		ImGui::TableSetupColumn("property", ImGuiTableColumnFlags_WidthFixed, 100.0f);
+
+		ImGui::TableNextColumn();
+		ImGui::Text("Position");
+		for (int i = 0; i < 3; i++) {
+			ImGui::TableNextColumn();
+			ImGui::Text("%7.2f", camera->getPosition()[i]);
+		}
+
+		ImGui::TableNextColumn();
+		ImGui::Text("Target");
+		for (int i = 0; i < 3; i++) {
+			ImGui::TableNextColumn();
+			ImGui::Text("%7.2f", camera->getTarget()[i]);
+		}
+
+		ImGui::EndTable();
+	}
+
+	ImGui::Text("Camera Pitch / Yaw: %0.2f / %0.2f", camera->getPitch(), camera->getYaw());
+
+	ImGui::End();
+}
+
 void draw(Transform::Composite* trans, int indent = 0);
 void drawTooltip(Transform::Component* t);
 
-GUIHandler::GUIHandler(Window* window) {
+GUIHandler::GUIHandler(WindowHandler* window) {
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
 
     // Setup Platform/Renderer backends
-    ImGui_ImplGlfw_InitForOpenGL(window->get(), true);
+    ImGui_ImplGlfw_InitForOpenGL(window->getWindow(), true);
     ImGui_ImplOpenGL3_Init();
 }
 
@@ -26,19 +95,18 @@ void GUIHandler::handle() {
 }
 
 void GUIHandler::render() {
-    int height = Engine::getInstance()->getScene()->getWindow()->getHeight();
+	Engine* engine = Engine::getInstance();
+    int height = engine->getScene()->getWindowHandler()->getHeight();
+	int width = engine->getScene()->getWindowHandler()->getWidth();
 
 //    ImGui::ShowDemoWindow();
 
-    int frameFlags = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoSavedSettings;
-    ImGui::Begin("Frames", nullptr, frameFlags);
-    ImGui::SetWindowPos(ImVec2(15, 15));
-    ImGui::Text("Frame Rate: %0.2f fps", ImGui::GetIO().Framerate);
-    ImGui::Text("Frame Time: %0.3f ms", 1000.0f / ImGui::GetIO().Framerate);
-    ImGui::Text("Delta Time: %0.5f ns", Engine::getInstance()->getDeltaTime());
-    ImGui::End();
+    drawFrames();
+	drawAuthor();
+	drawCrosshair();
+	drawCamera();
 
-    ImGui::Begin("Entities", nullptr, ImGuiWindowFlags_NoSavedSettings);
+    ImGui::Begin("Entities", nullptr, ImGuiWindowFlags_NoSavedSettings | (engine->getScene()->getWindowHandler()->isCursorEnabled() ? 0 : ImGuiWindowFlags_NoMouseInputs));
     ImGui::SetWindowPos(ImVec2(15, 95), ImGuiCond_FirstUseEver);
     ImGui::SetWindowSize(ImVec2(0, 0));
 
@@ -128,13 +196,6 @@ void GUIHandler::render() {
         }
     }
 
-    ImGui::End();
-
-    int authorFlags = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoSavedSettings;
-    ImGui::Begin("Author", nullptr, authorFlags);
-    ImGui::SetWindowPos(ImVec2(15, height - 65));
-    ImGui::Text("Author: Pavel Mikula, MIK0486");
-    ImGui::Text("Version: 1.0.0");
     ImGui::End();
 }
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../scene/window/Window.h"
+#include "../scene/window/WindowHandler.h"
 
 #include "imgui/imgui.h"
 #include "imgui/backend/imgui_impl_glfw.h"
@@ -8,7 +8,7 @@
 
 class GUIHandler {
     public:
-        explicit GUIHandler(Window* window);
+        explicit GUIHandler(WindowHandler* window);
         ~GUIHandler();
 
         void handle();
