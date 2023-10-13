@@ -4,16 +4,18 @@
 #include <GLFW/glfw3.h>
 #include <fstream>
 
-class Window {
+class WindowHandler {
     private:
         int width;
         int height;
         const char* title;
         GLFWwindow* window;
 
+		bool cursorEnabled = true;
+
     public:
-        Window(int width, int height, const char* title);
-        ~Window();
+        WindowHandler(int width, int height, const char* title);
+        ~WindowHandler();
 
         void setWidth(int width);
         int getWidth() const;
@@ -24,6 +26,11 @@ class Window {
 		bool shouldClose() const;
 		void swapBuffers();
 
+		void setCursorEnabled(bool enabled);
+		bool isCursorEnabled() const;
+
+		void setCursorLocation(double x, double y);
+
         const char* getTitle();
-        GLFWwindow* get();
+        GLFWwindow* getWindow();
 };
