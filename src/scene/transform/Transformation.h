@@ -22,8 +22,9 @@ namespace Transform {
         public:
             explicit Component(Transform::Type type) : type(type) {}
             virtual glm::mat4 resultMatrix() const = 0;
+			virtual ~Component() = default;
 
-            virtual void calculate();
+            virtual void calculate() = 0;
             Transform::Type getType() const;
     };
 
@@ -36,6 +37,7 @@ namespace Transform {
         public:
             /* -- */ Rotation(float x, float y, float z);
             explicit Rotation(glm::vec3 rotationVector);
+			/* - */ ~Rotation() override = default;
 
             glm::vec3 getVector();
             glm::mat4 resultMatrix() const override;
@@ -51,6 +53,7 @@ namespace Transform {
         public:
             /* -- */ Translate(float x, float y, float z);
             explicit Translate(glm::vec3 translationVector);
+			/* - */ ~Translate() override = default;
 
             glm::vec3 getVector();
             glm::mat4 resultMatrix() const override;
@@ -65,6 +68,7 @@ namespace Transform {
             explicit Scale(float scale);
             explicit Scale(glm::vec3 scaleVector);
             /* -- */ Scale(float x, float y, float z);
+			/* - */ ~Scale() override = default;
 
             glm::vec3 getVector();
             glm::mat4 resultMatrix() const override;
@@ -75,13 +79,15 @@ namespace Transform {
             std::vector<Component*> transforms;
             void calculate() override;
 
-        public:
+	    public:
             explicit Composite(const std::vector<Component*> &transforms);
+	        /* - */ ~Composite() override;
 
             std::vector<Component*>& get();
             glm::mat4 resultMatrix() const override;
 
             bool isEmpty();
+
     };
 };
 
@@ -92,6 +98,7 @@ class Transformation {
     public:
         /* -- */ Transformation();
         explicit Transformation(Transform::Composite* composite);
+		/* - */ ~Transformation();
 
         void setTransformation(Transform::Composite* composite);
         Transform::Composite* get();

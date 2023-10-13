@@ -35,10 +35,10 @@ class Engine {
         void createScene(int width, int height, const char *title);
         Scene* getScene();
 
-        void createEventHandler(Window* window);
+        void createEventHandler();
         EventHandler* getEventHandler();
 
-        void createGUI(Window* window);
+        void createGUI(WindowHandler* window);
         GUIHandler* getGUIHandler();
 
         void createShaders(const std::string& folderPath);

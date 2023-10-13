@@ -49,7 +49,7 @@ void Engine::run() {
     while (this->running) {
         glfwPollEvents();
 
-        this->running = !this->scene->getWindow()->shouldClose();
+        this->running = !this->scene->getWindowHandler()->shouldClose();
         calculateDeltaTime();
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -60,7 +60,7 @@ void Engine::run() {
         this->guiHandler->render();
 
         this->guiHandler->clear();
-        this->scene->getWindow()->swapBuffers();
+	    this->scene->getWindowHandler()->swapBuffers();
     }
 }
 
@@ -98,27 +98,29 @@ void Engine::createScene(int width, int height, const char* title) {
     glDepthFunc(GL_LEQUAL);                                     // Set the type of depth-test
     glShadeModel(GL_SMOOTH);                                   // Enable smooth shading
     glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);  // Nice perspective corrections
+
+	glfwSwapInterval(1);
 }
 
 Scene* Engine::getScene() {
     return this->scene;
 }
 
-void Engine::createEventHandler(Window* window) {
-    this->eventHandler = new EventHandler(window->get());
+void Engine::createEventHandler() {
+	this->eventHandler = new EventHandler();
 
-    // Window resize listener
+    // WindowHandler resize listener
     this->eventHandler->addListener(new Listener<WindowResizeEvent>([=](WindowResizeEvent* event) {
-        glViewport(0, 0, event->getWidth(), event->getHeight());
-        this->scene->setAspectRatio((float) event->getWidth() / (float) event->getHeight());
-        this->scene->getWindow()->setWidth(event->getWidth());
-        this->scene->getWindow()->setHeight(event->getHeight());
+        this->scene->getCameraHandler()->setAspectRatio(event->getWidth(), event->getHeight());
+	    this->scene->getCameraHandler()->calculateProjectionMatrix();
+	    this->scene->getWindowHandler()->setWidth(event->getWidth());
+	    this->scene->getWindowHandler()->setHeight(event->getHeight());
     }));
 
-    // Exit engine on ESCAPE key press
+    // Toggle cursor on escape key press
     this->eventHandler->addListener(new Listener<KeyPressEvent>([=](KeyPressEvent* event) {
         if (event->getKey() == GLFW_KEY_ESCAPE && event->getAction() == GLFW_PRESS) {
-            Engine::getInstance()->stop();
+            this->scene->getWindowHandler()->setCursorEnabled(!this->scene->getWindowHandler()->isCursorEnabled());
         }
     }));
 
@@ -132,7 +134,7 @@ EventHandler* Engine::getEventHandler() {
     return this->eventHandler;
 }
 
-void Engine::createGUI(Window* window) {
+void Engine::createGUI(WindowHandler* window) {
     this->guiHandler = new GUIHandler(window);
 }
 

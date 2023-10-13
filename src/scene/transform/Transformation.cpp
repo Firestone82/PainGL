@@ -98,6 +98,12 @@ namespace Transform {
         calculate();
     }
 
+	Composite::~Composite() {
+		for (const auto &transform: transforms) {
+			delete transform;
+		}
+	}
+
     void Composite::calculate() {
         matrix = glm::mat4(1.0f);
 
@@ -129,7 +135,12 @@ Transformation::Transformation(Transform::Composite* composite) {
     this->transform = composite;
 }
 
+Transformation::~Transformation() {
+	delete this->transform;
+}
+
 void Transformation::setTransformation(Transform::Composite* composite) {
+	delete this->transform;
     this->transform = composite;
 }
 

@@ -20,7 +20,7 @@ class EventHandler {
         static std::vector<ListenerBase*> listeners;
 
     public:
-        explicit EventHandler(GLFWwindow* window);
+        EventHandler();
         ~EventHandler();
 
         template<typename EventType>

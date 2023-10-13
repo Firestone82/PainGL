@@ -8,9 +8,9 @@ int main() {
     Engine* engine = new Engine();
     engine->init();
 
-    engine->createScene(800, 800, "Oh, PainGL: Project in ZPG");
-    engine->createEventHandler(engine->getScene()->getWindow());
-    engine->createGUI(engine->getScene()->getWindow());
+    engine->createEventHandler();
+    engine->createScene(1280, 920, "Oh, PainGL: Project in ZPG");
+    engine->createGUI(engine->getScene()->getWindowHandler());
     engine->createModels("../assets/model/object");
     engine->createShaders("../assets/shader");
 
