@@ -7,7 +7,9 @@
 
 class Scene {
     private:
-        Window* window;
+        WindowHandler* windowHandler;
+		CameraHandler* cameraHandler;
+
         std::vector<RenderableEntity*> entities;
 
         float fieldOfView = 45.0f;
@@ -23,11 +25,8 @@ class Scene {
         void draw();
         void tick(double deltaTime);
 
-        void setFieldOfView(float fieldOfView);
-        float getFieldOfView() const;
-
-        void setAspectRatio(float aspectRatio);
-        float getAspectRatio() const;
+        WindowHandler* getWindowHandler();
+		CameraHandler* getCameraHandler();
 
         void setNearFarPlane(glm::vec2 nearFarPlane);
         glm::vec2 getNearFarPlane() const;

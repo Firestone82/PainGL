@@ -84,7 +84,8 @@ double Engine::getDeltaTime() const {
 
 void Engine::createScene(int width, int height, const char* title) {
     this->scene = new Scene(width, height, title);
-    this->scene->setAspectRatio((float) width / (float) height);
+    this->scene->getCameraHandler()->setAspectRatio(width, height);
+	this->scene->getCameraHandler()->calculateProjectionMatrix();
 
     // Start GLEW extension handler
     glewExperimental = GL_TRUE;

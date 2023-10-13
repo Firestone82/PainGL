@@ -1,7 +1,8 @@
 #include "Scene.h"
 
 Scene::Scene(int width, int height, const char* title) {
-    this->window = new Window(width, height, title);
+    this->windowHandler = new WindowHandler(width, height, title);
+	this->cameraHandler = new CameraHandler({2, 3, 2}, {0, 0, 0});
 }
 
 Scene::~Scene() {
@@ -33,6 +34,8 @@ void Scene::draw() {
 }
 
 void Scene::tick(double deltaTime) {
+	cameraHandler->update();
+
     for (const auto &entity: this->entities) {
         entity->simulate(deltaTime);
     }
@@ -54,16 +57,8 @@ float Scene::getAspectRatio() const {
     return this->aspectRatio;
 }
 
-void Scene::setNearFarPlane(glm::vec2 nearFarPlane) {
-    this->nearFarPlane = nearFarPlane;
-}
-
-glm::vec2 Scene::getNearFarPlane() const {
-    return this->nearFarPlane;
-}
-
-Window* Scene::getWindow() {
-    return this->window;
+CameraHandler* Scene::getCameraHandler() {
+	return this->cameraHandler;
 }
 
 const std::vector<RenderableEntity*>& Scene::getEntities() {
