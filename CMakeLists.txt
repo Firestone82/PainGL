@@ -29,7 +29,7 @@ add_compile_options(
 add_executable(myApp
         src/main.cpp
         src/engine/Engine.cpp
-        src/scene/window/Window.cpp
+        src/scene/window/WindowHandler.cpp
         src/scene/Scene.cpp
         src/listener/EventHandler.cpp
         src/buffer/VBO.cpp
@@ -50,8 +50,8 @@ add_executable(myApp
         src/gui/imgui/imgui_demo.cpp
         src/gui/imgui/imgui_draw.cpp
         src/gui/GUIHandler.cpp
-        src/scene/camera/Camera.cpp
-        src/scene/camera/Camera.h src/scene/transform/Transformation.cpp)
+        src/scene/camera/camera/Camera.cpp
+        src/scene/camera/camera/Camera.h src/scene/transform/Transformation.cpp src/scene/camera/CameraHandler.cpp src/scene/camera/CameraHandler.h)
 
 target_link_libraries(myApp glfw)
 target_link_libraries(myApp OpenGL::GL)
