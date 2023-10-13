@@ -3,21 +3,24 @@
 #include "../structure/Event.h"
 #include "../structure/EventType.h"
 
+#include <GL/glew.h>
+#include <glm/vec2.hpp>
+
 class MousePositionEvent : public Event {
     private:
-        double x;
-        double y;
+        glm::vec2 oldPosition;
+		glm::vec2 newPosition;
 
     public:
-        MousePositionEvent(double x, double y) : Event(EventType::MOUSE_POSITION), x(x), y(y) {}
+        MousePositionEvent(glm::vec2 oldPosition, glm::vec2 newPosition) : Event(EventType::MOUSE_POSITION), oldPosition(oldPosition), newPosition(newPosition) {}
 
-        double getX() const {
-            return x;
-        }
+        glm::vec2 getOldPosition() const {
+			return oldPosition;
+		}
 
-        double getY() const {
-            return y;
-        }
+		glm::vec2 getNewPosition() const {
+			return newPosition;
+		}
 };
 
 class MouseButtonEvent : public Event {
