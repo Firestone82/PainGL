@@ -79,7 +79,7 @@ void drawCamera() {
 	ImGui::Begin("Camera", nullptr, environmentFlags);
 	ImGui::SetWindowPos(ImVec2(15.0f,topPadding));
 
-	if (ImGui::BeginTable("cameraTable", 5, ImGuiTableFlags_SizingStretchSame | ImGuiTableFlags_BordersOuter | ImGuiTableFlags_BordersV | ImGuiTableFlags_ContextMenuInBody)) {
+	if (ImGui::BeginTable("cameraTable", 4, ImGuiTableFlags_SizingStretchSame | ImGuiTableFlags_BordersOuter | ImGuiTableFlags_BordersV | ImGuiTableFlags_ContextMenuInBody)) {
 		ImGui::TableSetupColumn("property", ImGuiTableColumnFlags_WidthFixed, 65.0f);
 
 		ImGui::TableNextColumn();
@@ -100,7 +100,7 @@ void drawCamera() {
 	}
 
 	ImGui::Text("Rotation: %7.2f Pitch / %7.2f Yaw", camera->getPitch(), camera->getYaw());
-	ImGui::Text("Resolution: %d x %d (%f:%f)", engine->getScene()->getWindowHandler()->getWidth(), engine->getScene()->getWindowHandler()->getHeight());
+	ImGui::Text("Resolution: %d x %d", engine->getScene()->getWindowHandler()->getWidth(), engine->getScene()->getWindowHandler()->getHeight());
 
 	topPadding += ImGui::GetWindowHeight() + 15;
 
@@ -270,7 +270,7 @@ void GUIHandler::handle() {
 void GUIHandler::render() {
 	topPadding = 15.0f;
 
-//    ImGui::ShowDemoWindow();
+    ImGui::ShowDemoWindow();
 
     drawFrames();
 	drawCamera();

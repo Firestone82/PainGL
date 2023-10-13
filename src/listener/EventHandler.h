@@ -6,6 +6,7 @@
 #include <vector>
 #include <functional>
 #include <iostream>
+#include <map>
 
 #include "structure/EventType.h"
 #include "structure/Listener.h"
@@ -15,9 +16,12 @@
 #include "event/MouseEvents.h"
 #include "event/WindowEvents.h"
 
+#include "input/Input.h"
+
 class EventHandler {
     private:
         static std::vector<ListenerBase*> listeners;
+		Input* input;
 
     public:
         EventHandler();
@@ -37,4 +41,6 @@ class EventHandler {
 
             delete event;
         }
+
+		Input* getInput();
 };

@@ -34,17 +34,17 @@ class WindowCloseEvent : public Event {
 
 class WindowResizeEvent : public Event {
     private:
-        int width;
-        int height;
+        glm::vec2 oldSize;
+		glm::vec2 newSize;
 
     public:
-        WindowResizeEvent(int width, int height) : Event(EventType::WINDOW_RESIZE), width(width), height(height) {}
+        WindowResizeEvent(glm::vec2 oldSize, glm::vec2 newSize) : Event(EventType::WINDOW_RESIZE), oldSize(oldSize), newSize(newSize) {}
 
-        int getWidth() const {
-            return width;
-        }
+        glm::vec2 getOldSize() const {
+			return oldSize;
+		}
 
-        int getHeight() const {
-            return height;
-        }
+		glm::vec2 getNewSize() const {
+			return newSize;
+		}
 };

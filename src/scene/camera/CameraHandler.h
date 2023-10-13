@@ -29,5 +29,5 @@ class CameraHandler {
 		glm::mat4 getProjectionMatrix();
 
 		Camera* getCamera();
-		void update();
+		void update(double deltaTime);
 };

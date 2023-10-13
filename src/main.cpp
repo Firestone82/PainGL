@@ -55,6 +55,19 @@ int main() {
                      })
                      ->build());
 
+	engine->getScene()->renderEntity(
+            RenderableEntity::createEntity("Suzi")
+                     ->setModel(engine->getModelHandler()->getModel("suzi"))
+                     ->setShaderProgram(engine->getShaderHandler()->createProgram("fragmentShader", "vertexShader"))
+                     ->setSimulateFunction([=](RenderableEntity* entity, float deltaTime) {
+                         entity->getTransformation()->setTransformation(new Transform::Composite({
+							 new Transform::Translate(engine->getScene()->getCameraHandler()->getCamera()->getPosition()),
+							 new Transform::Translate(0.0f, 0.0f, 3.0f),
+							 new Transform::Rotation(0.0f, 180.0f, 0.0f),
+                         }));
+                     })
+                     ->build());
+
     engine->getScene()->renderEntity(
             RenderableEntity::createEntity("grid20m20x20")
                     ->setModel(engine->getModelHandler()->getModel("grid20m20x20"))

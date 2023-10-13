@@ -2,7 +2,7 @@
 
 Scene::Scene(int width, int height, const char* title) {
     this->windowHandler = new WindowHandler(width, height, title);
-	this->cameraHandler = new CameraHandler({2, 3, 2}, {0, 0, 0});
+	this->cameraHandler = new CameraHandler({2, 3, 10000000}, {0, 0, 0});
 }
 
 Scene::~Scene() {
@@ -28,7 +28,7 @@ void Scene::draw() {
 }
 
 void Scene::tick(double deltaTime) {
-	cameraHandler->update();
+	cameraHandler->update(deltaTime);
 
     for (const auto &entity: this->entities) {
         entity->simulate(deltaTime);

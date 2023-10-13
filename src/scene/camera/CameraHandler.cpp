@@ -8,20 +8,6 @@ CameraHandler::CameraHandler(glm::vec3 position, glm::vec3 target) {
 	this->camera = new Camera(position, target);
 
 	Engine* engine = Engine::getInstance();
-	engine->getEventHandler()->addListener(new Listener<KeyPressEvent>([=](KeyPressEvent* event) {
-		if (event->getKey() == GLFW_KEY_W) {
-			this->camera->setPosition(this->camera->getPosition() + glm::vec3(0.0f, 0.0f, 10 * engine->getDeltaTime()));
-		} else if (event->getKey() == GLFW_KEY_S) {
-			this->camera->setPosition(this->camera->getPosition() + glm::vec3(0.0f, 0.0f, -10 * engine->getDeltaTime()));
-		} else if (event->getKey() == GLFW_KEY_A) {
-			this->camera->setPosition(this->camera->getPosition() + glm::vec3(-10 * engine->getDeltaTime(), 0.0f, 0.0f));
-		} else if (event->getKey() == GLFW_KEY_D) {
-			this->camera->setPosition(this->camera->getPosition() + glm::vec3(10 * engine->getDeltaTime(), 0.0f, 0.0f));
-		}
-
-		camera->calculateViewMatrix();
-	}));
-
 	engine->getEventHandler()->addListener(new Listener<MousePositionEvent>([=](MousePositionEvent* event) {
 		if (engine->getScene()->getWindowHandler()->isCursorEnabled()) return;
 
@@ -82,6 +68,29 @@ Camera* CameraHandler::getCamera() {
 	return this->camera;
 }
 
-void CameraHandler::update() {
+void CameraHandler::update(double deltaTime) {
+	EventHandler* eventHandler = Engine::getInstance()->getEventHandler();
+	if (!(eventHandler->getInput()->isKeyPressed(GLFW_KEY_W)
+		|| eventHandler->getInput()->isKeyPressed(GLFW_KEY_A)
+        || eventHandler->getInput()->isKeyPressed(GLFW_KEY_S)
+		|| eventHandler->getInput()->isKeyPressed(GLFW_KEY_D)
+		|| eventHandler->getInput()->isKeyPressed(GLFW_KEY_SPACE)
+		|| eventHandler->getInput()->isKeyPressed(GLFW_KEY_LEFT_SHIFT)))
+		return;
 
+	glm::vec3 direction = glm::normalize(glm::vec3(this->camera->getTarget().x,0.0f, this->camera->getTarget().z ));
+	glm::vec3 right = glm::normalize(glm::cross(direction, {0.0f, 1.0f, 0.0f}));
+	glm::vec3 up = glm::normalize(glm::cross(right, direction));
+
+	glm::vec3 movement = glm::vec3(0.0f, 0.0f, 0.0f);
+	if (eventHandler->getInput()->isKeyPressed(GLFW_KEY_W)) movement += direction;
+	if (eventHandler->getInput()->isKeyPressed(GLFW_KEY_A)) movement -= right;
+	if (eventHandler->getInput()->isKeyPressed(GLFW_KEY_S)) movement -= direction;
+	if (eventHandler->getInput()->isKeyPressed(GLFW_KEY_D)) movement += right;
+
+	if (eventHandler->getInput()->isKeyPressed(GLFW_KEY_SPACE)) movement += up;
+	if (eventHandler->getInput()->isKeyPressed(GLFW_KEY_LEFT_SHIFT)) movement -= up;
+
+	this->camera->setPosition(this->camera->getPosition() + movement * static_cast<float>(deltaTime) * 5.0f);
+	this->camera->calculateViewMatrix();
 }

@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../../buffer/VAO.h"
-#include "../../buffer/VBO.h"
-#include "../../buffer/EBO.h"
+#include "buffer/VAO.h"
+#include "buffer/VBO.h"
+#include "buffer/EBO.h"
 #include <string>
 #include <glm/glm.hpp>
 

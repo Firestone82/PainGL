@@ -111,10 +111,10 @@ void Engine::createEventHandler() {
 
     // WindowHandler resize listener
     this->eventHandler->addListener(new Listener<WindowResizeEvent>([=](WindowResizeEvent* event) {
-        this->scene->getCameraHandler()->setAspectRatio(event->getWidth(), event->getHeight());
+        this->scene->getCameraHandler()->setAspectRatio(event->getNewSize()[0], event->getNewSize()[1]);
 	    this->scene->getCameraHandler()->calculateProjectionMatrix();
-	    this->scene->getWindowHandler()->setWidth(event->getWidth());
-	    this->scene->getWindowHandler()->setHeight(event->getHeight());
+	    this->scene->getWindowHandler()->setWidth(event->getNewSize()[0]);
+	    this->scene->getWindowHandler()->setHeight(event->getNewSize()[1]);
     }));
 
     // Toggle cursor on escape key press

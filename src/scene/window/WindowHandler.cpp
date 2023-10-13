@@ -19,12 +19,6 @@ WindowHandler::WindowHandler(int width, int height, const char *title) {
 		EventHandler::callEvent(new KeyPressEvent(key, scancode, action, mods));
 	});
 
-	static glm::vec2 lastMousePosition = glm::vec2(0.0f, 0.0f);
-	glfwSetCursorPosCallback(window, [](GLFWwindow* window, double xpos, double ypos) {
-		EventHandler::callEvent(new MousePositionEvent(lastMousePosition, glm::vec2(xpos, ypos)));
-		lastMousePosition = glm::vec2(xpos, ypos);
-	});
-
 	glfwSetMouseButtonCallback(window, [](GLFWwindow* window, int button, int action, int mods) {
 		EventHandler::callEvent(new MouseButtonEvent(button, action, mods));
 	});
@@ -41,8 +35,16 @@ WindowHandler::WindowHandler(int width, int height, const char *title) {
 		EventHandler::callEvent(new WindowCloseEvent());
 	});
 
+	static glm::vec2 lastMousePosition = glm::vec2(0.0f, 0.0f);
+	glfwSetCursorPosCallback(window, [](GLFWwindow* window, double xpos, double ypos) {
+		EventHandler::callEvent(new MousePositionEvent(lastMousePosition, glm::vec2(xpos, ypos)));
+		lastMousePosition = glm::vec2(xpos, ypos);
+	});
+
+	static glm::vec2 lastWindowSize = glm::vec2(0.0f, 0.0f);
 	glfwSetWindowSizeCallback(window, [](GLFWwindow* window, int width, int height) {
-		EventHandler::callEvent(new WindowResizeEvent(width, height));
+		EventHandler::callEvent(new WindowResizeEvent(lastWindowSize, glm::vec2(width, height)));
+		lastWindowSize = glm::vec2(width, height);
 	});
 
     glfwMakeContextCurrent(this->window);

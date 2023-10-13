@@ -2,7 +2,7 @@
 
 #include "../scene/Scene.h"
 #include "../listener/EventHandler.h"
-#include "../gui/GUIHandler.h"
+#include "GUIHandler.h"
 #include "../shader/ShaderHandler.h"
 #include "../model/ModelHandler.h"
 

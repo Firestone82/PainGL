@@ -26,32 +26,10 @@ add_compile_options(
         -Wno-missing-field-initializers
 )
 
-add_executable(myApp
-        src/main.cpp
-        src/engine/Engine.cpp
-        src/scene/window/WindowHandler.cpp
-        src/scene/Scene.cpp
-        src/listener/EventHandler.cpp
-        src/buffer/VBO.cpp
-        src/buffer/VAO.cpp
-        src/buffer/EBO.cpp
-        src/shader/shader/Shader.cpp
-        src/shader/program/Program.cpp
-        src/model/model/Model.cpp
-        src/scene/entity/RenderableEntity.cpp
-        src/shader/ShaderHandler.cpp
-        src/model/ModelHandler.cpp
-        src/logger/Logger.cpp
-        src/gui/imgui/backend/imgui_impl_glfw.cpp
-        src/gui/imgui/backend/imgui_impl_opengl3.cpp
-        src/gui/imgui/imgui.cpp
-        src/gui/imgui/imgui_widgets.cpp
-        src/gui/imgui/imgui_tables.cpp
-        src/gui/imgui/imgui_demo.cpp
-        src/gui/imgui/imgui_draw.cpp
-        src/gui/GUIHandler.cpp
-        src/scene/camera/camera/Camera.cpp
-        src/scene/camera/camera/Camera.h src/scene/transform/Transformation.cpp src/scene/camera/CameraHandler.cpp src/scene/camera/CameraHandler.h)
+file(GLOB_RECURSE myApp_SRC "src/*.cpp" "include/*.cpp")
+add_executable(myApp ${myApp_SRC})
+
+target_include_directories(myApp PUBLIC include)
 
 target_link_libraries(myApp glfw)
 target_link_libraries(myApp OpenGL::GL)
