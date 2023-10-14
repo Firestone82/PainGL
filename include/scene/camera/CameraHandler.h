@@ -10,6 +10,10 @@ class CameraHandler {
 		float aspectRatio = 4.0f / 3.0f;
 		glm::vec2 nearFarPane = {0.01f, 100.0f};
 
+		bool moving = false;
+		float sensitivity = 1.0f;
+		float speed = 5.0f;
+
 		glm::mat4 projectionMatrix = glm::mat4(1.0f);
 
 	public:
@@ -30,4 +34,13 @@ class CameraHandler {
 
 		Camera* getCamera();
 		void update(double deltaTime);
+
+		bool isMoving() const;
+		void setMoving(bool moving);
+
+		void setSensitivity(float sensitivity);
+		float getSensitivity() const;
+
+		void setSpeed(float speed);
+		float getSpeed() const;
 };

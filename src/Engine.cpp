@@ -4,10 +4,10 @@
 #include "Engine.h"
 #include "Logger.h"
 
-#include "../../assets/model/header/plain.h"
-#include "../../assets/model/header/pyramid.h"
-#include "../../assets/model/header/sphere.h"
-#include "../../assets/model/header/triangle.h"
+#include "../assets/model/header/plain.h"
+#include "../assets/model/header/pyramid.h"
+#include "../assets/model/header/sphere.h"
+#include "../assets/model/header/triangle.h"
 
 Engine* Engine::instance_ = nullptr;
 
@@ -46,6 +46,8 @@ void Engine::init() {
 }
 
 void Engine::run() {
+	bool consoleOpen = false;
+
     while (this->running) {
         glfwPollEvents();
 
@@ -57,7 +59,18 @@ void Engine::run() {
 
         this->scene->tick(this->deltaTime);
         this->scene->draw();
-        this->guiHandler->render();
+
+		if (this->guiHandler->isShown()) {
+            this->guiHandler->render();
+		}
+
+		if (this->guiHandler->isDemoShown()) {
+			ImGui::ShowDemoWindow(&this->guiHandler->showDemo);
+		}
+
+	    if (this->consoleHandler->isShown()) {
+		    this->consoleHandler->render();
+	    }
 
         this->guiHandler->clear();
 	    this->scene->getWindowHandler()->swapBuffers();
@@ -84,7 +97,7 @@ double Engine::getDeltaTime() const {
 
 void Engine::createScene(int width, int height, const char* title) {
     this->scene = new Scene(width, height, title);
-    this->scene->getCameraHandler()->setAspectRatio(width, height);
+    this->scene->getCameraHandler()->setAspectRatio(static_cast<float>(width), static_cast<float>(height));
 	this->scene->getCameraHandler()->calculateProjectionMatrix();
 
     // Start GLEW extension handler
@@ -113,15 +126,8 @@ void Engine::createEventHandler() {
     this->eventHandler->addListener(new Listener<WindowResizeEvent>([=](WindowResizeEvent* event) {
         this->scene->getCameraHandler()->setAspectRatio(event->getNewSize()[0], event->getNewSize()[1]);
 	    this->scene->getCameraHandler()->calculateProjectionMatrix();
-	    this->scene->getWindowHandler()->setWidth(event->getNewSize()[0]);
-	    this->scene->getWindowHandler()->setHeight(event->getNewSize()[1]);
-    }));
-
-    // Toggle cursor on escape key press
-    this->eventHandler->addListener(new Listener<KeyPressEvent>([=](KeyPressEvent* event) {
-        if (event->getKey() == GLFW_KEY_ESCAPE && event->getAction() == GLFW_PRESS) {
-            this->scene->getWindowHandler()->setCursorEnabled(!this->scene->getWindowHandler()->isCursorEnabled());
-        }
+	    this->scene->getWindowHandler()->setWidth(static_cast<int>(event->getNewSize()[0]));
+	    this->scene->getWindowHandler()->setHeight(static_cast<int>(event->getNewSize()[1]));
     }));
 
     // Exit engine on window close
@@ -164,6 +170,14 @@ void Engine::createModels(const std::string& folderPath) {
 
 ModelHandler* Engine::getModelHandler() {
     return this->modelHandler;
+}
+
+void Engine::createConsole() {
+	this->consoleHandler = new ConsoleHandler("Console");
+}
+
+ConsoleHandler* Engine::getConsoleHandler() {
+	return this->consoleHandler;
 }
 
 void Engine::setVersion(int major, int minor, bool forwardCompat, int profile) {

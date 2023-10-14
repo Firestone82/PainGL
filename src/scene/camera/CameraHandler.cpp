@@ -8,18 +8,37 @@ CameraHandler::CameraHandler(glm::vec3 position, glm::vec3 target) {
 	this->camera = new Camera(position, target);
 
 	Engine* engine = Engine::getInstance();
+
+	engine->getEventHandler()->addListener(new Listener<KeyPressEvent>([=](KeyPressEvent* event) {
+		if (event->getKey() == GLFW_KEY_ESCAPE && event->getAction() == GLFW_PRESS && !engine->getConsoleHandler()->isShown()) {
+			setMoving(!isMoving());
+		}
+	}));
+
 	engine->getEventHandler()->addListener(new Listener<MousePositionEvent>([=](MousePositionEvent* event) {
-		if (engine->getScene()->getWindowHandler()->isCursorEnabled()) return;
+		Engine* engine = Engine::getInstance();
+
+		if (!this->moving) return;
+		if (engine->getConsoleHandler()->isShown()) return;
 
 		float deltaX = event->getNewPosition().x - event->getOldPosition().x;
 		float deltaY = event->getNewPosition().y - event->getOldPosition().y;
 
 		if (deltaX != 0 || deltaY != 0) {
-			this->camera->setPitch(this->camera->getPitch() + -deltaY * 0.1f);
-			this->camera->setYaw(this->camera->getYaw() + deltaX * 0.1f);
-
+			this->camera->setPitch(this->camera->getPitch() + -deltaY * this->sensitivity / 10);
+			this->camera->setYaw(this->camera->getYaw() + deltaX * this->sensitivity / 10);
 			this->camera->setTarget(this->camera->getYaw(), this->camera->getPitch());
 		}
+	}));
+
+	engine->getEventHandler()->addListener(new Listener<MouseScrollEvent>([=](MouseScrollEvent* event) {
+		if (!this->moving) return;
+		if (engine->getConsoleHandler()->isShown()) return;
+
+		this->fov -= event->getOffset().y;
+		if (this->fov < 1.0f) this->fov = 1.0f;
+		if (this->fov > 120.0f) this->fov = 120.0f;
+		this->calculateProjectionMatrix();
 	}));
 }
 
@@ -69,7 +88,13 @@ Camera* CameraHandler::getCamera() {
 }
 
 void CameraHandler::update(double deltaTime) {
-	EventHandler* eventHandler = Engine::getInstance()->getEventHandler();
+	Engine* engine = Engine::getInstance();
+
+	if (!this->moving) return;
+	if (engine->getConsoleHandler()->isShown()) return;
+
+
+	EventHandler* eventHandler = engine->getEventHandler();
 	if (!(eventHandler->getInput()->isKeyPressed(GLFW_KEY_W)
 		|| eventHandler->getInput()->isKeyPressed(GLFW_KEY_A)
         || eventHandler->getInput()->isKeyPressed(GLFW_KEY_S)
@@ -91,6 +116,33 @@ void CameraHandler::update(double deltaTime) {
 	if (eventHandler->getInput()->isKeyPressed(GLFW_KEY_SPACE)) movement += up;
 	if (eventHandler->getInput()->isKeyPressed(GLFW_KEY_LEFT_SHIFT)) movement -= up;
 
-	this->camera->setPosition(this->camera->getPosition() + movement * static_cast<float>(deltaTime) * 5.0f);
+	this->camera->setPosition(this->camera->getPosition() + movement * static_cast<float>(deltaTime) * this->speed);
 	this->camera->calculateViewMatrix();
+}
+
+bool CameraHandler::isMoving() const {
+	return this->moving;
+}
+
+void CameraHandler::setMoving(bool moving) {
+	this->moving = moving;
+
+	Engine* engine = Engine::getInstance();
+	engine->getScene()->getWindowHandler()->setCursorEnabled(!moving);
+}
+
+void CameraHandler::setSensitivity(float sensitivity) {
+	this->sensitivity = sensitivity;
+}
+
+float CameraHandler::getSensitivity() const {
+	return this->sensitivity;
+}
+
+void CameraHandler::setSpeed(float speed) {
+	this->speed = speed;
+}
+
+float CameraHandler::getSpeed() const {
+	return this->speed;
 }

@@ -270,8 +270,6 @@ void GUIHandler::handle() {
 void GUIHandler::render() {
 	topPadding = 15.0f;
 
-    ImGui::ShowDemoWindow();
-
     drawFrames();
 	drawCamera();
 	drawEntities();
@@ -282,4 +280,20 @@ void GUIHandler::render() {
 void GUIHandler::clear() {
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+}
+
+void GUIHandler::setShow(bool show) {
+	this->showGui = show;
+}
+
+bool GUIHandler::isShown() const {
+	return this->showGui;
+}
+
+void GUIHandler::setDemoShow(bool show) {
+	this->showDemo = show;
+}
+
+bool GUIHandler::isDemoShown() const {
+	return this->showDemo;
 }

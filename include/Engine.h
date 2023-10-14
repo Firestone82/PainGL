@@ -2,23 +2,25 @@
 
 #include "scene/Scene.h"
 #include "listener/EventHandler.h"
-#include "GUIHandler.h"
 #include "shader/ShaderHandler.h"
 #include "model/ModelHandler.h"
+#include "GUIHandler.h"
+#include "console/ConsoleHandler.h"
 
 class Engine {
     private:
         static Engine* instance_;
 
         bool running = true;
-        double deltaTime = 0;
         double lastTime = 0;
+        double deltaTime = 0;
 
         Scene* scene;
         GUIHandler* guiHandler;
         EventHandler* eventHandler;
         ShaderHandler* shaderHandler;
         ModelHandler* modelHandler;
+		ConsoleHandler* consoleHandler;
 
     public:
         Engine();
@@ -46,6 +48,9 @@ class Engine {
 
         void createModels(const std::string& folderPath);
         ModelHandler* getModelHandler();
+
+		void createConsole();
+		ConsoleHandler* getConsoleHandler();
 
         void setVersion(int major, int minor, bool forwardCompat, int profile);
         void info();

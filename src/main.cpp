@@ -13,6 +13,7 @@ int main() {
     engine->createGUI(engine->getScene()->getWindowHandler());
     engine->createModels("../assets/model/object");
     engine->createShaders("../assets/shader");
+	engine->createConsole();
 
     static float y = 0.0f;
     static float x = 0.0f;
