@@ -9,7 +9,7 @@ Camera::Camera(glm::vec3 position, glm::vec3 target) {
 }
 
 void Camera::setPitch(float pitch) {
-	this->pitch = glm::clamp(pitch, -89.99f, 89.99f);
+	this->pitch = glm::clamp(pitch, -89.999f, 89.9999f);
 }
 
 float Camera::getPitch() const {
