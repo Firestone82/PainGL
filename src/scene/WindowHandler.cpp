@@ -35,6 +35,10 @@ WindowHandler::WindowHandler(int width, int height, const char *title) {
 		EventHandler::callEvent(new WindowCloseEvent());
 	});
 
+	glfwSetScrollCallback(window, [](GLFWwindow* window, double xoffset, double yoffset) {
+		EventHandler::callEvent(new MouseScrollEvent(glm::vec2(xoffset, yoffset)));
+	});
+
 	static glm::vec2 lastMousePosition = glm::vec2(0.0f, 0.0f);
 	glfwSetCursorPosCallback(window, [](GLFWwindow* window, double xpos, double ypos) {
 		EventHandler::callEvent(new MousePositionEvent(lastMousePosition, glm::vec2(xpos, ypos)));

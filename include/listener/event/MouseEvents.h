@@ -23,6 +23,18 @@ class MousePositionEvent : public Event {
 		}
 };
 
+class MouseScrollEvent : public Event {
+	private:
+		glm::vec2 offset;
+
+	public:
+		explicit MouseScrollEvent(glm::vec2 offset) : Event(EventType::MOUSE_SCROLL), offset(offset) {}
+
+		glm::vec2 getOffset() const {
+			return offset;
+		}
+};
+
 class MouseButtonEvent : public Event {
     private:
         int button;
