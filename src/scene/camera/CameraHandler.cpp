@@ -2,8 +2,6 @@
 #include "Logger.h"
 #include "Engine.h"
 
-#include <GL/glew.h>
-
 CameraHandler::CameraHandler(glm::vec3 position, glm::vec3 target) {
 	this->camera = new Camera(position, target);
 
@@ -54,9 +52,8 @@ float CameraHandler::getFov() const {
 	return this->fov;
 }
 
-void CameraHandler::setAspectRatio(float width, float height) {
-	this->aspectRatio = width / height;
-	glViewport(0, 0, static_cast<int>(width), static_cast<int>(height));
+void CameraHandler::setAspectRatio(int width, int height) {
+	this->aspectRatio = width / (float) height;
 }
 
 float CameraHandler::getAspectRatio() const {
@@ -77,6 +74,8 @@ void CameraHandler::calculateProjectionMatrix() {
 			this->aspectRatio,
 			this->nearFarPane[0], this->nearFarPane[1]
 	);
+
+	// TODO: Update projection matrix in every shader program
 }
 
 glm::mat4 CameraHandler::getProjectionMatrix() {
@@ -93,7 +92,6 @@ void CameraHandler::update(double deltaTime) {
 	if (!this->moving) return;
 	if (engine->getConsoleHandler()->isShown()) return;
 
-
 	EventHandler* eventHandler = engine->getEventHandler();
 	if (!(eventHandler->getInput()->isKeyPressed(GLFW_KEY_W)
 		|| eventHandler->getInput()->isKeyPressed(GLFW_KEY_A)
@@ -103,7 +101,7 @@ void CameraHandler::update(double deltaTime) {
 		|| eventHandler->getInput()->isKeyPressed(GLFW_KEY_LEFT_SHIFT)))
 		return;
 
-	glm::vec3 direction = glm::normalize(glm::vec3(this->camera->getTarget().x,0.0f, this->camera->getTarget().z ));
+	glm::vec3 direction = glm::normalize(glm::vec3(this->camera->getTarget().x,0.0f, this->camera->getTarget().z));
 	glm::vec3 right = glm::normalize(glm::cross(direction, {0.0f, 1.0f, 0.0f}));
 	glm::vec3 up = glm::normalize(glm::cross(right, direction));
 

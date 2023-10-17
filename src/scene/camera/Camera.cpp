@@ -30,6 +30,8 @@ void Camera::calculateViewMatrix() {
 			this->position + this->target,
 			{0.0f, 1.0f, 0.0f}
 	);
+
+	// TODO: Update view matrix in every shader program
 }
 
 glm::mat4 Camera::getViewMatrix() {

@@ -33,7 +33,7 @@ class EventHandler {
         }
 
         static void callEvent(Event* event) {
-            for (auto& listener : listeners) {
+            for (auto& listener: listeners) {
                 if (listener->getEventType() == std::type_index(typeid(*event))) {
                     listener->notify(event);
                 }

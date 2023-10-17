@@ -27,7 +27,7 @@ int ConsoleCommand::getMaxArgs() const {
 }
 
 void ConsoleCommand::execute(std::vector<std::string> args) {
-	this->callback(std::move(args));
+	this->callback(args);
 }
 
 ConsoleCommand::Builder* ConsoleCommand::createCommand(const std::string& name) {
@@ -60,8 +60,8 @@ ConsoleCommand::Builder* ConsoleCommand::Builder::setMaxArgs(int maxArgs) {
 	return this;
 }
 
-ConsoleCommand::Builder* ConsoleCommand::Builder::setCallback(const std::function<void(std::vector<std::string>)>& callback) {
-	this->consoleCommand->callback = callback;
+ConsoleCommand::Builder* ConsoleCommand::Builder::setCallback(std::function<void(std::vector<std::string>&)> callback) {
+	this->consoleCommand->callback = std::move(callback);
 	return this;
 }
 

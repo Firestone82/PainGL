@@ -3,7 +3,6 @@
 #include "3rdparty/imgui/imgui.h"
 #include "ConsoleCommand.h"
 #include "ConsoleLine.h"
-
 #include <string>
 #include <vector>
 
@@ -30,6 +29,7 @@ class ConsoleHandler {
 
 		void executeCommand(const char* command_line);
 		void addCommand(ConsoleCommand* command);
+		std::vector<ConsoleCommand*> getCommands() const;
 
 		static int textEditCallbackStub(ImGuiInputTextCallbackData* data);
 		int textEditCallback(ImGuiInputTextCallbackData* data);

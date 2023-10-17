@@ -2,7 +2,7 @@
 
 namespace Transform {
     Transform::Type Component::getType() const {
-        return this->type;
+        return type;
     }
 
     void Transform::Component::calculate() {
@@ -76,9 +76,9 @@ namespace Transform {
     }
 
     void Scale::calculate() {
-        scaleVector.x = static_cast<float>(fmax(scaleVector.x, 0.1f));
-        scaleVector.y = static_cast<float>(fmax(scaleVector.y, 0.1f));
-        scaleVector.z = static_cast<float>(fmax(scaleVector.z, 0.1f));
+        scaleVector.x = float(fmax(scaleVector.x, 0.1f));
+        scaleVector.y = float(fmax(scaleVector.y, 0.1f));
+        scaleVector.z = float(fmax(scaleVector.z, 0.1f));
 
         matrix = glm::mat4(1.0f);
         matrix = glm::scale(matrix, glm::vec3(scaleVector.x, scaleVector.y, scaleVector.z));
@@ -99,16 +99,16 @@ namespace Transform {
     }
 
 	Composite::~Composite() {
-		for (const auto &transform: transforms) {
+		for (const auto &transform: this->transforms) {
 			delete transform;
 		}
 	}
 
     void Composite::calculate() {
-        matrix = glm::mat4(1.0f);
+	    this->matrix = glm::mat4(1.0f);
 
         for (const auto &transform: transforms) {
-            matrix = matrix * transform->resultMatrix();
+	        this->matrix = this->matrix * transform->resultMatrix();
         }
     }
 
@@ -141,7 +141,7 @@ Transformation::~Transformation() {
 
 void Transformation::setTransformation(Transform::Composite* composite) {
 	delete this->transform;
-    this->transform = composite;
+	this->transform = composite;
 }
 
 glm::mat4 Transformation::resultMatrix() {

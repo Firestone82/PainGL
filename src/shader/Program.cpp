@@ -21,8 +21,8 @@ void Program::attach(Shader* shader) {
 }
 
 void Program::setShaderVariableMatrix(const glm::mat4 &matrix, const std::string &variable) {
-    GLint projectionMatrixLocation = glGetUniformLocation(this->program, variable.c_str());
-    glUniformMatrix4fv(projectionMatrixLocation, 1, GL_FALSE, glm::value_ptr(matrix));
+    GLint uniformLocation = glGetUniformLocation(this->program, variable.c_str());
+    glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, glm::value_ptr(matrix));
 }
 
 void Program::link() {
@@ -30,6 +30,8 @@ void Program::link() {
 
     GLint status;
     glGetProgramiv(this->program, GL_LINK_STATUS, &status);
+
+	// Check if program linked successfully
     if (status == GL_FALSE) {
         GLint infoLogLength;
         glGetProgramiv(this->program, GL_INFO_LOG_LENGTH, &infoLogLength);
@@ -37,7 +39,7 @@ void Program::link() {
         auto *strInfoLog = new GLchar[infoLogLength + 1];
         glGetProgramInfoLog(this->program, infoLogLength, nullptr, strInfoLog);
 
-        Logger::error("Linker failure: %s", strInfoLog);
+        Logger::error("ShaderProgram linking failure: %s", strInfoLog);
         delete[] strInfoLog;
     }
 }
@@ -47,13 +49,14 @@ void Program::use() {
 }
 
 std::string Program::toString() {
-    std::string result = "";
+    std::string result;
 
     for (auto shader: this->shaders) {
-        result += shader->getName() + ",";
+        result += shader->getName() + ", ";
     }
 
-    std::string::size_type pos = result.find_last_of(",");
+	// Remove trailing comma
+    std::string::size_type pos = result.find_last_of(',');
     if (pos != std::string::npos) {
         result.erase(pos, 1);
     }

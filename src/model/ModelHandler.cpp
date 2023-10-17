@@ -35,7 +35,7 @@ void ModelHandler::loadModelFile(const std::string &name, const std::string &pat
     const aiScene *scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
 
     if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
-        Logger::error(R"( -  Failed to load model "%s": %s)", name.c_str(), importer.GetErrorString());
+        Logger::error(R"( - Failed to load model "%s": %s)", name.c_str(), importer.GetErrorString());
         return;
     }
 

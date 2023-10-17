@@ -25,7 +25,7 @@ EventHandler::EventHandler() {
 EventHandler::~EventHandler() {
 	delete this->input;
 
-    for (auto& listener : listeners) {
+    for (const auto& listener : listeners) {
         delete listener;
     }
 

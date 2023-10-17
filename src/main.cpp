@@ -19,8 +19,8 @@ int main() {
     static float x = 0.0f;
 
     engine->getScene()->renderEntity(
-            RenderableEntity::createEntity("Sphere")
-                     ->setModel(engine->getModelHandler()->getModel("sphere"))
+            RenderableEntity::createEntity("Gift")
+                     ->setModel(engine->getModelHandler()->getModel("gift"))
                      ->setShaderProgram(engine->getShaderHandler()->createProgram("fragmentShader", "vertexShader"))
                      ->setSimulateFunction([=](RenderableEntity* entity, float deltaTime) {
                          entity->getTransformation()->setTransformation(new Transform::Composite({
@@ -28,7 +28,7 @@ int main() {
 								 new Transform::Rotation(0.0f, x, 0.0f),
 								 new Transform::Translate(0.0f, 1.0f, 2.0f),
 							 }),
-							 new Transform::Scale(0.5f),
+							 new Transform::Scale(1.5f),
 							 new Transform::Rotation(0.0f, x, 0.0f),
                          }));
                          x += 1;
@@ -47,25 +47,12 @@ int main() {
 							 }),
 							 new Transform::Composite({
 								 new Transform::Rotation(0.0f, y, 0.0f),
-								 new Transform::Translate(0.0f, 1.0f, 2.0f),
+								 new Transform::Translate(0.0f, 0.0f, 2.0f),
 							}),
 							new Transform::Scale(0.5f),
 							new Transform::Rotation(0.0f, y, 0.0f),
                          }));
                          y += 1;
-                     })
-                     ->build());
-
-	engine->getScene()->renderEntity(
-            RenderableEntity::createEntity("Suzi")
-                     ->setModel(engine->getModelHandler()->getModel("suzi"))
-                     ->setShaderProgram(engine->getShaderHandler()->createProgram("fragmentShader", "vertexShader"))
-                     ->setSimulateFunction([=](RenderableEntity* entity, float deltaTime) {
-                         entity->getTransformation()->setTransformation(new Transform::Composite({
-							 new Transform::Translate(engine->getScene()->getCameraHandler()->getCamera()->getPosition()),
-							 new Transform::Translate(0.0f, 0.0f, 3.0f),
-							 new Transform::Rotation(0.0f, 180.0f, 0.0f),
-                         }));
                      })
                      ->build());
 

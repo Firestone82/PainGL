@@ -15,38 +15,38 @@ WindowHandler::WindowHandler(int width, int height, const char *title) {
         exit(EXIT_FAILURE);
     }
 
-	glfwSetKeyCallback(window, [](GLFWwindow* window, int key, int scancode, int action, int mods) {
+	glfwSetKeyCallback(this->window, [](GLFWwindow* window, int key, int scancode, int action, int mods) {
 		EventHandler::callEvent(new KeyPressEvent(key, scancode, action, mods));
 	});
 
-	glfwSetMouseButtonCallback(window, [](GLFWwindow* window, int button, int action, int mods) {
+	glfwSetMouseButtonCallback(this->window, [](GLFWwindow* window, int button, int action, int mods) {
 		EventHandler::callEvent(new MouseButtonEvent(button, action, mods));
 	});
 
-	glfwSetWindowFocusCallback(window, [](GLFWwindow* window, int focused) {
+	glfwSetWindowFocusCallback(this->window, [](GLFWwindow* window, int focused) {
 		EventHandler::callEvent(new WindowFocusEvent(focused));
 	});
 
-	glfwSetWindowIconifyCallback(window, [](GLFWwindow* window, int iconified) {
+	glfwSetWindowIconifyCallback(this->window, [](GLFWwindow* window, int iconified) {
 		EventHandler::callEvent(new WindowIconifyEvent(iconified));
 	});
 
-	glfwSetWindowCloseCallback(window, [](GLFWwindow* window) {
+	glfwSetWindowCloseCallback(this->window, [](GLFWwindow* window) {
 		EventHandler::callEvent(new WindowCloseEvent());
 	});
 
-	glfwSetScrollCallback(window, [](GLFWwindow* window, double xoffset, double yoffset) {
+	glfwSetScrollCallback(this->window, [](GLFWwindow* window, double xoffset, double yoffset) {
 		EventHandler::callEvent(new MouseScrollEvent(glm::vec2(xoffset, yoffset)));
 	});
 
 	static glm::vec2 lastMousePosition = glm::vec2(0.0f, 0.0f);
-	glfwSetCursorPosCallback(window, [](GLFWwindow* window, double xpos, double ypos) {
+	glfwSetCursorPosCallback(this->window, [](GLFWwindow* window, double xpos, double ypos) {
 		EventHandler::callEvent(new MousePositionEvent(lastMousePosition, glm::vec2(xpos, ypos)));
 		lastMousePosition = glm::vec2(xpos, ypos);
 	});
 
 	static glm::vec2 lastWindowSize = glm::vec2(0.0f, 0.0f);
-	glfwSetWindowSizeCallback(window, [](GLFWwindow* window, int width, int height) {
+	glfwSetWindowSizeCallback(this->window, [](GLFWwindow* window, int width, int height) {
 		EventHandler::callEvent(new WindowResizeEvent(lastWindowSize, glm::vec2(width, height)));
 		lastWindowSize = glm::vec2(width, height);
 	});

@@ -11,6 +11,8 @@ Shader::Shader(const std::string& name, GLenum type, const char* source) {
 
     GLint status;
     glGetShaderiv(this->shader, GL_COMPILE_STATUS, &status);
+
+	// Check if shader compiled successfully
     if (status == GL_FALSE) {
         GLint infoLogLength;
         glGetShaderiv(this->shader, GL_INFO_LOG_LENGTH, &infoLogLength);

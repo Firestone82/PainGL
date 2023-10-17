@@ -79,11 +79,17 @@ void RenderableEntity::simulate(double deltaTime) {
     }
 }
 
+static bool test = false;
 void RenderableEntity::draw(glm::mat4 viewMatrix, glm::mat4 projectionMatrix) {
     this->shaderProgram->use();
     this->shaderProgram->setShaderVariableMatrix(this->matrix, "modelMatrix");
-    this->shaderProgram->setShaderVariableMatrix(viewMatrix, "viewMatrix");
-    this->shaderProgram->setShaderVariableMatrix(projectionMatrix, "projectionMatrix");
+
+//	if (!test) {
+	    this->shaderProgram->setShaderVariableMatrix(viewMatrix, "viewMatrix");
+	    this->shaderProgram->setShaderVariableMatrix(projectionMatrix, "projectionMatrix");
+		test = true;
+//	}
+
     this->model->getVAO()->bind();
 
     if (this->model->hasIndices()) {

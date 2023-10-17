@@ -23,7 +23,7 @@ class CameraHandler {
 		void setFov(float fov);
 		float getFov() const;
 
-		void setAspectRatio(float width, float height);
+		void setAspectRatio(int width, int height);
 		float getAspectRatio() const;
 
 		void setNearFarPlane(glm::vec2 nearFarPlane);

@@ -13,7 +13,7 @@ class ConsoleCommand {
 		int minArgs = 0;
 		int maxArgs = 0;
 
-		std::function<void(std::vector<std::string>)> callback;
+		std::function<void(std::vector<std::string>&)> callback;
 
 		explicit ConsoleCommand(const std::string& name);
 
@@ -37,7 +37,7 @@ class ConsoleCommand {
 				Builder* setUsage(const std::string& usage);
 				Builder* setMinArgs(int minArgs);
 				Builder* setMaxArgs(int maxArgs);
-				Builder* setCallback(const std::function<void(std::vector<std::string>)>& callback);
+				Builder* setCallback(std::function<void(std::vector<std::string>&)> callback);
 
 				ConsoleCommand* build();
 		};

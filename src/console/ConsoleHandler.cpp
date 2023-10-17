@@ -15,215 +15,6 @@ ConsoleHandler::ConsoleHandler(std::string title) : title(std::move(title)) {
 			this->setShown(!this->isShown());
 		}
 	}));
-
-	addCommand(ConsoleCommand::createCommand("help")
-			->setDescription("Displays all available commands")
-			->setUsage("help")
-			->setCallback([=](const std::vector<std::string>& args) {
-				addLog(false,"\n Commands:");
-
-				for (const auto& command : commands) {
-					addLog(false,"  » %s", command->getUsage().c_str());
-					addLog(false,"     # %s", command->getDescription().c_str());
-				}
-			})
-			->build());
-
-	addCommand(ConsoleCommand::createCommand("clear")
-			->setDescription("Clears the console")
-			->setUsage("clear")
-			->setCallback([=](const std::vector<std::string>& args) {
-				this->clearLog();
-			})
-			->build());
-
-	addCommand(ConsoleCommand::createCommand("position")
-		->setDescription("Sets the position of the camera")
-		->setUsage("position <x> <y> <z>")
-		->setMinArgs(3)
-		->setMaxArgs(3)
-		->setCallback([=](const std::vector<std::string>& args) {
-			float x = 0.0;
-			float y = 0.0;
-			float z = 0.0;
-
-			try {
-				x = std::stof(args[1]);
-				y = std::stof(args[2]);
-				z = std::stof(args[3]);
-			} catch (std::exception& e) {
-				addLog(false, "[error] %s", e.what());
-				return;
-			}
-
-			engine->getScene()->getCameraHandler()->getCamera()->setPosition(glm::vec3(x, y, z));
-			engine->getScene()->getCameraHandler()->getCamera()->calculateViewMatrix();
-
-			addLog(false,"\n Camera position set to (%0.2f, %0.2f, %0.2f)", x, y, z);
-		})
-		->build());
-
-	addCommand(ConsoleCommand::createCommand("target")
-		->setDescription("Sets the target of the camera")
-		->setUsage("target <x> <y> <z>")
-		->setMinArgs(3)
-		->setMaxArgs(3)
-		->setCallback([=](const std::vector<std::string>& args) {
-			float x = 0.0;
-			float y = 0.0;
-			float z = 0.0;
-
-			try {
-				x = std::stof(args[1]);
-				y = std::stof(args[2]);
-				z = std::stof(args[3]);
-			} catch (std::exception& e) {
-				addLog(false, "[error] %s", e.what());
-				return;
-			}
-
-		   engine->getScene()->getCameraHandler()->getCamera()->setTarget(glm::vec3(x, y, z));
-		   engine->getScene()->getCameraHandler()->getCamera()->calculateViewMatrix();
-
-		   addLog(false, "\n Camera target set to (%0.2f, %0.2f, %0.2f)", x, y, z);
-		})
-		->build());
-
-	addCommand(ConsoleCommand::createCommand("sensitivity")
-		->setDescription("Sets the sensitivity of the camera")
-		->setUsage("sensitivity <sensitivity>")
-		->setMinArgs(0)
-		->setMaxArgs(1)
-		->setCallback([=](const std::vector<std::string>& args) {
-			float sensitivity = engine->getScene()->getCameraHandler()->getSensitivity();
-
-			if (args.size() == 1) {
-				addLog(false, "\n Camera sensitivity is %0.2f", sensitivity);
-				return;
-			}
-
-			try {
-				sensitivity = std::stof(args[1]);
-				engine->getScene()->getCameraHandler()->setSensitivity(sensitivity);
-			} catch (std::exception& e) {
-				addLog(false, "[error] %s", e.what());
-				return;
-			}
-
-			addLog(false, "\n Camera sensitivity set to %0.2f", sensitivity);
-		})
-		->build());
-
-	addCommand(ConsoleCommand::createCommand("speed")
-		->setDescription("Sets the speed of the camera")
-		->setUsage("speed <speed>")
-		->setMinArgs(0)
-		->setMaxArgs(1)
-		->setCallback([=](const std::vector<std::string>& args) {
-			float speed = engine->getScene()->getCameraHandler()->getSpeed();
-
-			if (args.empty() == 1) {
-				addLog(false, "\n Camera speed is %0.2f", speed);
-				return;
-			}
-
-			try {
-				speed = std::stof(args[1]);
-				engine->getScene()->getCameraHandler()->setSpeed(speed);
-			} catch (std::exception& e) {
-				addLog(false, "[error] %s", e.what());
-				return;
-			}
-
-			addLog(false, "\n Camera speed set to %0.2f", speed);
-		})
-		->build());
-
-	addCommand(ConsoleCommand::createCommand("fov")
-		->setDescription("Sets the field of view of the camera")
-		->setUsage("fov <fov>")
-		->setMinArgs(0)
-		->setMaxArgs(1)
-		->setCallback([=](const std::vector<std::string>& args) {
-			float fov = engine->getScene()->getCameraHandler()->getFov();
-
-			if (args.size() == 1) {
-				addLog(false, "\n Camera fov is %0.2f", fov);
-				return;
-			}
-
-			try {
-				fov = std::stof(args[1]);
-				engine->getScene()->getCameraHandler()->setFov(fov);
-				engine->getScene()->getCameraHandler()->calculateProjectionMatrix();
-			} catch (std::exception& e) {
-				addLog(false, "[error] %s", e.what());
-				return;
-			}
-
-			addLog(false, "\n Camera fov set to %0.2f", fov);
-		})
-		->build());
-
-	// TODO: Max FPS command
-
-	// TODO: Static delta time command
-
-	addCommand(ConsoleCommand::createCommand("demo")
-		->setDescription("Toggle demo window")
-		->setUsage("demo")
-		->setCallback([=](const std::vector<std::string>& args) {
-			bool state = engine->getGUIHandler()->isDemoShown();
-
-			Engine *engine = Engine::getInstance();
-			engine->getGUIHandler()->setDemoShow(!state);
-			engine->getScene()->getCameraHandler()->setMoving(false);
-
-			if (!state) {
-				this->showConsole = false;
-			}
-
-			addLog(false, "\n Demo window %s", state ? "hidden" : "shown");
-		})
-		->build());
-
-	addCommand(ConsoleCommand::createCommand("vsync")
-		->setDescription("Toggle vsync between 20fps, 30fps, 60fps and unlimited")
-		->setUsage("vsync <0,1,2,3>")
-        ->setMinArgs(1)
-        ->setMaxArgs(1)
-		->setCallback([=](const std::vector<std::string>& args) {
-			float sync = 0.0;
-
-			try {
-				sync = std::stof(args[1]);
-			} catch (std::exception& e) {
-				addLog(false, "[error] %s", e.what());
-				return;
-			}
-
-			if (sync < 0 || sync > 3) {
-				addLog(false, "[error] Vsync must be 0, 1, 2 or 3");
-				return;
-			}
-
-			glfwSwapInterval(sync);
-			int fps = (float) 60 / sync;
-
-			addLog(false, "\n Vsync changed to %d (%dfps)", static_cast<int>(sync), (fps == 0 ? 2000 : fps));
-		})
-		->build());
-
-	addCommand(ConsoleCommand::createCommand("gui")
-		->setDescription("Toggle GUI from rendering")
-		->setUsage("gui")
-		->setCallback([=](const std::vector<std::string>& args) {
-			bool state = engine->getGUIHandler()->isShown();
-			engine->getGUIHandler()->setShow(!state);
-
-			addLog(false, "\n GUI %s", state ? "disabled" : "enabled");
-		})
-		->build());
 }
 
 ConsoleHandler::~ConsoleHandler() {
@@ -275,7 +66,10 @@ bool ConsoleHandler::isShown() const {
 }
 
 void ConsoleHandler::render() {
-	ImGui::SetNextWindowSize(ImVec2(520, 600), ImGuiCond_FirstUseEver);
+	int width = Engine::getInstance()->getScene()->getWindowHandler()->getWidth();
+
+	ImGui::SetNextWindowSize(ImVec2(500, 600), ImGuiCond_FirstUseEver);
+	ImGui::SetNextWindowPos({float(width - 500 - 15), 15.0f}, ImGuiCond_FirstUseEver);
 	if (!ImGui::Begin(title.c_str(), nullptr, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoSavedSettings)) {
 		ImGui::End();
 		return;
@@ -311,11 +105,11 @@ void ConsoleHandler::render() {
 
 			// Add timestamp
 			if (item->isCommand()) {
-				static const float timestamp_width = ImGui::CalcTextSize("00:00:00").x;
+				static const float timestamp_width = ImGui::CalcTextSize("00:00:00 ").x;
 				ImGui::SameLine(ImGui::GetColumnWidth(-1) - timestamp_width);
 
 				ImGui::PushStyleColor(ImGuiCol_Text, {0.3f, 0.3f, 0.3f, 1.0f});
-				ImGui::Text("%02d:%02d:%02d", ((item->getTimestamp() / 1000 / 3600) % 24), ((item->getTimestamp() / 1000 / 60) % 60), ((item->getTimestamp() / 1000) % 60));
+				ImGui::Text("%02d:%02d:%02d ", ((item->getTimestamp() / 1000 / 3600) % 24), ((item->getTimestamp() / 1000 / 60) % 60), ((item->getTimestamp() / 1000) % 60));
 				ImGui::PopStyleColor();
 			}
 		}
@@ -382,13 +176,11 @@ void ConsoleHandler::render() {
 	ImGui::End();
 }
 
-static bool firstCommand = false;
 void ConsoleHandler::executeCommand(const char *command_line) {
+	static bool firstCommand = false;
 
 	// Add to log
-	if (firstCommand) addLog(false,"");
 	addLog(true,"> %s\n", command_line);
-	firstCommand = true;
 
 	// Add to history
 	historyPos = -1;
@@ -407,19 +199,27 @@ void ConsoleHandler::executeCommand(const char *command_line) {
 		if (strcasecmp(command->getName().c_str(), args[0].c_str()) == 0) {
 			if (argc < command->getMinArgs() || argc > command->getMaxArgs()) {
 				addLog(false,"\n[error] Wrong usage! Use: %s ", command->getUsage().c_str());
+				addLog(false,"");
 				return;
 			}
 
 			command->execute(args);
+			addLog(false,"");
+
 			return;
 		}
 	}
 
 	addLog(false,"\n Unknown command: '%s'", command_line);
+	addLog(false,"");
 }
 
 void ConsoleHandler::addCommand(ConsoleCommand* command) {
 	commands.emplace_back(command);
+}
+
+std::vector<ConsoleCommand*> ConsoleHandler::getCommands() const {
+	return this->commands;
 }
 
 int ConsoleHandler::textEditCallbackStub(ImGuiInputTextCallbackData* data) {

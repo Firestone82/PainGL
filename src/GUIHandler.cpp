@@ -34,8 +34,8 @@ void drawTransformationMatrix(glm::mat4 mat)  {
 }
 
 void drawFrames() {
-	int frameFlags = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoSavedSettings;
-	ImGui::Begin("Frames", nullptr, frameFlags);
+	int flags = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoSavedSettings;
+	ImGui::Begin("Frames", nullptr, flags);
 	ImGui::SetWindowPos(ImVec2(15.0f, topPadding));
 
 	ImGui::Text("Frame Rate: %0.2f fps (%0.3f ms)", ImGui::GetIO().Framerate, 1000.0f / ImGui::GetIO().Framerate);
@@ -47,12 +47,12 @@ void drawFrames() {
 }
 
 void drawCrosshair() {
-	float height = Engine::getInstance()->getScene()->getWindowHandler()->getHeight();
-	float width = Engine::getInstance()->getScene()->getWindowHandler()->getWidth();
+	float height = float(Engine::getInstance()->getScene()->getWindowHandler()->getHeight());
+	float width = float(Engine::getInstance()->getScene()->getWindowHandler()->getWidth());
 
-	int crosshairFlags = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoMouseInputs;
-	ImGui::Begin("Crosshair", nullptr, crosshairFlags);
-	ImGui::SetWindowPos(ImVec2(width / 2 - 5, height / 2 - 5));
+	int flags = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoMouseInputs;
+	ImGui::Begin("Crosshair", nullptr, flags);
+	ImGui::SetWindowPos(ImVec2(width / 2.0f - 5.0f, height / 2.0f - 5.0f));
 
 	ImGui::Text("X");
 
@@ -60,9 +60,11 @@ void drawCrosshair() {
 }
 
 void drawAuthor() {
-	int authorFlags = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoSavedSettings;
-	ImGui::Begin("Author", nullptr, authorFlags);
-	ImGui::SetWindowPos(ImVec2(15, Engine::getInstance()->getScene()->getWindowHandler()->getHeight() - ImGui::GetWindowHeight() - 15));
+	float height = float(Engine::getInstance()->getScene()->getWindowHandler()->getHeight());
+
+	int flags = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoSavedSettings;
+	ImGui::Begin("Author", nullptr, flags);
+	ImGui::SetWindowPos(ImVec2(15, height - ImGui::GetWindowHeight() - 15.0f));
 
 	ImGui::Text("Author: Pavel Mikula, MIK0486");
 	ImGui::Text("Version: 1.0.0");
@@ -75,8 +77,8 @@ void drawCamera() {
 	CameraHandler* cameraHandler = engine->getScene()->getCameraHandler();
 	Camera* camera = cameraHandler->getCamera();
 
-	int environmentFlags = ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoSavedSettings | (engine->getScene()->getWindowHandler()->isCursorEnabled() ? 0 : ImGuiWindowFlags_NoMouseInputs);
-	ImGui::Begin("Camera", nullptr, environmentFlags);
+	int flags = ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoSavedSettings | (engine->getScene()->getWindowHandler()->isCursorEnabled() ? 0 : ImGuiWindowFlags_NoMouseInputs);
+	ImGui::Begin("Camera", nullptr, flags);
 	ImGui::SetWindowPos(ImVec2(15.0f,topPadding));
 
 	if (ImGui::BeginTable("cameraTable", 4, ImGuiTableFlags_SizingStretchSame | ImGuiTableFlags_BordersOuter | ImGuiTableFlags_BordersV | ImGuiTableFlags_ContextMenuInBody)) {
@@ -107,7 +109,7 @@ void drawCamera() {
 	ImGui::End();
 }
 
-void drawEntityTransformation(Transform::Composite* trans, int indent = 0)  {
+void drawEntityTransformation(Transform::Composite* trans, float indent = 0)  {
 	for (Transform::Component* t : trans->get()) {
 		if (indent > 0) {
 			ImGui::Indent(indent * 20.0f);

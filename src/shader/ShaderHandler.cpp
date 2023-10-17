@@ -9,7 +9,7 @@ ShaderHandler::~ShaderHandler() {
     Logger::info("\nDestroying %zu shaders", shaders.size());
 
     for (auto &shader: shaders) {
-        Logger::info(" Shader %s destroyed", shader->getName().c_str());
+        Logger::info(" - Shader %s destroyed", shader->getName().c_str());
         delete shader;
     }
 }
@@ -35,7 +35,7 @@ void ShaderHandler::loadShaderVar(const std::string &name, const char *source, G
     try {
         shader = new Shader(name, type, source);
     } catch (const std::exception &e) {
-        Logger::error(R"(  - Failed to load shader "%s": %s)", name.c_str(), e.what());
+        Logger::error(R"( - Failed to load shader "%s": %s)", name.c_str(), e.what());
         return;
     }
 
@@ -60,7 +60,7 @@ void ShaderHandler::loadShaderFile(const std::string &name, const std::string &p
     try {
         shader = new Shader(name, type, source.c_str());
     } catch (const std::exception &e) {
-        Logger::error(R"(  - Failed to load shader "%s": %s)", name.c_str(), e.what());
+        Logger::error(R"( - Failed to load shader "%s": %s)", name.c_str(), e.what());
         return;
     }
 
