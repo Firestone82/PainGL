@@ -44,6 +44,7 @@ Model* ModelHandler::loadModelFile(const std::string &name, const std::string &p
 
 	std::vector<float> points;
 	std::vector<unsigned int> indices;
+	std::vector<Texture> textureCoords;
 	for (unsigned int i = 0; i < scene->mNumMeshes; i++) {
 		aiMesh* mesh = scene->mMeshes[i];
 
@@ -51,9 +52,22 @@ Model* ModelHandler::loadModelFile(const std::string &name, const std::string &p
 			points.push_back(mesh->mVertices[j].x);
 			points.push_back(mesh->mVertices[j].y);
 			points.push_back(mesh->mVertices[j].z);
-			points.push_back(mesh->mNormals[j].x);
-			points.push_back(mesh->mNormals[j].y);
-			points.push_back(mesh->mNormals[j].z);
+
+			if (mesh->HasNormals()) {
+				points.push_back(mesh->mNormals[j].x);
+				points.push_back(mesh->mNormals[j].y);
+				points.push_back(mesh->mNormals[j].z);
+			}
+
+			if (mesh->HasTextureCoords(0)) {
+				points.push_back(mesh->mTextureCoords[0][j].x);
+				points.push_back(mesh->mTextureCoords[0][j].y);
+			} else {
+				points.push_back(0.0f);
+				points.push_back(0.0f);
+			}
+
+			// TODO: Load material texture
 		}
 
 		for (unsigned int j = 0; j < mesh->mNumFaces; j++) {
@@ -67,7 +81,7 @@ Model* ModelHandler::loadModelFile(const std::string &name, const std::string &p
 
 	Model* model;
 	try {
-		model = new Model(name, points, indices);
+		model = new Model(name, points, indices, textureCoords);
 	} catch (const std::exception &e) {
 		Logger::debug(R"( - Failed to load model "%s": %s)", name.c_str(), e.what());
 		return nullptr;

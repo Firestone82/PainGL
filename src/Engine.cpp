@@ -22,6 +22,7 @@ Engine::~Engine() {
 	delete this->modelHandler;
 	delete this->windowHandler;
 	delete this->eventHandler;
+	delete this->textureHandler;
 
 	Engine::instance_ = nullptr;
 	glfwTerminate();
@@ -55,6 +56,7 @@ void Engine::init(int width, int height, const std::string &title) {
 	this->sceneHandler = new SceneHandler();
 	this->shaderHandler = new ShaderHandler("../assets/shader", true);
 	this->modelHandler = new ModelHandler("../assets/model", false);
+	this->textureHandler = new TextureHandler("../assets/texture", true);
 	this->consoleHandler = new ConsoleHandler("Developer Console");
 	this->guiHandler = new GUIHandler();
 }
@@ -141,6 +143,10 @@ ConsoleHandler* Engine::getConsoleHandler() {
 
 GUIHandler* Engine::getGUIHandler() {
 	return this->guiHandler;
+}
+
+TextureHandler* Engine::getTextureHandler() {
+	return this->textureHandler;
 }
 
 void Engine::setVsync(int vsync) {

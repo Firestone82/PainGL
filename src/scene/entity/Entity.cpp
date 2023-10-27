@@ -20,12 +20,17 @@ void Entity::draw() {
 	this->shaderProgram->setShaderVariableMatrix(glm::transpose(glm::inverse(glm::mat3(this->matrix))), "normalMatrix");
 
     // Material
-    this->shaderProgram->setShaderVariableVector(this->ambientColor, "material.ambientColor");
-    this->shaderProgram->setShaderVariableVector(this->objectColor, "material.objectColor");
-    this->shaderProgram->setShaderVariableFloat(this->specular, "material.specular");
-    this->shaderProgram->setShaderVariableFloat(this->shininess, "material.shininess");
+    this->shaderProgram->setShaderVariableVector(this->material->getAmbientColor(), "material.ambientColor");
+    this->shaderProgram->setShaderVariableVector(this->material->getObjectColor(), "material.objectColor");
+    this->shaderProgram->setShaderVariableFloat(this->material->getSpecular(), "material.specular");
+    this->shaderProgram->setShaderVariableFloat(this->material->getShininess(), "material.shininess");
+    this->shaderProgram->setShaderVariableFloat(this->material->getShininess(), "material.shininess");
 
 	this->model->getVAO()->bind();
+
+//	if (this->material->getTexture() != nullptr) {
+//		this->material->getTexture()->bind();
+//	}
 
 	if (this->model->hasIndices()) {
 		this->model->getEBO()->bind();
@@ -43,26 +48,15 @@ ShaderProgram* Entity::getShaderProgram() const {
 	return this->shaderProgram;
 }
 
-glm::vec3 Entity::getAmbientColor() const {
-	return this->ambientColor;
-}
-
-glm::vec3 Entity::getObjectColor() const {
-	return this->objectColor;
-}
-
-float Entity::getSpecular() const {
-	return this->specular;
-}
-
-float Entity::getShininess() const {
-	return this->shininess;
+Material* Entity::getMaterial() const {
+	return this->material;
 }
 
 // -- Builder --
 
 Entity::Builder::Builder(const std::string &name) {
 	this->renderableEntity = new Entity(name);
+	this->renderableEntity->material = new Material();
 }
 
 Entity::Builder* Entity::Builder::setModel(Model* model) {
@@ -90,23 +84,8 @@ Entity::Builder* Entity::Builder::setStatik(bool statik) {
 	return this;
 }
 
-Entity::Builder* Entity::Builder::setObjectColor(glm::vec3 color) {
-	this->renderableEntity->objectColor = color;
-	return this;
-}
-
-Entity::Builder* Entity::Builder::setAmbientColor(glm::vec3 color) {
-	this->renderableEntity->ambientColor = color;
-	return this;
-}
-
-Entity::Builder* Entity::Builder::setSpecular(float specular) {
-	this->renderableEntity->specular = specular;
-	return this;
-}
-
-Entity::Builder* Entity::Builder::setShininess(float shininess) {
-	this->renderableEntity->shininess = shininess;
+Entity::Builder* Entity::Builder::setMaterial(Material* material) {
+	this->renderableEntity->material = material;
 	return this;
 }
 

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "scene/entity/material/Material.h"
 #include "scene/structure/Object.h"
 #include "model/Model.h"
 #include "shader/ShaderProgram.h"
@@ -8,12 +9,7 @@ class Entity : public Object<Entity> {
 	private:
 		Model* model = nullptr;
 		ShaderProgram* shaderProgram = nullptr;
-
-		// TODO: Move to Material class
-		glm::vec3 ambientColor = glm::vec3(0.1f, 0.1f, 0.1f);
-		glm::vec3 objectColor = glm::vec3(1.0f, 1.0f, 1.0f);
-		float specular = 1.0f;
-		float shininess = 32.0f;
+		Material* material = nullptr;
 
 		explicit Entity(const std::string &name) : Object(name) {};
 
@@ -24,11 +20,7 @@ class Entity : public Object<Entity> {
 
 		Model* getModel() const;
 		ShaderProgram* getShaderProgram() const;
-
-		glm::vec3 getAmbientColor() const;
-		glm::vec3 getObjectColor() const;
-		float getSpecular() const;
-		float getShininess() const;
+		Material* getMaterial() const;
 
 		class Builder {
 			private:
@@ -42,10 +34,7 @@ class Entity : public Object<Entity> {
 				Builder* setShaderProgram(ShaderProgram* shaderProgram);
 				Builder* setShaderProgram(const std::string &vertex, const std::string &fragment);
 				Builder* setStatik(bool statik);
-				Builder* setObjectColor(glm::vec3 color);
-				Builder* setAmbientColor(glm::vec3 color);
-				Builder* setSpecular(float specular);
-				Builder* setShininess(float shininess);
+				Builder* setMaterial(Material* material);
 				Builder* setTransformation(Transform::Composite* composite);
 				Builder* setSimulateFunction(const std::function<void(Entity*, float)> &simulateFunction);
 

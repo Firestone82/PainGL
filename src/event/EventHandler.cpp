@@ -4,7 +4,7 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
-std::vector<ListenerBase*> EventHandler::listeners;
+std::vector<AbstractListener*> EventHandler::listeners;
 
 EventHandler::EventHandler() {
 	this->inputController = new InputController();

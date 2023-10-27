@@ -5,15 +5,15 @@
 #include <typeindex>
 #include <functional>
 
-class ListenerBase {
+class AbstractListener {
 	public:
-		virtual ~ListenerBase() = default;
+		virtual ~AbstractListener() = default;
 		virtual void notify(Event* event) = 0;
 		virtual std::type_index getEventType() const = 0;
 };
 
 template<typename EventType>
-class Listener : public ListenerBase {
+class Listener : public AbstractListener {
 	private:
 		std::function<void(EventType*)> callback;
 
@@ -24,7 +24,7 @@ class Listener : public ListenerBase {
 			if (EventType* typedEvent = dynamic_cast<EventType*>(event)) {
 				callback(typedEvent);
 			}
-	}
+		}
 
 		std::type_index getEventType() const override {
 			return std::type_index(typeid(EventType));

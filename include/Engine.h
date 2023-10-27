@@ -7,6 +7,7 @@
 #include "model/ModelHandler.h"
 #include "console/ConsoleHandler.h"
 #include "gui/GUIHandler.h"
+#include "texture/TextureHandler.h"
 
 class Engine {
 	private:
@@ -29,6 +30,7 @@ class Engine {
 		ModelHandler* modelHandler;
 		ConsoleHandler* consoleHandler;
 		GUIHandler* guiHandler;
+		TextureHandler* textureHandler;
 
 	public:
 		static Engine* getInstance();
@@ -56,6 +58,7 @@ class Engine {
 		ModelHandler* getModelHandler();
 		ConsoleHandler* getConsoleHandler();
 		GUIHandler* getGUIHandler();
+		TextureHandler* getTextureHandler();
 
 		void setVersion(int major, int minor, bool forwardCompat, int profile);
 		void info();

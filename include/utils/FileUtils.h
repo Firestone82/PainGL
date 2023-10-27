@@ -8,11 +8,11 @@
 #include <fstream>
 
 namespace FileUtils {
-	inline std::vector<std::string> getFiles(const std::string &path, const std::string &extension) {
+	inline std::vector<std::string> getFiles(const std::string &path, const std::string &extension = "") {
 		std::vector<std::string> files;
 
 		for (const auto &entry: std::filesystem::directory_iterator(path)) {
-			if (entry.path().extension() == extension) {
+			if (entry.path().extension() == extension || extension.empty()) {
 				files.push_back(entry.path().string());
 			}
 		}

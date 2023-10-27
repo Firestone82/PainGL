@@ -7,7 +7,7 @@
 
 class EventHandler {
 	private:
-		static std::vector<ListenerBase*> listeners;
+		static std::vector<AbstractListener*> listeners;
 		InputController* inputController;
 
 	public:

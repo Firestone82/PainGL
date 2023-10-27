@@ -128,13 +128,22 @@ void GUIHandler::fillGUIs() {
 		Scene* scene = engine->getSceneHandler()->getActiveScene();
 		if (scene == nullptr) return;
 
-		ImGui::Begin(gui->getName().c_str(), nullptr, defaultFlags | (engine->getWindowHandler()->isCursorEnabled() ? 0 : ImGuiWindowFlags_NoMouseInputs) | ImGuiWindowFlags_AlwaysAutoResize);
+		// If window would be out of screen, move it to the right
+		int flags = defaultFlags | (engine->getWindowHandler()->isCursorEnabled() ? 0 : ImGuiWindowFlags_NoMouseInputs);
+
+		if (scene->getEntityHandler()->getEntities().size() < 10) {
+			flags = flags | ImGuiWindowFlags_AlwaysAutoResize;
+		} else {
+			ImGui::SetNextWindowSize(ImVec2(0, 300));
+		}
+
+		ImGui::Begin(gui->getName().c_str(), nullptr, flags);
 		ImGui::SetWindowPos(ImVec2(15, top));
 
 		static bool first = true;
 		for (Entity* entity: scene->getEntityHandler()->getEntities()) {
 			char name[256];
-			sprintf(name, "Entity: %s", entity->getName().c_str());
+			sprintf(name, "Entity: %s (#%d)", entity->getName().c_str(), entity->getID());
 
 			if (ImGui::TreeNodeEx(name, first ? ImGuiTreeNodeFlags_DefaultOpen : 0)) {
 				first = false;

@@ -2,6 +2,7 @@
 
 in vec4 ex_worldPosition;
 in vec3 ex_worldNormal;
+in vec2 ex_tex;
 
 // Material properties
 struct Material {
@@ -9,6 +10,7 @@ struct Material {
     vec3 ambientColor;  // The ambient reflection color
     float specular;     // Specular intensity
     float shininess;    // Shininess coefficient
+    sampler2D teksture; // Texture
 };
 uniform Material material;
 
@@ -50,5 +52,6 @@ void main() {
     // Add the ambient color to the final color
     finalColor += material.ambientColor;
 
-    out_Color = vec4(finalColor * material.objectColor, 1.0);
+//    out_Color = vec4(finalColor * material.objectColor, 1.0);
+    out_Color = texture(material.teksture, ex_tex) * vec4(finalColor * material.objectColor, 1.0);
 }

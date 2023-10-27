@@ -9,15 +9,20 @@ Model::Model(const std::string &name, const std::vector<float> &points) : name(n
 
 	vao = new VAO();
 	vao->bind();
+
+	// Vertex positions
 	vao->setEnableVertexArray(0);
-	vao->setEnableVertexArray(1);
 	vao->setVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(points[0]) * 6, (GLvoid *) nullptr);
+
+	// Vertex normals
+	vao->setEnableVertexArray(1);
 	vao->setVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(points[0]) * 6, (GLvoid *) (3 * sizeof(float)));
 }
 
-Model::Model(const std::string &name, const std::vector<float> &points, const std::vector<unsigned int> &indices) : name(name), object(true) {
+Model::Model(const std::string &name, const std::vector<float> &points, const std::vector<unsigned int> &indices, const std::vector<Texture> &textures) : name(name), object(true) {
 	this->points = points;
 	this->indices = indices;
+	this->textures = textures;
 
 	vbo = new VBO();
 	vbo->bind();
@@ -32,15 +37,15 @@ Model::Model(const std::string &name, const std::vector<float> &points, const st
 
 	// Vertex positions
 	vao->setEnableVertexArray(0);
-	vao->setVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(points[0]) * 6, (GLvoid *) nullptr);
+	vao->setVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(points[0]) * 8, (GLvoid*) nullptr);
 
 	// Vertex normals
 	vao->setEnableVertexArray(1);
-	vao->setVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(points[0]) * 6, (GLvoid *) (3 * sizeof(float)));
+	vao->setVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(points[0]) * 8, (GLvoid*) (3 * sizeof(float)));
 
 	// Vertex texture coordinates
 	vao->setEnableVertexArray(2);
-	vao->setVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(points[0]) * 8, (GLvoid *) (6 * sizeof(float)));
+	vao->setVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(points[0]) * 8, (GLvoid*) (6 * sizeof(float)));
 }
 
 Model::~Model() {

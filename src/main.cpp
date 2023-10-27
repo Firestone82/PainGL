@@ -21,8 +21,27 @@ int main() {
 			#pragma region Scene 0 - Test Scene
 			Scene::createScene("Test Scene")
 					->addEntity(
+							Entity::createEntity("Grid")
+									->setModel("grid30m2")
+									->setMaterial(
+											Material::createMaterial()
+													->setObjectColor({0.2f, 0.2f, 0.2f})
+													->build()
+									)
+									->setShaderProgram("modelShader.vert", "lambertLightShader.frag")
+									->build()
+					)
+					->addEntity(
 							Entity::createEntity("Tank")
 									->setModel("tank")
+									->setTransformation(new Transform::Composite({
+										new Transform::Translate(0.0f, 1.0f, 0.0f)
+									}))
+									->setMaterial(
+											Material::createMaterial()
+													->setTexture(engine->getTextureHandler()->getTexture("tank_diff"))
+													->build()
+									)
 									->setShaderProgram("modelShader.vert", "phongLightShader.frag")
 									->build()
 					)
@@ -43,18 +62,26 @@ int main() {
 					->addEntity(
 							Entity::createEntity("Pikachu")
 									->setModel("pikachu")
-									->setObjectColor({0.6f, 0.6f, 0.0f})
-									->setSpecular(0.2f)
-									->setShininess(10.0f)
+									->setMaterial(
+											Material::createMaterial()
+													->setObjectColor({0.4f, 0.4f, 0.0f})
+													->setSpecular(0.2f)
+													->setShininess(10.0f)
+													->build()
+									)
 									->setShaderProgram("modelShader.vert", "phongLightShader.frag")
 									->build()
 					)
 					->addEntity(
 							Entity::createEntity("Devil")
 									->setModel("devil")
-									->setObjectColor({0.4f, 0.0f, 0.0f})
-									->setSpecular(0.2f)
-									->setShininess(10.0f)
+									->setMaterial(
+											Material::createMaterial()
+													->setObjectColor({0.4f, 0.4f, 0.0f})
+													->setSpecular(0.2f)
+													->setShininess(10.0f)
+													->build()
+									)
 									->setShaderProgram("modelShader.vert", "phongLightShader.frag")
 									->setTransformation(new Transform::Composite({
 										new Transform::Translate(2.0f, 0.0f, -2.0f),
@@ -65,9 +92,13 @@ int main() {
 					->addEntity(
 							Entity::createEntity("Hollow Knight")
 									->setModel("hollowknight")
-									->setObjectColor({0.4f, 0.0f, 0.4f})
-									->setSpecular(0.2f)
-									->setShininess(10.0f)
+									->setMaterial(
+											Material::createMaterial()
+													->setObjectColor({0.4f, 0.0f, 0.4f})
+													->setSpecular(0.2f)
+													->setShininess(10.0f)
+													->build()
+									)
 									->setShaderProgram("modelShader.vert", "phongLightShader.frag")
 									->setTransformation(new Transform::Composite({
 										new Transform::Translate(-2.0f, 0.0f, -2.0f),
@@ -78,9 +109,13 @@ int main() {
 					->addEntity(
 							Entity::createEntity("Tank")
 									->setModel("tank")
-									->setObjectColor({0.3f, 0.7f, 0.5f})
-									->setSpecular(0.2f)
-									->setShininess(10.0f)
+									->setMaterial(
+											Material::createMaterial()
+													->setObjectColor({0.3f, 0.7f, 0.5f})
+													->setSpecular(0.2f)
+													->setShininess(10.0f)
+													->build()
+									)
 									->setShaderProgram("modelShader.vert", "phongLightShader.frag")
 									->setTransformation(new Transform::Composite({
 										new Transform::Translate(2.0f, 0.25f, 3.0f),
@@ -92,9 +127,13 @@ int main() {
 					->addEntity(
 							Entity::createEntity("Pac-Man")
 									->setModel("pacman")
-									->setObjectColor({0.4f, 0.4f, 0.0f})
-									->setSpecular(0.2f)
-									->setShininess(10.0f)
+									->setMaterial(
+											Material::createMaterial()
+													->setObjectColor({0.4f, 0.4f, 0.0f})
+													->setSpecular(0.2f)
+													->setShininess(16.0f)
+													->build()
+									)
 									->setShaderProgram("modelShader.vert", "phongLightShader.frag")
 									->setSimulateFunction([&](Entity* entity, float delta) {
 										static float x = -5.0f;
@@ -131,7 +170,14 @@ int main() {
 					->addEntity(
 							Entity::createEntity("Grid")
 									->setModel("grid30m2")
-									->setObjectColor({0.2f, 0.2f, 0.2f})
+									->setMaterial(
+											Material::createMaterial()
+													->setAmbientColor({0.1f, 0.1f, 0.1f})
+													->setObjectColor({0.2f, 0.2f, 0.2f})
+													->setSpecular(0.2f)
+													->setShininess(10.0f)
+													->build()
+									)
 									->setShaderProgram("modelShader.vert", "staticLightShader.frag")
 									->build()
 					)
@@ -161,231 +207,275 @@ int main() {
 			#pragma endregion
 			);
 
- 	engine->getSceneHandler()->addScene(
-			#pragma region Scene 2 - Light Test Scene
-			Scene::createScene("Light Test Scene")
-					->addEntity(
-							Entity::createEntity("Sphere - Phong")
-									->setModel("sphere")
-									->setShaderProgram("modelShader.vert", "phongLightShader.frag")
-                                    ->setTransformation(new Transform::Composite({
-                                        new Transform::Translate(0.0f, 2.0f, 0.0f),
-                                    }))
-									->build()
-					)
-					->addEntity(
-							Entity::createEntity("Sphere - Lambert")
-									->setModel("sphere")
-									->setShaderProgram("modelShader.vert", "lambertLightShader.frag")
-                                    ->setTransformation(new Transform::Composite({
-                                        new Transform::Translate(-2.0f, 0.0f, 0.0f),
-                                    }))
-									->build()
-					)
-					->addEntity(
-							Entity::createEntity("Sphere - Blimm")
-									->setModel("sphere")
-									->setShaderProgram("modelShader.vert", "blimmLightShader.frag")
-                                    ->setTransformation(new Transform::Composite({
-                                        new Transform::Translate(0.0f, -2.0f, 0.0f),
-                                    }))
-									->build()
-					)
-					->addEntity(
-							Entity::createEntity("Sphere - Static")
-									->setModel("sphere")
-									->setShaderProgram("modelShader.vert", "staticLightShader.frag")
-                                    ->setTransformation(new Transform::Composite({
-                                        new Transform::Translate(2.0f, 0.0f, 0.0f),
-                                    }))
-									->build()
-					)
-					->addLight(Light::createLight("First")
-							           ->setColor(glm::vec3(1.0f, 1.0f, 1.0f))
-							           ->setTransformation(new Transform::Composite({
-										   new Transform::Translate(0.0f, 0.0f, 0.0f)
-									   }))
-							           ->build())
-                    ->setCameraTarget(glm::vec3 {0.0f, 0.0f, 0.0f})
-                    ->setCameraPosition(glm::vec3 {0.0f, 0.0f, 8.0f})
-					->build()
-#pragma endregion
-	);
+// 	engine->getSceneHandler()->addScene(
+//			#pragma region Scene 2 - Light Test Scene
+//			Scene::createScene("Light Test Scene")
+//					->addEntity(
+//							Entity::createEntity("Sphere - Phong")
+//									->setModel("sphere")
+//									->setShaderProgram("modelShader.vert", "phongLightShader.frag")
+//                                    ->setTransformation(new Transform::Composite({
+//                                        new Transform::Translate(0.0f, 2.0f, 0.0f),
+//                                    }))
+//									->build()
+//					)
+//					->addEntity(
+//							Entity::createEntity("Sphere - Lambert")
+//									->setModel("sphere")
+//									->setShaderProgram("modelShader.vert", "lambertLightShader.frag")
+//                                    ->setTransformation(new Transform::Composite({
+//                                        new Transform::Translate(-2.0f, 0.0f, 0.0f),
+//                                    }))
+//									->build()
+//					)
+//					->addEntity(
+//							Entity::createEntity("Sphere - Blimm")
+//									->setModel("sphere")
+//									->setShaderProgram("modelShader.vert", "blimmLightShader.frag")
+//                                    ->setTransformation(new Transform::Composite({
+//                                        new Transform::Translate(0.0f, -2.0f, 0.0f),
+//                                    }))
+//									->build()
+//					)
+//					->addEntity(
+//							Entity::createEntity("Sphere - Static")
+//									->setModel("sphere")
+//									->setShaderProgram("modelShader.vert", "staticLightShader.frag")
+//                                    ->setTransformation(new Transform::Composite({
+//                                        new Transform::Translate(2.0f, 0.0f, 0.0f),
+//                                    }))
+//									->build()
+//					)
+//					->addLight(Light::createLight("First")
+//							           ->setColor(glm::vec3(1.0f, 1.0f, 1.0f))
+//							           ->setTransformation(new Transform::Composite({
+//										   new Transform::Translate(0.0f, 0.0f, 0.0f)
+//									   }))
+//							           ->build())
+//                    ->setCameraTarget(glm::vec3 {0.0f, 0.0f, 0.0f})
+//                    ->setCameraPosition(glm::vec3 {0.0f, 0.0f, 8.0f})
+//					->build()
+//			#pragma endregion
+//	);
 
-     float rotations[10] = {0.0f};
-     engine->getSceneHandler()->addScene(
-			#pragma region Scene 3 - Planetary System
-			Scene::createScene("Planetary System")
-					->addEntity(
-							Entity::createEntity("Sun")
-									->setModel("sphere")
-									->setShaderProgram("modelShader.vert", "staticLightShader.frag")
-									->build()
-					)
-					->addEntity(
-							Entity::createEntity("Mercury")
-									->setModel("sphere")
-									->setShaderProgram("modelShader.vert", "lambertLightShader.frag")
-                                    ->setSimulateFunction([&](Entity* entity, float delta) {
-                                        entity->getTransformation()->setTransformation(new Transform::Composite({
-                                            new Transform::Composite({
-                                                new Transform::Rotation(0.0f, rotations[0], 0.0f),
-                                                new Transform::Translate(2.0f, 0.0f, 0.0f),
-                                            }),
-                                            new Transform::Scale(0.2f),
-                                        }));
+//     float rotations[10] = {0.0f};
+//     engine->getSceneHandler()->addScene(
+//			#pragma region Scene 3 - Planetary System
+//			Scene::createScene("Planetary System")
+//					->addEntity(
+//							Entity::createEntity("Sun")
+//									->setModel("sphere")
+//									->setShaderProgram("modelShader.vert", "staticLightShader.frag")
+//									->build()
+//					)
+//					->addEntity(
+//							Entity::createEntity("Mercury")
+//									->setModel("sphere")
+//									->setShaderProgram("modelShader.vert", "lambertLightShader.frag")
+//                                    ->setSimulateFunction([&](Entity* entity, float delta) {
+//                                        entity->getTransformation()->setTransformation(new Transform::Composite({
+//                                            new Transform::Composite({
+//                                                new Transform::Rotation(0.0f, rotations[0], 0.0f),
+//                                                new Transform::Translate(2.0f, 0.0f, 0.0f),
+//                                            }),
+//                                            new Transform::Scale(0.2f),
+//                                        }));
+//
+//                                        rotations[0] += 1.0f;
+//                                        rotations[0] = fmodf(rotations[0], 360.0f);
+//                                    })
+//									->build()
+//					)
+//					->addEntity(
+//							Entity::createEntity("Venus")
+//									->setModel("sphere")
+//									->setShaderProgram("modelShader.vert", "lambertLightShader.frag")
+//                                    ->setSimulateFunction([&](Entity* entity, float delta) {
+//                                        entity->getTransformation()->setTransformation(new Transform::Composite({
+//                                            new Transform::Composite({
+//                                                new Transform::Rotation(0.0f, -rotations[1], 0.0f),
+//                                                new Transform::Translate(4.0f, 0.0f, 0.0f),
+//                                            }),
+//                                            new Transform::Scale(0.5f),
+//                                        }));
+//
+//                                        rotations[1] += 0.5f;
+//                                        rotations[1] = fmodf(rotations[1], 360.0f);
+//                                    })
+//									->build()
+//                    )
+//					->addEntity(
+//							Entity::createEntity("Earth")
+//									->setModel("sphere")
+//									->setShaderProgram("modelShader.vert", "lambertLightShader.frag")
+//                                    ->setSimulateFunction([&](Entity* entity, float delta) {
+//                                        entity->getTransformation()->setTransformation(new Transform::Composite({
+//                                            new Transform::Composite({
+//                                                new Transform::Rotation(0.0f, rotations[2], 0.0f),
+//                                                new Transform::Translate(6.0f, 0.0f, 0.0f),
+//                                            }),
+//                                            new Transform::Scale(0.5f),
+//                                        }));
+//
+//                                        rotations[2] += 0.6f;
+//                                        rotations[2] = fmodf(rotations[2], 360.0f);
+//                                    })
+//									->build()
+//					)
+//					->addEntity(
+//							Entity::createEntity("Earth-Moon")
+//									->setModel("sphere")
+//									->setShaderProgram("modelShader.vert", "lambertLightShader.frag")
+//                                    ->setSimulateFunction([&](Entity* entity, float delta) {
+//                                        entity->getTransformation()->setTransformation(new Transform::Composite({
+//                                            new Transform::Composite({
+//                                                new Transform::Rotation(0.0f, rotations[2], 0.0f),
+//                                                new Transform::Translate(6.0f, 0.0f, 0.0f),
+//                                            }),
+//                                            new Transform::Composite({
+//                                                new Transform::Rotation(0.0f, rotations[3], 0.0f),
+//                                                new Transform::Translate(1.0f, 0.0f, 0.0f),
+//                                            }),
+//                                            new Transform::Scale(0.15f),
+//                                        }));
+//
+//                                        rotations[3] += 0.4f;
+//                                        rotations[3] = fmodf(rotations[3], 360.0f);
+//                                    })
+//									->build()
+//                    )
+//					->addEntity(
+//							Entity::createEntity("Mars")
+//									->setModel("sphere")
+//									->setShaderProgram("modelShader.vert", "lambertLightShader.frag")
+//                                    ->setSimulateFunction([&](Entity* entity, float delta) {
+//                                        entity->getTransformation()->setTransformation(new Transform::Composite({
+//                                            new Transform::Composite({
+//                                                new Transform::Rotation(0.0f, rotations[4], 0.0f),
+//                                                new Transform::Translate(9.0f, 0.0f, 0.0f),
+//                                            }),
+//                                            new Transform::Scale(0.25f),
+//                                        }));
+//
+//                                        rotations[4] += 0.35f;
+//                                        rotations[4] = fmodf(rotations[4], 360.0f);
+//                                    })
+//									->build()
+//					)
+//					->addEntity(
+//							Entity::createEntity("Mars-Moon-1")
+//									->setModel("sphere")
+//									->setShaderProgram("modelShader.vert", "lambertLightShader.frag")
+//                                    ->setSimulateFunction([&](Entity* entity, float delta) {
+//                                        entity->getTransformation()->setTransformation(new Transform::Composite({
+//                                            new Transform::Composite({
+//                                                new Transform::Rotation(0.0f, rotations[4], 0.0f),
+//                                                new Transform::Translate(9.0f, 0.0f, 0.0f),
+//                                            }),
+//                                            new Transform::Composite({
+//                                                new Transform::Rotation(0.0f, rotations[5], 0.0f),
+//                                                new Transform::Translate(0.5f, 0.0f, 0.0f),
+//                                            }),
+//                                            new Transform::Scale(0.1f),
+//                                        }));
+//
+//                                        rotations[5] += 0.4f;
+//                                        rotations[5] = fmodf(rotations[5], 360.0f);
+//                                    })
+//									->build()
+//					)
+//					->addEntity(
+//							Entity::createEntity("Mars-Moon-2")
+//									->setModel("sphere")
+//									->setShaderProgram("modelShader.vert", "lambertLightShader.frag")
+//                                    ->setSimulateFunction([&](Entity* entity, float delta) {
+//                                        entity->getTransformation()->setTransformation(new Transform::Composite({
+//                                            new Transform::Composite({
+//                                                new Transform::Rotation(0.0f, rotations[4], 0.0f),
+//                                                new Transform::Translate(9.0f, 0.0f, 0.0f),
+//                                            }),
+//                                            new Transform::Composite({
+//                                                new Transform::Rotation(rotations[6] * 0.5, rotations[6], 0.0f),
+//                                                new Transform::Translate(1.0f, 0.0f, 0.0f),
+//                                            }),
+//                                            new Transform::Scale(0.05f),
+//                                        }));
+//
+//                                        rotations[6] += 1.0f;
+//                                        rotations[6] = fmodf(rotations[6], 360.0f);
+//                                    })
+//									->build()
+//					)
+//                    ->addEntity(
+//                            Entity::createEntity("Jupiter")
+//                                    ->setModel("sphere")
+//                                    ->setShaderProgram("modelShader.vert", "lambertLightShader.frag")
+//                                    ->setSimulateFunction([&](Entity* entity, float delta) {
+//                                        entity->getTransformation()->setTransformation(new Transform::Composite({
+//                                            new Transform::Composite({
+//                                                new Transform::Rotation(0.0f, rotations[7], 0.0f),
+//                                                new Transform::Translate(12.0f, 0.0f, 0.0f),
+//                                            }),
+//                                            new Transform::Scale(1.2f),
+//                                        }));
+//
+//                                        rotations[7] += 0.85f;
+//                                        rotations[7] = fmodf(rotations[7], 360.0f);
+//                                    })
+//                                    ->build()
+//                    )
+//					->addLight(Light::createLight("First")
+//							           ->setColor(glm::vec3(1.0f, 1.0f, 0.0f))
+//							           ->build())
+//                    ->setCameraTarget(glm::vec3 {0.0f, 0.0f, 0.0f})
+//                    ->setCameraPosition(glm::vec3 {6.0f, 15.0f, 6.0f})
+//					->build()
+//			#pragma endregion
+//	);
 
-                                        rotations[0] += 1.0f;
-                                        rotations[0] = fmodf(rotations[0], 360.0f);
-                                    })
-									->build()
-					)
-					->addEntity(
-							Entity::createEntity("Venus")
-									->setModel("sphere")
-									->setShaderProgram("modelShader.vert", "lambertLightShader.frag")
-                                    ->setSimulateFunction([&](Entity* entity, float delta) {
-                                        entity->getTransformation()->setTransformation(new Transform::Composite({
-                                            new Transform::Composite({
-                                                new Transform::Rotation(0.0f, -rotations[1], 0.0f),
-                                                new Transform::Translate(4.0f, 0.0f, 0.0f),
-                                            }),
-                                            new Transform::Scale(0.5f),
-                                        }));
-
-                                        rotations[1] += 0.5f;
-                                        rotations[1] = fmodf(rotations[1], 360.0f);
-                                    })
-									->build()
-                    )
-					->addEntity(
-							Entity::createEntity("Earth")
-									->setModel("sphere")
-									->setShaderProgram("modelShader.vert", "lambertLightShader.frag")
-                                    ->setSimulateFunction([&](Entity* entity, float delta) {
-                                        entity->getTransformation()->setTransformation(new Transform::Composite({
-                                            new Transform::Composite({
-                                                new Transform::Rotation(0.0f, rotations[2], 0.0f),
-                                                new Transform::Translate(6.0f, 0.0f, 0.0f),
-                                            }),
-                                            new Transform::Scale(0.5f),
-                                        }));
-
-                                        rotations[2] += 0.6f;
-                                        rotations[2] = fmodf(rotations[2], 360.0f);
-                                    })
-									->build()
-					)
-					->addEntity(
-							Entity::createEntity("Earth-Moon")
-									->setModel("sphere")
-									->setShaderProgram("modelShader.vert", "lambertLightShader.frag")
-                                    ->setSimulateFunction([&](Entity* entity, float delta) {
-                                        entity->getTransformation()->setTransformation(new Transform::Composite({
-                                            new Transform::Composite({
-                                                new Transform::Rotation(0.0f, rotations[2], 0.0f),
-                                                new Transform::Translate(6.0f, 0.0f, 0.0f),
-                                            }),
-                                            new Transform::Composite({
-                                                new Transform::Rotation(0.0f, rotations[3], 0.0f),
-                                                new Transform::Translate(1.0f, 0.0f, 0.0f),
-                                            }),
-                                            new Transform::Scale(0.15f),
-                                        }));
-
-                                        rotations[3] += 0.4f;
-                                        rotations[3] = fmodf(rotations[3], 360.0f);
-                                    })
-									->build()
-                    )
-					->addEntity(
-							Entity::createEntity("Mars")
-									->setModel("sphere")
-									->setShaderProgram("modelShader.vert", "lambertLightShader.frag")
-                                    ->setSimulateFunction([&](Entity* entity, float delta) {
-                                        entity->getTransformation()->setTransformation(new Transform::Composite({
-                                            new Transform::Composite({
-                                                new Transform::Rotation(0.0f, rotations[4], 0.0f),
-                                                new Transform::Translate(9.0f, 0.0f, 0.0f),
-                                            }),
-                                            new Transform::Scale(0.25f),
-                                        }));
-
-                                        rotations[4] += 0.35f;
-                                        rotations[4] = fmodf(rotations[4], 360.0f);
-                                    })
-									->build()
-					)
-					->addEntity(
-							Entity::createEntity("Mars-Moon-1")
-									->setModel("sphere")
-									->setShaderProgram("modelShader.vert", "lambertLightShader.frag")
-                                    ->setSimulateFunction([&](Entity* entity, float delta) {
-                                        entity->getTransformation()->setTransformation(new Transform::Composite({
-                                            new Transform::Composite({
-                                                new Transform::Rotation(0.0f, rotations[4], 0.0f),
-                                                new Transform::Translate(9.0f, 0.0f, 0.0f),
-                                            }),
-                                            new Transform::Composite({
-                                                new Transform::Rotation(0.0f, rotations[5], 0.0f),
-                                                new Transform::Translate(0.5f, 0.0f, 0.0f),
-                                            }),
-                                            new Transform::Scale(0.1f),
-                                        }));
-
-                                        rotations[5] += 0.4f;
-                                        rotations[5] = fmodf(rotations[5], 360.0f);
-                                    })
-									->build()
-					)
-					->addEntity(
-							Entity::createEntity("Mars-Moon-2")
-									->setModel("sphere")
-									->setShaderProgram("modelShader.vert", "lambertLightShader.frag")
-                                    ->setSimulateFunction([&](Entity* entity, float delta) {
-                                        entity->getTransformation()->setTransformation(new Transform::Composite({
-                                            new Transform::Composite({
-                                                new Transform::Rotation(0.0f, rotations[4], 0.0f),
-                                                new Transform::Translate(9.0f, 0.0f, 0.0f),
-                                            }),
-                                            new Transform::Composite({
-                                                new Transform::Rotation(rotations[6] * 0.5, rotations[6], 0.0f),
-                                                new Transform::Translate(1.0f, 0.0f, 0.0f),
-                                            }),
-                                            new Transform::Scale(0.05f),
-                                        }));
-
-                                        rotations[6] += 1.0f;
-                                        rotations[6] = fmodf(rotations[6], 360.0f);
-                                    })
-									->build()
-					)
-                    ->addEntity(
-                            Entity::createEntity("Jupiter")
-                                    ->setModel("sphere")
-                                    ->setShaderProgram("modelShader.vert", "lambertLightShader.frag")
-                                    ->setSimulateFunction([&](Entity* entity, float delta) {
-                                        entity->getTransformation()->setTransformation(new Transform::Composite({
-                                            new Transform::Composite({
-                                                new Transform::Rotation(0.0f, rotations[7], 0.0f),
-                                                new Transform::Translate(12.0f, 0.0f, 0.0f),
-                                            }),
-                                            new Transform::Scale(1.2f),
-                                        }));
-
-                                        rotations[7] += 0.85f;
-                                        rotations[7] = fmodf(rotations[7], 360.0f);
-                                    })
-                                    ->build()
-                    )
-					->addLight(Light::createLight("First")
-							           ->setColor(glm::vec3(1.0f, 1.0f, 0.0f))
-							           ->build())
-                    ->setCameraTarget(glm::vec3 {0.0f, 0.0f, 0.0f})
-                    ->setCameraPosition(glm::vec3 {6.0f, 15.0f, 6.0f})
-					->build()
-			#pragma endregion
-	);
+//	Scene::Builder* forestSceneBuilder = Scene::createScene("Forest Scene");
+//
+//	std::mt19937 gen(std::random_device{}());
+//	std::uniform_real_distribution<> randomPosition(-15.0f, 15.0f);
+//	std::uniform_real_distribution<> randomRotation(0.0f, 360.0f);
+//	std::uniform_real_distribution<> randomColor(0.0f, 255.0f);
+//	std::uniform_int_distribution<> randomModel(0, 4);
+//
+//	for (int i = 0; i < 100; i++) {
+//		static std::string models[5] = {"tree", "bush", "suzi", "devil", "hollowknight"};
+//		std::string model = models[randomModel(gen)];
+//
+//		// Random color
+//
+//		forestSceneBuilder->addEntity(
+//			Entity::createEntity(model + std::to_string(i))
+//					->setModel(model)
+//					->setObjectColor({
+//						randomColor(gen) / 255.0f,
+//						randomColor(gen) / 255.0f,
+//						randomColor(gen) / 255.0f,
+//						})
+//					->setSpecular(0.2f)
+//					->setShininess(10.0f)
+//					->setShaderProgram("modelShader.vert", "phongLightShader.frag")
+//					->setTransformation(new Transform::Composite({
+//						new Transform::Translate(randomPosition(gen), 0.0f, randomPosition(gen)),
+//						new Transform::Rotation(0.0f, randomRotation(gen), 0.0f),
+//						new Transform::Scale(model == "tree" ? 5.0f : model == "bush" ? 3.0f : 1.0f),
+//					}))
+//					->build()
+//		);
+//	}
+//
+//	forestSceneBuilder->addLight(
+//			Light::createLight("Top Light")
+//					->setTransformation(new Transform::Composite({
+//						new Transform::Translate(0.0f, 3.0f, 0.0f)
+//					}))
+//					->build()
+//	);
+//
+//	engine->getSceneHandler()->addScene(forestSceneBuilder->build());
 
 	engine->run();
 

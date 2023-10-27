@@ -20,7 +20,10 @@ CameraHandler::CameraHandler(Scene* parent, glm::vec3 position, glm::vec3 target
 	Engine::getInstance()->getEventHandler()->addListener(new Listener<KeyPressEvent>([=](KeyPressEvent* event) {
 		if (Engine::getInstance()->getConsoleHandler()->isEnabled()) return;
 
-		CameraHandler* cameraHandler = Engine::getInstance()->getSceneHandler()->getActiveScene()->getCameraHandler();
+		Scene* activeScene = Engine::getInstance()->getSceneHandler()->getActiveScene();
+		if (this->parentScene != activeScene) return;
+
+		CameraHandler* cameraHandler = activeScene->getCameraHandler();
 		if (event->getKey() == GLFW_KEY_ESCAPE && event->getAction() == GLFW_PRESS) {
 			cameraHandler->setMoving(!cameraHandler->isMoving());
 		}
@@ -30,11 +33,11 @@ CameraHandler::CameraHandler(Scene* parent, glm::vec3 position, glm::vec3 target
 	Engine::getInstance()->getEventHandler()->addListener(new Listener<MousePositionEvent>([=](MousePositionEvent* event) {
 		if (Engine::getInstance()->getConsoleHandler()->isEnabled()) return;
 
-		Scene* scene = Engine::getInstance()->getSceneHandler()->getActiveScene();
-		CameraHandler* cameraHandler = scene->getCameraHandler();
+		Scene* activeScene = Engine::getInstance()->getSceneHandler()->getActiveScene();
+		CameraHandler* cameraHandler = activeScene->getCameraHandler();
 		Camera* camera = cameraHandler->getCamera();
 
-		if (this->parentScene != scene) return;
+		if (this->parentScene != activeScene) return;
 
 		float deltaX = event->getNewPosition().x - event->getOldPosition().x;
 		float deltaY = event->getNewPosition().y - event->getOldPosition().y;
