@@ -8,7 +8,7 @@ Scene::Scene(const std::string &name) : Object(name) {
 	this->entityHandler = new EntityHandler();
 	this->lightHandler = new LightHandler(this);
 	this->cameraHandler = new CameraHandler(this, {3.0f, 2.0f, 3.0f}, glm::vec3(0.0f));
-	this->skyBox = nullptr;
+	this->sky = nullptr;
 }
 
 Scene::~Scene() {
@@ -16,8 +16,8 @@ Scene::~Scene() {
 	delete this->lightHandler;
 	delete this->cameraHandler;
 
-	if (this->skyBox != nullptr) {
-		delete this->skyBox;
+	if (this->sky != nullptr) {
+		delete this->sky;
 	}
 }
 
@@ -34,6 +34,11 @@ CameraHandler* Scene::getCameraHandler() const {
 }
 
 void Scene::render() {
+	if (this->sky != nullptr) {
+		glStencilFunc(GL_ALWAYS, 0, 0xFF);
+		this->sky->draw();
+	}
+
 	for (const auto &entity: this->entityHandler->getEntities()) {
 		glStencilFunc(GL_ALWAYS, entity->getID() + 1, 0xFF);
 		entity->calculateTransformationMatrix();
@@ -48,10 +53,6 @@ void Scene::render() {
 		glStencilFunc(GL_ALWAYS, entityCount + light->getID() + 1, 0xFF);
 		renderable->calculateTransformationMatrix();
 		renderable->draw();
-	}
-
-	if (this->skyBox != nullptr) {
-		this->skyBox->draw();
 	}
 }
 
@@ -150,8 +151,8 @@ Scene::Builder& Scene::Builder::setSimulateFunction(const std::function<void(Sce
 	return *this;
 }
 
-Scene::Builder& Scene::Builder::setSkyBox(const std::string &name, const std::vector<Path> &images) {
-	this->scene->skyBox = new SkyBox(name, images);
+Scene::Builder& Scene::Builder::setSky(Sky* sky) {
+	this->scene->sky = sky;
 	return *this;
 }
 

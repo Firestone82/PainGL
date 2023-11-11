@@ -47,10 +47,24 @@ void loadMaterialTextures(aiMaterial* material, aiTextureType type, const std::s
 
 		if (skip) continue;
 
+		TextureHandler* textureHandler = Engine::getInstance()->getTextureHandler();
+		for (Texture* texture : textureHandler->getTextures()) {
+			std::string strWithoutExtension = str.C_Str();
+			strWithoutExtension = strWithoutExtension.substr(0, strWithoutExtension.find_last_of('.'));
+
+			if (texture->getName() == strWithoutExtension.c_str()) {
+				textures.push_back(texture);
+				skip = true;
+				break;
+			}
+		}
+
+		if (skip) continue;
+
 		Texture* texture = Engine::getInstance()->getTextureHandler()->loadTextureFile(Path(directory + "/" + str.C_Str()), textureType);
 		if (texture != nullptr) {
 			textures.push_back(texture);
-			Logger::debug(" - Attaching texture from %d \"%s\"", static_cast<int>(type), str.C_Str());
+			Logger::debug(" - Attaching texture from %s \"%s\"", texture->getTextureTypeString().c_str(), str.C_Str());
 		}
 	}
 }
@@ -164,7 +178,7 @@ std::vector<Model*> ModelHandler::getModels() const {
 }
 
 Model* ModelHandler::getModel(const std::string &name) {
-	for (Model* model: this->models) {
+	for (Model* model : this->models) {
 		if (model->getName() == name) {
 			return model;
 		}

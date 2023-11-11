@@ -52,3 +52,16 @@ GLenum Texture::getGLType() const {
 TextureType Texture::getTextureType() const {
 	return this->type;
 }
+
+std::string Texture::getTextureTypeString() const {
+	switch (this->type) {
+		case TextureType::DIFFUSE:
+			return "DIFFUSE";
+
+		case TextureType::SPECULAR:
+			return "SPECULAR";
+
+		default:
+			return "UNSPECIFIED";
+	}
+}
