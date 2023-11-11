@@ -4,41 +4,27 @@
 
 class Color {
 	public:
-		// Text colors
+		// Standard colors
+		static inline std::string BLACK = "\033[0;30m";
 		static inline std::string RED = "\033[0;31m";
-		static inline std::string GREEN = "\033[32m";
-		static inline std::string YELLOW = "\033[33m";
-		static inline std::string BLUE = "\033[34m";
-		static inline std::string MAGENTA = "\033[35m";
-		static inline std::string CYAN = "\033[36m";
-		static inline std::string WHITE = "\033[97m";
-		static inline std::string DARK_GRAY = "\033[90m";
-		static inline std::string GRAY = "\033[37m";
-		static inline std::string BRIGHT_RED = "\033[91m";
-		static inline std::string BRIGHT_GREEN = "\033[92m";
-		static inline std::string BRIGHT_YELLOW = "\033[93m";
-		static inline std::string BRIGHT_BLUE = "\033[94m";
-		static inline std::string BRIGHT_MAGENTA = "\033[95m";
-		static inline std::string BRIGHT_CYAN = "\033[96m";
-		static inline std::string BRIGHT_WHITE = "\033[97m";
+		static inline std::string GREEN = "\033[0;32m";
+		static inline std::string YELLOW = "\033[0;33m";
+		static inline std::string BLUE = "\033[0;34m";
+		static inline std::string MAGENTA = "\033[0;35m";
+		static inline std::string CYAN = "\033[0;36m";
+		static inline std::string GRAY = "\033[0;37m";
+		static inline std::string WHITE = "\033[0;38m";
 
-		// Background colors
-		static inline std::string BACKGROUND_RED = "\033[41m";
-		static inline std::string BACKGROUND_GREEN = "\033[42m";
-		static inline std::string BACKGROUND_YELLOW = "\033[43m";
-		static inline std::string BACKGROUND_BLUE = "\033[44m";
-		static inline std::string BACKGROUND_MAGENTA = "\033[45m";
-		static inline std::string BACKGROUND_CYAN = "\033[46m";
-		static inline std::string BACKGROUND_WHITE = "\033[107m";
-		static inline std::string BACKGROUND_DARK_GRAY = "\033[100m";
-		static inline std::string BACKGROUND_GRAY = "\033[47m";
-		static inline std::string BACKGROUND_BRIGHT_RED = "\033[101m";
-		static inline std::string BACKGROUND_BRIGHT_GREEN = "\033[102m";
-		static inline std::string BACKGROUND_BRIGHT_YELLOW = "\033[103m";
-		static inline std::string BACKGROUND_BRIGHT_BLUE = "\033[104m";
-		static inline std::string BACKGROUND_BRIGHT_MAGENTA = "\033[105m";
-		static inline std::string BACKGROUND_BRIGHT_CYAN = "\033[106m";
-		static inline std::string BACKGROUND_BRIGHT_WHITE = "\033[107m";
+		// Bright colors
+		static inline std::string BOLD_BLACK = "\033[1;30m";
+		static inline std::string BOLD_RED = "\033[1;31m";
+		static inline std::string BOLD_GREEN = "\033[1;32m";
+		static inline std::string BOLD_YELLOW = "\033[1;33m";
+		static inline std::string BOLD_BLUE = "\033[1;34m";
+		static inline std::string BOLD_MAGENTA = "\033[1;35m";
+		static inline std::string BOLD_CYAN = "\033[1;36m";
+		static inline std::string BOLD_GRAY = "\033[1;37m";
+		static inline std::string BOLD_WHITE = "\033[1;38m";
 
 		// Reset color
 		static inline std::string RESET = "\033[0m";

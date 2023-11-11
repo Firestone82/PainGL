@@ -1,11 +1,13 @@
 #pragma once
 
 #include <map>
+#include <glm/vec2.hpp>
 
 class InputController {
 	private:
 		std::map<int, std::tuple<int, int>> keyboardKeys;
 		std::map<int, std::tuple<int, int>> mouseButtons;
+		glm::vec2 mousePosition;
 
 	public:
 		InputController();
@@ -17,4 +19,6 @@ class InputController {
 		void setMouseButtonState(int button, int state, int mod);
 		bool isMouseButtonPressed(int button);
 		int getMouseButtonMod(int button);
+
+		glm::vec2 getMousePosition();
 };

@@ -4,42 +4,32 @@
 #include "scene/structure/Object.h"
 #include "model/Model.h"
 #include "shader/ShaderProgram.h"
+#include "scene/structure/Transformable.h"
+#include "scene/structure/Randerable.h"
+#include "scene/structure/Simulable.h"
 
-class Entity : public Object<Entity> {
-	private:
-		Model* model = nullptr;
-		ShaderProgram* shaderProgram = nullptr;
-		Material* material = nullptr;
-
+class Entity : public Object, public Renderable, public Simulable<Entity> {
+	protected:
 		explicit Entity(const std::string &name) : Object(name) {};
 
 	public:
 		~Entity() override;
 
-		void draw() override;
-
-		Model* getModel() const;
-		ShaderProgram* getShaderProgram() const;
-		Material* getMaterial() const;
-
 		class Builder {
 			private:
-				Entity* renderableEntity;
+				Entity* entity;
 
 			public:
-				explicit Builder(const std::string &name);
+				Builder(const std::string &name);
 
-				Builder* setModel(Model* model);
-				Builder* setModel(const std::string &model);
-				Builder* setShaderProgram(ShaderProgram* shaderProgram);
-				Builder* setShaderProgram(const std::string &vertex, const std::string &fragment);
-				Builder* setStatik(bool statik);
-				Builder* setMaterial(Material* material);
-				Builder* setTransformation(Transform::Composite* composite);
-				Builder* setSimulateFunction(const std::function<void(Entity*, float)> &simulateFunction);
+				Builder& setModel(const std::string &model);
+				Builder& setShaderProgram(const std::string &vertex, const std::string &fragment);
+				Builder& setMaterial(Material* material);
+				Builder& setTransformation(Transform::Composite* composite);
+				Builder& setSimulateFunction(const std::function<void(Entity*, float)> &simulateFunction);
 
 				Entity* build();
 		};
 
-		static Builder* createEntity(const std::string &name);
+		static Builder createEntity(const std::string &name);
 };

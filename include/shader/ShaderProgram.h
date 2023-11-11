@@ -7,6 +7,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+class AbstractLight;
 class ShaderProgram {
 	private:
 		std::string name;
@@ -19,15 +20,21 @@ class ShaderProgram {
 		~ShaderProgram();
 
 		void attach(Shader* shader);
-		void setShaderVariableMatrix(const std::variant<glm::mat2, glm::mat3, glm::mat4> &matrix, const std::string &variable);
-		void setShaderVariableVector(const std::variant<glm::vec2, glm::vec3, glm::vec4> &vector, const std::string &variable);
-		void setShaderVariableInt(int integer, const std::string &variable);
-		void setShaderVariableFloat(float value, const std::string &variable);
+
+		void setShaderVariable(const glm::mat2 &mat, const std::string &variable);
+		void setShaderVariable(const glm::mat3 &mat, const std::string &variable);
+		void setShaderVariable(const glm::mat4 &mat, const std::string &variable);
+		void setShaderVariable(const glm::vec2 &vec, const std::string &variable);
+		void setShaderVariable(const glm::vec3 &vec, const std::string &variable);
+		void setShaderVariable(const glm::vec4 &vec, const std::string &variable);
+		void setShaderVariable(int value, const std::string &variable);
+		void setShaderVariable(bool state, const std::string &variable);
+		void setShaderVariable(float value, const std::string &variable);
+		void setShaderLight(AbstractLight* light);
 
 		void link();
 		void use();
-		void update();
-		void unset();
+		void unUse();
 
 		std::string toString();
 };

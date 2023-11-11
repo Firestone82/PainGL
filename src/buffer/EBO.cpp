@@ -10,10 +10,14 @@ EBO::~EBO() {
     this->ebo = 0;
 }
 
-void EBO::setData(std::vector<unsigned int> points, GLulong size, GLenum usage) {
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, points.data(), usage);
+void EBO::setData(const void* data, GLulong size, GLenum usage) {
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, data, usage);
 }
 
 void EBO::bind() {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->ebo);
+}
+
+void EBO::unbind() {
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }

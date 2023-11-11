@@ -12,7 +12,8 @@ class VBO {
         VBO();
         ~VBO();
 
-        void setData(std::vector<float> points, GLulong size, GLenum usage);
+        void setData(const void* data, GLulong size, GLenum usage);
 
         void bind();
+		void unbind();
 };

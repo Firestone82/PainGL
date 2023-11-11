@@ -1,54 +1,62 @@
 #include "texture/TextureHandler.h"
-#include "utils/FileUtils.h"
+#include "utils/FileUtils.hpp"
 #include "utils/StringUtils.h"
 
-#define STB_IMAGE_IMPLEMENTATION
-#include "3rdparty/stb/stb_image.h"
+#include "utils/Logger.h"
 
-TextureHandler::TextureHandler(const std::string path, bool preLoad) : path(path) {
-	if (preLoad) {
-		this->loadTextureFolder(path);
-	}
+TextureHandler::TextureHandler(const Path &path, bool preLoad) : folderPath(path) {
+	if (preLoad) this->loadTextureFolder(path);
 }
 
 TextureHandler::~TextureHandler() {
 	Logger::debug("\nDestroying %zu textures", this->textures.size());
 
-	for (Texture* texture : this->textures) {
+	for (Texture* texture: this->textures) {
 		std::string name = texture->getName();
 		delete texture;
 		Logger::debug(R"( - Texture "%s" destroyed)", name.c_str());
 	}
 }
 
-void TextureHandler::loadTextureFolder(const std::string &folderPath) {
-	for (std::string file : FileUtils::getFiles(folderPath)) {
-		std::vector<std::string> args = StringUtils::split(file, "\\");
+void TextureHandler::loadTextureFolder(const Path &folderPath) {
+	for (const auto &filePath: FileUtils::getFiles(folderPath)) {
 
-		this->loadTextureFile(args[1], file);
+		TextureType textureType = TextureType::UNSPECIFIED;
+		if (StringUtils::endsWith(filePath.getFileNameWithoutExtension(),"_spec")) {
+			textureType = TextureType::SPECULAR;
+		} else if (StringUtils::endsWith(filePath.getFileNameWithoutExtension(),"_diff")) {
+			textureType = TextureType::DIFFUSE;
+		}
+
+		// Skip files that are not texture of model
+		if (textureType == TextureType::UNSPECIFIED) {
+			continue;
+		}
+
+		loadTextureFile(filePath, textureType);
 	}
+
+	Logger::debug("");
 }
 
-Texture* TextureHandler::loadTextureFile(const std::string &name, const std::string &path) {
-	Logger::debug(R"(Loading texture "%s" from file "%s")", name.c_str(), path.c_str());
+Texture* TextureHandler::loadTextureFile(const Path &filePath, TextureType type) {
+	Logger::debug(R"(Loading texture "%s")", filePath.toString().c_str());
 
-	Texture* texture = new Texture(name, GL_TEXTURE_2D);
-
-	int width, height, nrChannels;
-	std::vector<unsigned char> data;
-	unsigned char* dataPtr = stbi_load(path.c_str(), &width, &height, &nrChannels, 0);
-
-	if (dataPtr) {
-		data = std::vector<unsigned char>(dataPtr, dataPtr + width * height * nrChannels);
-		stbi_image_free(dataPtr);
-	} else {
-		Logger::error(R"( - Failed to load texture "%s")", name.c_str());
+	if (!filePath.exists()) {
+		Logger::error(R"( - File does not exist)");
+		return nullptr;
 	}
 
-	Logger::debug(R"( - Texture "%s" loaded: %dx%d)", name.c_str(), width, height);
-	texture->setData(data, width, height);
+	Image* image = new Image(filePath);
+	if (image->getData() == nullptr) {
+		Logger::error(R"( - Failed to load image)");
+		return nullptr;
+	}
 
+	Texture* texture = new Texture(filePath.getFileNameWithoutExtension(), type, image);
 	this->textures.push_back(texture);
+
+	Logger::debug(" - Successfully loaded texture.");
 	return texture;
 }
 
@@ -57,12 +65,30 @@ std::vector<Texture*> TextureHandler::getTextures() const {
 }
 
 Texture* TextureHandler::getTexture(const std::string &name) {
-	for (Texture* texture : this->textures) {
+	for (Texture* texture: this->textures) {
 		if (texture->getName() == name) {
 			return texture;
 		}
 	}
 
+	std::optional<Path> filePath = FileUtils::findFileInFolder(this->folderPath, name);
+
+	if (filePath.has_value()) {
+		Path path = filePath.value();
+
+		TextureType type = TextureType::UNSPECIFIED;
+		if (StringUtils::endsWith("_diff", path.getFileNameWithoutExtension())) {
+			type = TextureType::DIFFUSE;
+		} else if (StringUtils::endsWith("_spec", path.getFileNameWithoutExtension())) {
+			type = TextureType::SPECULAR;
+		}
+
+		return this->loadTextureFile(path, type);
+	}
+
 	return nullptr;
 }
 
+Path TextureHandler::getFolderPath() const {
+	return this->folderPath;
+}

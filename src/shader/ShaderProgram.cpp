@@ -1,10 +1,12 @@
 #include <stdexcept>
 #include <variant>
+
 #include "shader/ShaderProgram.h"
-#include "utils/Logger.h"
-#include "Engine.h"
 #include "event/type/CameraEvents.h"
 #include "event/type/SceneEvents.h"
+#include "event/type/LightEvents.h"
+#include "utils/Logger.h"
+#include "Engine.h"
 
 ShaderProgram::ShaderProgram(const std::string &name) : name(name) {
 	this->program = glCreateProgram();
@@ -12,35 +14,26 @@ ShaderProgram::ShaderProgram(const std::string &name) : name(name) {
 	// Listener for camera zoom
 	Engine::getInstance()->getEventHandler()->addListener(new Listener<CameraZoomEvent>([=](CameraZoomEvent* event) {
 		this->use();
-		this->setShaderVariableMatrix(event->getCameraHandler()->getProjectionMatrix(), "projectionMatrix");
+		this->setShaderVariable(event->getCameraHandler()->getProjectionMatrix(), "projectionMatrix");
 	}));
 
 	// Listener for camera rotation
 	Engine::getInstance()->getEventHandler()->addListener(new Listener<CameraRotateEvent>([=](CameraRotateEvent* event) {
 		this->use();
-		this->setShaderVariableMatrix(event->getCamera()->getViewMatrix(), "viewMatrix");
+		this->setShaderVariable(event->getCamera()->getViewMatrix(), "viewMatrix");
 	}));
 
 	// Listener for camera movement
 	Engine::getInstance()->getEventHandler()->addListener(new Listener<CameraMoveEvent>([=](CameraMoveEvent* event) {
 		this->use();
-		this->setShaderVariableMatrix(event->getCamera()->getViewMatrix(), "viewMatrix");
-		this->setShaderVariableVector(event->getCamera()->getPosition(), "camera.position");
+		this->setShaderVariable(event->getCamera()->getViewMatrix(), "viewMatrix");
+		this->setShaderVariable(event->getCamera()->getPosition(), "camera.position");
 	}));
 
-	// Listener for switching scenes
-	Engine::getInstance()->getEventHandler()->addListener(new Listener<SceneSwitchEvent>([=](SceneSwitchEvent* event) {
+	// Listener for light update
+	Engine::getInstance()->getEventHandler()->addListener(new Listener<LightUpdateEvent>([=](LightUpdateEvent* event) {
 		this->use();
-		this->setShaderVariableMatrix(event->getNewScene()->getCameraHandler()->getCamera()->getViewMatrix(), "viewMatrix");
-		this->setShaderVariableMatrix(event->getNewScene()->getCameraHandler()->getProjectionMatrix(), "projectionMatrix");
-		this->setShaderVariableVector(event->getNewScene()->getCameraHandler()->getCamera()->getPosition(), "camera.position");
-
-		this->setShaderVariableInt(event->getNewScene()->getLightHandler()->getLights().size(), "numLights");
-		for (Light* light: event->getNewScene()->getLightHandler()->getLights()){
-			light->calculateTransformationMatrix();
-			this->setShaderVariableVector(light->getPosition(), "lights["+ std::to_string(light->getID())  +"].position");
-			this->setShaderVariableVector(light->getColor(), "lights["+ std::to_string(light->getID()) +"].color");
-		}
+		this->setShaderLight(event->getLight());
 	}));
 }
 
@@ -58,57 +51,133 @@ void ShaderProgram::attach(Shader* shader) {
 	glAttachShader(this->program, shader->get());
 }
 
-static long lastNotify = 0;
-void ShaderProgram::setShaderVariableMatrix(const std::variant<glm::mat2, glm::mat3, glm::mat4> &matrix, const std::string &variable) {
+static long lastNotify = glfwGetTime();
+void notify(const std::string message, ...) {
+//	if (lastNotify + 10 < glfwGetTime()) {
+//		va_list args;
+//		va_start(args, message);
+//		Logger::warning(message, args);
+//		printf(message.c_str(), args);
+//		va_end(args);
+//
+//		lastNotify = glfwGetTime();
+//	}
+}
+
+void ShaderProgram::setShaderVariable(const glm::mat2 &mat, const std::string &variable) {
 	GLint uniformLocation = glGetUniformLocation(this->program, variable.c_str());
 
 	if (uniformLocation == -1) {
-		if (lastNotify + 1000 < glfwGetTime()) {
-			Logger::warning(R"(ShaderProgram "%s": Uniform variable "%s" not found)", this->name.c_str(), variable.c_str());
-			lastNotify = glfwGetTime();
-		}
-
+		notify(R"(ShaderProgram "%s": Uniform variable "%s" not found)", this->name.c_str(), variable.c_str());
 		return;
 	}
 
-	if (std::holds_alternative<glm::mat2>(matrix)) {
-		glUniformMatrix2fv(uniformLocation, 1, GL_FALSE, glm::value_ptr(std::get<glm::mat2>(matrix)));
-	} else if (std::holds_alternative<glm::mat3>(matrix)) {
-		glUniformMatrix3fv(uniformLocation, 1, GL_FALSE, glm::value_ptr(std::get<glm::mat3>(matrix)));
-	} else {
-		glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, glm::value_ptr(std::get<glm::mat4>(matrix)));
-	}
+	glUniformMatrix2fv(uniformLocation, 1, GL_FALSE, glm::value_ptr(mat));
 }
 
-void ShaderProgram::setShaderVariableVector(const std::variant<glm::vec2, glm::vec3, glm::vec4> &vector, const std::string &variable) {
+void ShaderProgram::setShaderVariable(const glm::mat3 &mat, const std::string &variable) {
 	GLint uniformLocation = glGetUniformLocation(this->program, variable.c_str());
 
 	if (uniformLocation == -1) {
-		if (lastNotify + 1000 < glfwGetTime()) {
-			Logger::warning(R"(ShaderProgram "%s": Uniform variable "%s" not found)", this->name.c_str(), variable.c_str());
-			lastNotify = glfwGetTime();
-		}
-
+		notify(R"(ShaderProgram "%s": Uniform variable "%s" not found)", this->name.c_str(), variable.c_str());
 		return;
 	}
 
-	if (std::holds_alternative<glm::vec2>(vector)) {
-		glUniform2fv(uniformLocation, 1, glm::value_ptr(std::get<glm::vec2>(vector)));
-	} else if (std::holds_alternative<glm::vec3>(vector)) {
-		glUniform3fv(uniformLocation, 1, glm::value_ptr(std::get<glm::vec3>(vector)));
-	} else {
-		glUniform4fv(uniformLocation, 1, glm::value_ptr(std::get<glm::vec4>(vector)));
-	}
+	glUniformMatrix3fv(uniformLocation, 1, GL_FALSE, glm::value_ptr(mat));
 }
 
-void ShaderProgram::setShaderVariableInt(int value, const std::string &variable) {
+void ShaderProgram::setShaderVariable(const glm::mat4 &mat, const std::string &variable) {
 	GLint uniformLocation = glGetUniformLocation(this->program, variable.c_str());
+
+	if (uniformLocation == -1) {
+		notify(R"(ShaderProgram "%s": Uniform variable "%s" not found)", this->name.c_str(), variable.c_str());
+		return;
+	}
+
+	glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, glm::value_ptr(mat));
+}
+
+void ShaderProgram::setShaderVariable(const glm::vec2 &mat, const std::string &variable) {
+	GLint uniformLocation = glGetUniformLocation(this->program, variable.c_str());
+
+	if (uniformLocation == -1) {
+		notify(R"(ShaderProgram "%s": Uniform variable "%s" not found)", this->name.c_str(), variable.c_str());
+		return;
+	}
+
+	glUniform2fv(uniformLocation, 1, glm::value_ptr(mat));
+}
+
+void ShaderProgram::setShaderVariable(const glm::vec3 &mat, const std::string &variable) {
+	GLint uniformLocation = glGetUniformLocation(this->program, variable.c_str());
+
+	if (uniformLocation == -1) {
+		notify(R"(ShaderProgram "%s": Uniform variable "%s" not found)", this->name.c_str(), variable.c_str());
+		return;
+	}
+
+	glUniform3fv(uniformLocation, 1, glm::value_ptr(mat));
+}
+
+void ShaderProgram::setShaderVariable(const glm::vec4 &mat, const std::string &variable) {
+	GLint uniformLocation = glGetUniformLocation(this->program, variable.c_str());
+
+	if (uniformLocation == -1) {
+		notify(R"(ShaderProgram "%s": Uniform variable "%s" not found)", this->name.c_str(), variable.c_str());
+		return;
+	}
+
+	glUniform4fv(uniformLocation, 1, glm::value_ptr(mat));
+}
+
+void ShaderProgram::setShaderVariable(int value, const std::string &variable) {
+	GLint uniformLocation = glGetUniformLocation(this->program, variable.c_str());
+
+	if (uniformLocation == -1) {
+		notify(R"(ShaderProgram "%s": Uniform variable "%s" not found)", this->name.c_str(), variable.c_str());
+		return;
+	}
+
 	glUniform1i(uniformLocation, value);
 }
 
-void ShaderProgram::setShaderVariableFloat(float value, const std::string &variable) {
+void ShaderProgram::setShaderVariable(bool state, const std::string &variable) {
 	GLint uniformLocation = glGetUniformLocation(this->program, variable.c_str());
+
+	if (uniformLocation == -1) {
+		notify(R"(ShaderProgram "%s": Uniform variable "%s" not found)", this->name.c_str(), variable.c_str());
+		return;
+	}
+
+	glUniform1i(uniformLocation, state);
+}
+
+void ShaderProgram::setShaderVariable(float value, const std::string &variable) {
+	GLint uniformLocation = glGetUniformLocation(this->program, variable.c_str());
+
+	if (uniformLocation == -1) {
+		notify(R"(ShaderProgram "%s": Uniform variable "%s" not found)", this->name.c_str(), variable.c_str());
+		return;
+	}
+
 	glUniform1f(uniformLocation, value);
+}
+
+void ShaderProgram::setShaderLight(AbstractLight* light) {
+	std::string id = std::to_string(light->getID());
+	std::string prefix = "lights[" + id + "].";
+
+	this->setShaderVariable(int(light->getType()), prefix + "type");
+
+	for (const auto &[key, value]: light->getShaderVariables()) {
+		if (std::holds_alternative<glm::vec3>(value)) {
+			this->setShaderVariable(std::get<glm::vec3>(value), prefix + key);
+		} else if (std::holds_alternative<float>(value)) {
+			this->setShaderVariable(std::get<float>(value), prefix + key);
+		} else {
+			Logger::warning("ShaderProgram: Unknown shader variable type");
+		}
+	}
 }
 
 void ShaderProgram::link() {
@@ -135,13 +204,7 @@ void ShaderProgram::use() {
 	glUseProgram(this->program);
 }
 
-void ShaderProgram::update() {
-	this->use();
-	this->setShaderVariableMatrix(Engine::getInstance()->getSceneHandler()->getActiveScene()->getCameraHandler()->getProjectionMatrix(), "projectionMatrix");
-	this->setShaderVariableMatrix(Engine::getInstance()->getSceneHandler()->getActiveScene()->getCameraHandler()->getCamera()->getViewMatrix(), "viewMatrix");
-}
-
-void ShaderProgram::unset() {
+void ShaderProgram::unUse() {
 	glUseProgram(0);
 }
 

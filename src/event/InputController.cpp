@@ -17,6 +17,11 @@ InputController::InputController() {
 	Engine::getInstance()->getEventHandler()->addListener(new Listener<MouseButtonEvent>([=](MouseButtonEvent* event) {
 		setMouseButtonState(event->getButton(), event->getAction(), event->getMods());
 	}));
+
+	// Listener for mouse position
+	Engine::getInstance()->getEventHandler()->addListener(new Listener<MousePositionEvent>([=](MousePositionEvent* event) {
+		this->mousePosition = event->getNewPosition();
+	}));
 }
 
 void InputController::setKeyState(int key, int state, int mod) {
@@ -41,4 +46,8 @@ bool InputController::isMouseButtonPressed(int button) {
 
 int InputController::getMouseButtonMod(int button) {
 	return std::get<1>(this->mouseButtons[button]);
+}
+
+glm::vec2 InputController::getMousePosition() {
+	return this->mousePosition;
 }

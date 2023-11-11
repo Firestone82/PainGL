@@ -2,22 +2,35 @@
 
 #define GLEW_STATIC
 #include <GL/glew.h>
+#include "Image.h"
+
 #include <string>
 #include <vector>
+
+enum TextureType {
+	UNSPECIFIED,
+	DIFFUSE,
+	SPECULAR,
+	NORMAL,
+};
 
 class Texture {
 	private:
 		std::string name;
 
-		GLenum type;
-		GLuint texture;
+		GLenum glType;
+		TextureType type;
+		GLuint texture = 0;
 
 	public:
-		Texture(const std::string &name, GLenum type);
+		Texture(const std::string &name, TextureType type, Image* image);
 		~Texture();
 
-		void setData(std::vector<unsigned char> data, int width, int height);
-		void bind();
+		void bind(int slot = 0);
+		void unbind();
 
 		std::string getName() const;
+
+		GLenum getGLType() const;
+		TextureType getTextureType() const;
 };

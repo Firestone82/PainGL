@@ -12,7 +12,8 @@ class EBO {
         EBO();
         ~EBO();
 
-        void setData(std::vector<unsigned int> data, GLulong size, GLenum mode = GL_STATIC_DRAW);
+        void setData(const void* data, GLulong size, GLenum mode = GL_STATIC_DRAW);
 
         void bind();
+		void unbind();
 };

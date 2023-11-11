@@ -1,31 +1,41 @@
 #include "scene/entity/material/Material.h"
+#include "Engine.h"
 
 Material::~Material() {
-	this->texture = nullptr;
+	this->diffuseTexture = nullptr;
+	this->specularTexture = nullptr;
 }
 
-void Material::setAmbientColor(glm::vec3 ambientColor) {
-	this->ambientColor = ambientColor;
+void Material::setDiffuseTexture(Texture* texture) {
+	this->diffuseTexture = texture;
 }
 
-glm::vec3 Material::getAmbientColor() const {
-	return this->ambientColor;
+Texture* Material::getDiffuseTexture() const {
+	return this->diffuseTexture;
 }
 
-void Material::setObjectColor(glm::vec3 objectColor) {
-	this->objectColor = objectColor;
+void Material::setDiffuseColor(glm::vec3 color) {
+	this->diffuseColor = color;
 }
 
-glm::vec3 Material::getObjectColor() const {
-	return this->objectColor;
+glm::vec3 Material::getDiffuseColor() const {
+	return this->diffuseColor;
 }
 
-void Material::setSpecular(float specular) {
-	this->specular = specular;
+void Material::setSpecularTexture(Texture* texture) {
+	this->specularTexture = texture;
 }
 
-float Material::getSpecular() const {
-	return this->specular;
+Texture* Material::getSpecularTexture() const {
+	return this->specularTexture;
+}
+
+void Material::setSpecularColor(glm::vec3 color) {
+	this->specularColor = color;
+}
+
+glm::vec3 Material::getSpecularColor() const {
+	return this->specularColor;
 }
 
 void Material::setShininess(float shininess) {
@@ -36,8 +46,12 @@ float Material::getShininess() const {
 	return this->shininess;
 }
 
-Texture* Material::getTexture() const {
-	return this->texture;
+void Material::setTextureScale(float scale) {
+	this->textureScale = scale;
+}
+
+float Material::getTextureScale() const {
+	return this->textureScale;
 }
 
 // -- Builder --
@@ -46,35 +60,50 @@ Material::Builder::Builder() {
 	this->material = new Material();
 }
 
-Material::Builder* Material::Builder::setAmbientColor(glm::vec3 ambientColor) {
-	this->material->ambientColor = ambientColor;
-	return this;
+Material::Builder& Material::Builder::setDiffuseTexture(Texture* diffuseTexture) {
+	this->material->diffuseTexture = diffuseTexture;
+	return *this;
 }
 
-Material::Builder* Material::Builder::setObjectColor(glm::vec3 objectColor) {
-	this->material->objectColor = objectColor;
-	return this;
+Material::Builder& Material::Builder::setDiffuseTexture(const std::string &textureName) {
+	this->material->diffuseTexture = Engine::getInstance()->getTextureHandler()->getTexture(textureName);
+	return *this;
 }
 
-Material::Builder* Material::Builder::setSpecular(float specular) {
-	this->material->specular = specular;
-	return this;
+Material::Builder& Material::Builder::setDiffuseColor(glm::vec3 color) {
+	this->material->diffuseColor = color;
+	return *this;
 }
 
-Material::Builder* Material::Builder::setShininess(float shininess) {
+Material::Builder& Material::Builder::setSpecularTexture(Texture* specularTexture) {
+	this->material->specularTexture = specularTexture;
+	return *this;
+}
+
+Material::Builder& Material::Builder::setSpecularTexture(const std::string &textureName) {
+	this->material->specularTexture = Engine::getInstance()->getTextureHandler()->getTexture(textureName);
+	return *this;
+}
+
+Material::Builder& Material::Builder::setSpecularColor(glm::vec3 color) {
+	this->material->specularColor = color;
+	return *this;
+}
+
+Material::Builder& Material::Builder::setShininess(float shininess) {
 	this->material->shininess = shininess;
-	return this;
+	return *this;
 }
 
-Material::Builder* Material::Builder::setTexture(Texture* texture) {
-	this->material->texture = texture;
-	return this;
+Material::Builder& Material::Builder::setTextureScale(float scale) {
+	this->material->textureScale = scale;
+	return *this;
 }
 
 Material* Material::Builder::build() {
 	return this->material;
 }
 
-Material::Builder* Material::createMaterial() {
-	return new Material::Builder();
+Material::Builder Material::createMaterial() {
+	return Material::Builder();
 }

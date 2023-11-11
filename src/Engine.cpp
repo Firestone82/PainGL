@@ -3,6 +3,8 @@
 
 #include "GL/glew.h"
 #include "event/type/SceneEvents.h"
+#include "texture/TextureHandler.h"
+#include "event/type/MouseEvents.h"
 #include <GLFW/glfw3.h>
 
 Engine* Engine::instance_ = nullptr;
@@ -41,12 +43,19 @@ void Engine::init(int width, int height, const std::string &title) {
 	this->windowHandler = new WindowHandler(width, height, title.c_str());
 
 	// Initialize OpenGL graphics settings
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);     // Set background color to black and opaque
-	glClearDepth(1.0f);                                        // Set background depth to farthest
-	glEnable(GL_DEPTH_TEST);                                     // Enable depth testing for z-culling
-	glDepthFunc(GL_LEQUAL);                                     // Set the type of depth-test
-	glShadeModel(GL_SMOOTH);                                   // Enable smooth shading
-	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);  // Nice perspective corrections
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);       // Set background color to black and opaque
+	glClearDepth(1.0f);                                         // Set background depth to farthest
+	glShadeModel(GL_SMOOTH);                                    // Enable smooth shading
+	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);   // Nice perspective corrections
+
+	// Depth testing
+	glEnable(GL_DEPTH_TEST); // Enable depth testing for z-culling
+	glDepthFunc(GL_LEQUAL);  // Set the depth operation to less than or equal to
+
+	// Stencil testing
+	glEnable(GL_STENCIL_TEST);                              // Enable stencil testing for object picking
+	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);  // Set the stencil operation to replace the stencil buffer
+
 	Logger::info(" - OpenGL initialized successfully! \n");
 
 	// Set default swap interval to 60 FPS
@@ -54,9 +63,9 @@ void Engine::init(int width, int height, const std::string &title) {
 	this->maxFPS = 60;
 
 	this->sceneHandler = new SceneHandler();
-	this->shaderHandler = new ShaderHandler("../assets/shader", true);
-	this->modelHandler = new ModelHandler("../assets/model", false);
-	this->textureHandler = new TextureHandler("../assets/texture", true);
+	this->shaderHandler = new ShaderHandler(Path("../assets/shader"), false);
+	this->textureHandler = new TextureHandler(Path("../assets/texture"), false);
+	this->modelHandler = new ModelHandler(Path("../assets/model"), false);
 	this->consoleHandler = new ConsoleHandler("Developer Console");
 	this->guiHandler = new GUIHandler();
 }
@@ -70,6 +79,7 @@ void Engine::run() {
 
 	// Scene changed, recalculate camera
 	EventHandler::callEvent(new SceneSwitchEvent(nullptr, this->sceneHandler->getActiveScene()));
+	Logger::info(" - Active scene: %s", this->sceneHandler->getActiveScene()->getName().c_str());
 
 	while (this->running) {
 		glfwPollEvents();
@@ -77,7 +87,7 @@ void Engine::run() {
 		this->running = !this->getWindowHandler()->shouldClose();
 		calculateDeltaTime();
 
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 		this->guiHandler->handle();
 
 		Scene* scene = this->sceneHandler->getActiveScene();

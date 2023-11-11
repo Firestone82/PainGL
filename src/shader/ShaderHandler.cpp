@@ -1,15 +1,12 @@
 #include "shader/ShaderHandler.h"
-#include "utils/Logger.h"
-#include "utils/FileUtils.h"
-#include "utils/StringUtils.h"
-#include "Engine.h"
 #include "event/type/CameraEvents.h"
+#include "utils/StringUtils.h"
+#include "utils/FileUtils.hpp"
+#include "utils/Logger.h"
+#include "Engine.h"
 
-ShaderHandler::ShaderHandler(const std::string &path, bool preLoad) : path(path) {
-	if (preLoad) {
-		this->loadShaderFolder(path, ".frag");
-		this->loadShaderFolder(path, ".vert");
-	}
+ShaderHandler::ShaderHandler(const Path &folderPath, bool preLoad) : folderPath(folderPath) {
+	if (preLoad) this->loadShaderFolder(folderPath);
 }
 
 ShaderHandler::~ShaderHandler() {
@@ -22,49 +19,44 @@ ShaderHandler::~ShaderHandler() {
 	}
 }
 
-void ShaderHandler::loadShaderFolder(const std::string &folderPath, const std::string &extension) {
-	for (const auto &entry: FileUtils::getFiles(folderPath, extension)) {
-		std::vector<std::string> args = StringUtils::split(entry, "\\");
+void ShaderHandler::loadShaderFolder(const Path &folderPath) {
+	for (const auto &filePath: FileUtils::getFiles(folderPath)) {
 
-		GLenum shaderType = extension == ".vert" ? GL_VERTEX_SHADER : GL_FRAGMENT_SHADER;
-		loadShaderFile(args[1], entry, shaderType);
+		GLenum shaderType = 0;
+		if (filePath.getExtension() == ".vert") {
+			shaderType = GL_VERTEX_SHADER;
+		} else if (filePath.getExtension() == ".frag") {
+			shaderType = GL_FRAGMENT_SHADER;
+		}
+
+		// Skip files that are not shaders
+		if (shaderType == 0) {
+			continue;
+		}
+
+		this->loadShaderFile(filePath, shaderType);
 	}
+
+	Logger::debug("");
 }
 
-Shader* ShaderHandler::loadShaderVar(const std::string &name, const char* source, GLenum type) {
-	Logger::debug(R"(Loading shader "%s")", name.c_str());
+Shader* ShaderHandler::loadShaderFile(const Path &filePath, GLenum type) {
+	Logger::debug(R"(Loading shader "%s")", filePath.toString().c_str());
 
-	Shader* shader;
-	try {
-		shader = new Shader(name, type, source);
-	} catch (const std::exception &e) {
-		Logger::error(R"( - Failed to load shader "%s": %s)", name.c_str(), e.what());
+	if (!filePath.exists()) {
+		Logger::error(R"( - File does not exist)");
 		return nullptr;
 	}
 
-	shaders.push_back(shader);
-	Logger::debug(" - Successfully loaded shader.");
-	return shader;
-}
-
-Shader* ShaderHandler::loadShaderFile(const std::string &name, const std::string &path, GLenum type) {
-	Logger::debug(R"(Loading shader "%s" from file "%s")", name.c_str(), path.c_str());
-
-	std::string source = FileUtils::readFile(path);
-	if (source.empty()) {
-		Logger::error(R"( - Failed to load shader "%s": Failed to read file)", name.c_str());
+	File source = File(filePath);
+	if (source.content().empty()) {
+		Logger::error(R"( - Failed to load shader)");
 		return nullptr;
 	}
 
-	Shader* shader;
-	try {
-		shader = new Shader(name, type, source.c_str());
-	} catch (const std::exception &e) {
-		Logger::error(R"( - Failed to load shader "%s": %s)", name.c_str(), e.what());
-		return nullptr;
-	}
+	Shader* shader = new Shader(filePath.getFileName(), type, source.content().c_str());
+	this->shaders.push_back(shader);
 
-	shaders.push_back(shader);
 	Logger::debug(" - Successfully loaded shader.");
 	return shader;
 }
@@ -80,22 +72,21 @@ Shader* ShaderHandler::getShader(const std::string &name) {
 		}
 	}
 
-	// Try to load the model if it doesn't exist
-	std::string path = this->path + "/" + name;
-	if (FileUtils::fileExists(path)) {
-		return this->loadShaderFile(name, path, FileUtils::getFileExtension(path) == ".vert" ? GL_VERTEX_SHADER : GL_FRAGMENT_SHADER);
+	std::optional<Path> filePath = FileUtils::findFileInFolder(this->folderPath, name);
+
+	if (filePath.has_value()) {
+		Path path = filePath.value();
+		GLenum type = path.getExtension() == ".vert" ? GL_VERTEX_SHADER : GL_FRAGMENT_SHADER;
+		return this->loadShaderFile(path, type);
 	}
 
 	return nullptr;
 }
 
-ShaderProgram *ShaderHandler::createProgram(const std::string &fragment, const std::string &vertex) {
-	std::string fragmentName = FileUtils::getFileName(fragment);
-	std::string vertexName = FileUtils::getFileName(vertex);
-	std::string programName = fragmentName + "-" + vertexName;
+ShaderProgram* ShaderHandler::createProgram(const std::string &vertex, const std::string &fragment) {
+	std::string programName = vertex + "_" + fragment;
 
-
-	Logger::debug(R"(Creating shader program "%s" with fragment shader "%s" and vertex shader "%s")", programName.c_str(), fragment.c_str(), vertex.c_str());
+	Logger::debug(R"(Creating shader program "%s" ("%s", "%s"))", programName.c_str(), fragment.c_str(), vertex.c_str());
 
 	// If the program already exists, return it
 	if (programs.find(programName) != programs.end()) {
@@ -105,13 +96,13 @@ ShaderProgram *ShaderHandler::createProgram(const std::string &fragment, const s
 
 	Shader* fragmentShader = getShader(fragment);
 	if (fragmentShader == nullptr) {
-		Logger::error(R"( - Failed to create shader program "%s": Fragment shader "%s" not found)", programName.c_str(), fragment.c_str());
+		Logger::error(R"( - Shader "%s" not found!)", fragment.c_str());
 		return nullptr;
 	}
 
 	Shader* vertexShader = getShader(vertex);
 	if (vertexShader == nullptr) {
-		Logger::error(R"( - Failed to create shader program "%s": Vertex shader "%s" not found)", programName.c_str(), vertex.c_str());
+		Logger::error(R"( - Shader "%s" not found!)", vertex.c_str());
 		return nullptr;
 	}
 
@@ -139,4 +130,8 @@ std::vector<ShaderProgram*> ShaderHandler::getPrograms() const {
 	}
 
 	return result;
+}
+
+Path ShaderHandler::getFolderPath() const {
+	return this->folderPath;
 }

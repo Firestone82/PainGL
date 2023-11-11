@@ -1,22 +1,25 @@
 #pragma once
 
-#include "texture/Texture.h"
+#include "Texture.h"
+#include "utils/FileUtils.hpp"
 
 #include <vector>
 #include <string>
 
 class TextureHandler {
 	private:
-		std::string path;
+		Path folderPath;
 		std::vector<Texture*> textures;
 
 	public:
-		TextureHandler(const std::string path, bool preLoad = false);
+		TextureHandler(const Path &path, bool preLoad = false);
 		~TextureHandler();
 
-		void loadTextureFolder(const std::string &folderPath);
-		Texture* loadTextureFile(const std::string &name, const std::string &path);
+		void loadTextureFolder(const Path &folderPath);
+		Texture* loadTextureFile(const Path &filePath, TextureType type);
 
 		std::vector<Texture*> getTextures() const;
 		Texture* getTexture(const std::string &name);
+
+		Path getFolderPath() const;
 };

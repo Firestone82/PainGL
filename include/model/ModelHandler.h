@@ -7,17 +7,20 @@
 
 class ModelHandler {
 	private:
-		std::string path;
+		Path folderPath;
 		std::vector<Model*> models;
 
 	public:
-		ModelHandler(const std::string path, bool preLoad = false);
+		ModelHandler(const Path &folderPath, bool preLoad = false);
 		~ModelHandler();
 
-		void loadModelFolder(const std::string &folderPath, const std::string &extension);
-		Model* loadModelFile(const std::string &name, const std::string &path);
+		void loadModelFolder(const Path &folderPath);
+
+		Model* loadModelFile(const Path &filePath);
 		Model* loadModelVariable(const std::string &name, const std::vector<float> &points);
 
 		std::vector<Model*> getModels() const;
 		Model* getModel(const std::string &name);
+
+		Path getFolderPath() const;
 };

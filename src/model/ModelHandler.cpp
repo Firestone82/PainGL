@@ -1,16 +1,16 @@
 #include "model/ModelHandler.h"
-#include "utils/FileUtils.h"
+#include "utils/FileUtils.hpp"
 #include "utils/Logger.h"
 #include "utils/StringUtils.h"
+#include "buffer/Vertex.h"
+#include "Engine.h"
 
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
-ModelHandler::ModelHandler(const std::string path, bool preLoad) : path(path) {
-	if (preLoad) {
-		this->loadModelFolder(path, ".obj");
-	}
+ModelHandler::ModelHandler(const Path &folderPath, bool preLoad) : folderPath(folderPath) {
+	if (preLoad) this->loadModelFolder(folderPath);
 }
 
 ModelHandler::~ModelHandler() {
@@ -23,88 +23,140 @@ ModelHandler::~ModelHandler() {
 	}
 }
 
-void ModelHandler::loadModelFolder(const std::string &folderPath, const std::string &extension) {
-	for (std::string file : FileUtils::getFiles(folderPath, extension)) {
-		std::vector<std::string> args = StringUtils::split(file, "\\");
+void ModelHandler::loadModelFolder(const Path &folderPath) {
+	for (const auto &path: FileUtils::getFiles(folderPath, ".obj")) {
+		this->loadModelFile(path);
+	}
 
-		this->loadModelFile(args[1], file);
+	Logger::debug("");
+}
+
+void loadMaterialTextures(aiMaterial* material, aiTextureType type, const std::string& directory, std::vector<Texture*>& textures, TextureType textureType) {
+	for (GLuint i = 0; i < material->GetTextureCount(type); i++) {
+		aiString str;
+		material->GetTexture(type, i, &str);
+
+		bool skip = false;
+		for (Texture* texture : textures) {
+			if (texture->getName() == str.C_Str()) {
+				textures.push_back(texture);
+				skip = true;
+				break;
+			}
+		}
+
+		if (skip) continue;
+
+		Texture* texture = Engine::getInstance()->getTextureHandler()->loadTextureFile(Path(directory + "/" + str.C_Str()), textureType);
+		if (texture != nullptr) {
+			textures.push_back(texture);
+			Logger::debug(" - Attaching texture from %d \"%s\"", static_cast<int>(type), str.C_Str());
+		}
 	}
 }
 
-Model* ModelHandler::loadModelFile(const std::string &name, const std::string &path) {
-	Logger::debug(R"(Loading model "%s" from file "%s")", name.c_str(), path.c_str());
+Model* ModelHandler::loadModelFile(const Path &filePath) {
+	Logger::debug(R"(Loading model "%s")", filePath.toString().c_str());
 
 	Assimp::Importer importer;
-	const aiScene *scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
+	const aiScene *scene = importer.ReadFile(filePath.toString().c_str(), aiProcess_Triangulate | aiProcess_FlipUVs);
 
 	if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
-		Logger::error(R"( - Failed to load model "%s": %s)", name.c_str(), importer.GetErrorString());
+		Logger::error(R"( - Failed to load model: %s)", importer.GetErrorString());
 		return nullptr;
 	}
 
-	std::vector<float> points;
-	std::vector<unsigned int> indices;
-	std::vector<Texture> textureCoords;
-	for (unsigned int i = 0; i < scene->mNumMeshes; i++) {
+	Model* model = new Model(filePath);
+	this->models.push_back(model);
+
+	for (GLuint i = 0; i < scene->mNumMeshes; i++) {
 		aiMesh* mesh = scene->mMeshes[i];
 
-		for (unsigned int j = 0; j < mesh->mNumVertices; j++) {
-			points.push_back(mesh->mVertices[j].x);
-			points.push_back(mesh->mVertices[j].y);
-			points.push_back(mesh->mVertices[j].z);
+		std::vector<Vertex> points;
+		std::vector<GLuint> indices;
+		std::vector<Texture*> textures;
+
+		for (GLuint i = 0; i < mesh->mNumVertices; i++) {
+			Vertex vertex;
+
+			if (mesh->HasPositions()) {
+				vertex.position = glm::vec3(mesh->mVertices[i].x, mesh->mVertices[i].y, mesh->mVertices[i].z);
+			} else {
+				vertex.position = glm::vec3(0.0f);
+			}
 
 			if (mesh->HasNormals()) {
-				points.push_back(mesh->mNormals[j].x);
-				points.push_back(mesh->mNormals[j].y);
-				points.push_back(mesh->mNormals[j].z);
+				vertex.normal = glm::vec3(mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z);
+			} else {
+				vertex.normal = glm::vec3(0.0f);
 			}
 
 			if (mesh->HasTextureCoords(0)) {
-				points.push_back(mesh->mTextureCoords[0][j].x);
-				points.push_back(mesh->mTextureCoords[0][j].y);
+				vertex.texCoords = glm::vec2(mesh->mTextureCoords[0][i].x, mesh->mTextureCoords[0][i].y);
 			} else {
-				points.push_back(0.0f);
-				points.push_back(0.0f);
+				vertex.texCoords = glm::vec2(0.0f);
 			}
 
-			// TODO: Load material texture
+			points.emplace_back(vertex);
 		}
 
-		for (unsigned int j = 0; j < mesh->mNumFaces; j++) {
-			aiFace face = mesh->mFaces[j];
+		for (GLuint i = 0; i < mesh->mNumFaces; i++) {
+			aiFace face = mesh->mFaces[i];
 
-			for (unsigned int k = 0; k < face.mNumIndices; k++) {
-				indices.push_back(face.mIndices[face.mNumIndices - k - 1]);
+			for (GLuint k = 0; k < face.mNumIndices; k++) {
+				indices.push_back(face.mIndices[k]);
 			}
 		}
+
+		if (mesh->mMaterialIndex >= 0) {
+			aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
+			std::string directory = filePath.getDirectory();
+
+			loadMaterialTextures(material, aiTextureType_DIFFUSE, directory, textures, TextureType::DIFFUSE);
+			loadMaterialTextures(material, aiTextureType_SPECULAR, directory, textures, TextureType::SPECULAR);
+			loadMaterialTextures(material, aiTextureType_NORMALS, directory, textures, TextureType::NORMAL);
+		}
+
+		// Try to load fallback texture
+		if (textures.empty()) {
+			static std::vector<std::string> fallbackTextures = {"_diff", "_spec"};
+
+			for (const std::string &fallbackTexture: fallbackTextures) {
+				Texture* texture = Engine::getInstance()->getTextureHandler()->getTexture(filePath.getFileNameWithoutExtension() + fallbackTexture);
+
+				if (texture != nullptr) {
+					textures.push_back(texture);
+					Logger::debug(R"( - Attaching fallback texture from "%s")", texture->getName().c_str());
+				}
+			}
+		}
+
+		model->addMesh(new Mesh(points, indices, textures));
 	}
 
-	Model* model;
-	try {
-		model = new Model(name, points, indices, textureCoords);
-	} catch (const std::exception &e) {
-		Logger::debug(R"( - Failed to load model "%s": %s)", name.c_str(), e.what());
-		return nullptr;
-	}
-
-	this->models.push_back(model);
-	Logger::debug(" - Successfully loaded model. Size: %zu (%dB)", model->getPoints().size(), model->getSize());
+	Logger::debug(" - Successfully loaded model.");
 	return model;
 }
 
 Model* ModelHandler::loadModelVariable(const std::string &name, const std::vector<float> &points) {
 	Logger::debug(R"(Loading model "%s")", name.c_str());
 
-	Model* model;
-	try {
-		model = new Model(name, points);
-	} catch (const std::exception &e) {
-		Logger::error(R"( - Failed to load model "%s": %s)", name.c_str(), e.what());
-		return nullptr;
+	std::vector<Vertex> vertices;
+	for (GLuint i = 0; i < points.size(); i += 6) {
+		Vertex vertex;
+
+		vertex.position = glm::vec3(points[i], points[i + 1], points[i + 2]);
+		vertex.normal = glm::vec3(points[i + 3], points[i + 4], points[i + 5]);
+		vertex.texCoords = glm::vec2(0.0f);
+
+		vertices.push_back(vertex);
 	}
 
-	models.push_back(model);
-	Logger::debug(" - Successfully loaded model. Size: %lu (%dB)", model->getPoints().size(), model->getSize());
+	Model* model = new Model(Path(name));
+	model->addMesh(new Mesh(vertices, std::vector<GLuint>(), std::vector<Texture*>()));
+
+	this->models.push_back(model);
+	Logger::debug(" - Successfully loaded model.");
 	return model;
 }
 
@@ -113,16 +165,16 @@ std::vector<Model*> ModelHandler::getModels() const {
 }
 
 Model* ModelHandler::getModel(const std::string &name) {
-	for (auto model: this->models) {
+	for (Model* model: this->models) {
 		if (model->getName() == name) {
 			return model;
 		}
 	}
 
-	// Try to load the model if it doesn't exist
-	std::string path = this->path + "/" + name + ".obj";
-	if (FileUtils::fileExists(path)) {
-		return this->loadModelFile(name, path);
+	std::optional<Path> filePath = FileUtils::findFileInFolder(this->folderPath, name, ".obj");
+
+	if (filePath.has_value()) {
+		return this->loadModelFile(filePath.value());
 	}
 
 	return nullptr;

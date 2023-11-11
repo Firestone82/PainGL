@@ -13,13 +13,22 @@ CameraHandler::CameraHandler(Scene* parent, glm::vec3 position, glm::vec3 target
 	Engine::getInstance()->getEventHandler()->addListener(new Listener<WindowResizeEvent>([=](WindowResizeEvent* event) {
 		this->setAspectRatio(int(event->getNewSize()[0]), int(event->getNewSize()[1]));
 		this->calculateProjectionMatrix();
-		EventHandler::callEvent(new CameraZoomEvent(this));
+
+		// Ignore cameras out of active scene
+		Scene* activeScene = Engine::getInstance()->getSceneHandler()->getActiveScene();
+		if (this->parentScene != activeScene) return;
+
+		for (const auto& shaderProgram : activeScene->getShaders()) {
+			shaderProgram->use();
+			shaderProgram->setShaderVariable(this->getProjectionMatrix(), "projectionMatrix");
+		}
 	}));
 
 	// Listener for toggling the camera movement on ESC key press
 	Engine::getInstance()->getEventHandler()->addListener(new Listener<KeyPressEvent>([=](KeyPressEvent* event) {
 		if (Engine::getInstance()->getConsoleHandler()->isEnabled()) return;
 
+		// Ignore cameras out of active scene
 		Scene* activeScene = Engine::getInstance()->getSceneHandler()->getActiveScene();
 		if (this->parentScene != activeScene) return;
 
@@ -33,11 +42,12 @@ CameraHandler::CameraHandler(Scene* parent, glm::vec3 position, glm::vec3 target
 	Engine::getInstance()->getEventHandler()->addListener(new Listener<MousePositionEvent>([=](MousePositionEvent* event) {
 		if (Engine::getInstance()->getConsoleHandler()->isEnabled()) return;
 
+		// Ignore cameras out of active scene
 		Scene* activeScene = Engine::getInstance()->getSceneHandler()->getActiveScene();
+		if (this->parentScene != activeScene) return;
+
 		CameraHandler* cameraHandler = activeScene->getCameraHandler();
 		Camera* camera = cameraHandler->getCamera();
-
-		if (this->parentScene != activeScene) return;
 
 		float deltaX = event->getNewPosition().x - event->getOldPosition().x;
 		float deltaY = event->getNewPosition().y - event->getOldPosition().y;
@@ -55,8 +65,12 @@ CameraHandler::CameraHandler(Scene* parent, glm::vec3 position, glm::vec3 target
 	Engine::getInstance()->getEventHandler()->addListener(new Listener<MouseScrollEvent>([=](MouseScrollEvent* event) {
 		if (Engine::getInstance()->getConsoleHandler()->isEnabled()) return;
 
-		Scene* scene = Engine::getInstance()->getSceneHandler()->getActiveScene();
-		CameraHandler* cameraHandler = scene->getCameraHandler();
+		// Ignore cameras out of active scene
+		Scene* activeScene = Engine::getInstance()->getSceneHandler()->getActiveScene();
+		if (this->parentScene != activeScene) return;
+
+		CameraHandler* cameraHandler = activeScene->getCameraHandler();
+		Camera* camera = cameraHandler->getCamera();
 
 		float newFov = cameraHandler->getFov() - event->getOffset().y;
 		newFov = std::min(std::max(newFov, 1.0f), 120.0f);

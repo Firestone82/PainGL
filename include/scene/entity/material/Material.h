@@ -1,34 +1,39 @@
 #pragma once
 
-#include "texture/Texture.h"
-
 #include <glm/glm.hpp>
+#include "texture/Texture.h"
 
 class Material {
 	private:
-		glm::vec3 ambientColor = glm::vec3(0.1f, 0.1f, 0.1f);
-		glm::vec3 objectColor = glm::vec3(1.0f, 1.0f, 1.0f);
-		float specular = 1.0f;
-		float shininess = 32.0f;
+		Texture* diffuseTexture = nullptr;
+		glm::vec3 diffuseColor = glm::vec3(1.0f, 1.0f, 1.0f);
 
-		Texture* texture = nullptr;
+		Texture* specularTexture = nullptr;
+		glm::vec3 specularColor = glm::vec3(1.0f, 1.0f, 1.0f);
+
+		float shininess = 32.0f;
+		float textureScale = 1.0f;
 
 	public:
 		~Material();
 
-		void setAmbientColor(glm::vec3 ambientColor);
-		glm::vec3 getAmbientColor() const;
+		void setDiffuseTexture(Texture* texture);
+		Texture* getDiffuseTexture() const;
 
-		void setObjectColor(glm::vec3 objectColor);
-		glm::vec3 getObjectColor() const;
+		void setDiffuseColor(glm::vec3 color);
+		glm::vec3 getDiffuseColor() const;
 
-		void setSpecular(float specular);
-		float getSpecular() const;
+		void setSpecularTexture(Texture* texture);
+		Texture* getSpecularTexture() const;
+
+		void setSpecularColor(glm::vec3 color);
+		glm::vec3 getSpecularColor() const;
 
 		void setShininess(float shininess);
 		float getShininess() const;
 
-		Texture* getTexture() const;
+		void setTextureScale(float scale);
+		float getTextureScale() const;
 
 		class Builder {
 			private:
@@ -37,14 +42,19 @@ class Material {
 			public:
 				Builder();
 
-				Builder* setAmbientColor(glm::vec3 ambientColor);
-				Builder* setObjectColor(glm::vec3 objectColor);
-				Builder* setSpecular(float specular);
-				Builder* setShininess(float shininess);
-				Builder* setTexture(Texture* texture);
+				Builder& setDiffuseTexture(Texture* texture);
+				Builder& setDiffuseTexture(const std::string &textureName);
+				Builder& setDiffuseColor(glm::vec3 color);
+
+				Builder& setSpecularTexture(Texture* texture);
+				Builder& setSpecularTexture(const std::string &textureName);
+				Builder& setSpecularColor(glm::vec3 color);
+
+				Builder& setTextureScale(float scale);
+				Builder& setShininess(float shininess);
 
 				Material* build();
 		};
 
-		static Builder* createMaterial();
+		static Builder createMaterial();
 };

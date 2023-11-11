@@ -2,17 +2,17 @@
 
 #include "event/structure/Event.h"
 
-class Light;
+class AbstractLight;
 
 class LightUpdateEvent : public Event {
 	private:
-		Light* light;
+		AbstractLight* light;
 
 	public:
-		explicit LightUpdateEvent(Light* light)
+		explicit LightUpdateEvent(AbstractLight* light)
 			: Event(EventType::LIGHT_UPDATE), light(light) {}
 
-		Light* getLight() const {
+		AbstractLight* getLight() const {
 			return light;
 		}
 };

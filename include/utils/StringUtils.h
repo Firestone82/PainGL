@@ -18,6 +18,14 @@ namespace StringUtils {
 		res.push_back(string.substr(pos_start));
 		return res;
 	}
+
+	inline bool startsWith(const std::string &string, const std::string &start) {
+		return string.rfind(start, 0) == 0;
+	}
+
+	inline bool endsWith(const std::string &string, const std::string &end) {
+		return string.rfind(end) == (string.size() - end.size());
+	}
 }
 
 

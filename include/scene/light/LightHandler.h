@@ -1,16 +1,19 @@
 #pragma once
 
-#include "scene/light/Light.h"
+#include "scene/light/AbstractLight.h"
 
+class Scene;
 class LightHandler {
 	private:
-		std::vector<Light*> lights;
+		Scene* parentScene;
+		std::vector<AbstractLight*> lights;
 
 	public:
+		LightHandler(Scene* parent);
 		~LightHandler();
 
-		void addLight(Light* light);
-		void removeLight(Light* light);
+		void addLight(AbstractLight* light);
+		void removeLight(AbstractLight* light);
 
-		const std::vector<Light*>& getLights() const;
+		const std::vector<AbstractLight*>& getLights() const;
 };

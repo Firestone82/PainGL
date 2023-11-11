@@ -16,5 +16,5 @@ class SceneHandler {
 		std::vector<Scene*> getScenes() const;
 
 		void setActiveScene(Scene* scene);
-		Scene* getActiveScene() const;
+		Scene* getActiveScene();
 };

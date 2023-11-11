@@ -81,7 +81,8 @@ void GUIHandler::fillGUIs() {
 		ImGui::Begin(gui->getName().c_str(), nullptr, defaultFlags | ImGuiWindowFlags_NoTitleBar);
 		ImGui::SetWindowPos(ImVec2(15.0f, top));
 
-		ImGui::Text("Scene: %s (#%d)", engine->getSceneHandler()->getActiveScene()->getName().c_str(), 0);
+		Scene* activeScene = engine->getSceneHandler()->getActiveScene();
+		ImGui::Text("Scene: %s (#%d)", activeScene->getName().c_str(), activeScene->getID());
 		ImGui::Separator();
 		ImGui::Text("Frame Rate: %0.2f fps (%0.3f ms)", ImGui::GetIO().Framerate, 1000.0f / ImGui::GetIO().Framerate);
 		ImGui::Text("Delta Time: %0.5f ns", engine->getDeltaTime());
@@ -94,7 +95,7 @@ void GUIHandler::fillGUIs() {
 		Scene* scene = engine->getSceneHandler()->getActiveScene();
 		if (scene == nullptr) return;
 
-		ImGui::Begin(gui->getName().c_str(), nullptr, defaultFlags | (engine->getWindowHandler()->isCursorEnabled() ? 0 : ImGuiWindowFlags_NoMouseInputs));
+		ImGui::Begin(gui->getName().c_str(), nullptr, defaultFlags | (engine->getWindowHandler()->isCursorEnabled() ? 0 : ImGuiWindowFlags_NoMouseInputs) | ImGuiWindowFlags_AlwaysAutoResize);
 		ImGui::SetWindowPos(ImVec2(15.0f,top));
 
 		if (ImGui::BeginTable("cameraTable", 4, ImGuiTableFlags_SizingStretchSame | ImGuiTableFlags_BordersOuter | ImGuiTableFlags_BordersV | ImGuiTableFlags_ContextMenuInBody)) {
@@ -119,6 +120,48 @@ void GUIHandler::fillGUIs() {
 
 		ImGui::Text("Rotation: %7.2f Pitch / %7.2f Yaw", scene->getCameraHandler()->getCamera()->getPitch(), scene->getCameraHandler()->getCamera()->getYaw());
 		ImGui::Text("Resolution: %d x %d", engine->getWindowHandler()->getWidth(), engine->getWindowHandler()->getHeight());
+
+		ImGui::Separator();
+
+		int windowHeight = engine->getWindowHandler()->getHeight();
+		int windowWidth = engine->getWindowHandler()->getWidth();
+		Object* crosshairObject = scene->getObjectAt(windowWidth / 2, windowHeight / 2);
+
+		if (crosshairObject != nullptr) {
+			AbstractLight* light = dynamic_cast<AbstractLight*>(crosshairObject);
+			if (light) {
+				ImGui::Text("Target: Light  - %s (#%d)", light->getName().c_str(), light->getID());
+			} else {
+				Entity* entity = dynamic_cast<Entity*>(crosshairObject);
+
+				if (entity) {
+					ImGui::Text("Target: Entity - %s (#%d)", entity->getName().c_str(), entity->getID());
+				} else {
+					ImGui::Text("Target: NaN");
+				}
+			}
+		} else {
+			ImGui::Text("Target: NaN");
+		}
+
+		if (engine->getWindowHandler()->isCursorEnabled()) {
+			int posX = engine->getEventHandler()->getInputController()->getMousePosition().x;
+			int posY = engine->getEventHandler()->getInputController()->getMousePosition().y;
+			Object* cursorObject = scene->getObjectAt(posX, engine->getWindowHandler()->getHeight() - posY);
+
+			AbstractLight* light = dynamic_cast<AbstractLight*>(cursorObject);
+			if (light) {
+				ImGui::Text("Cursor: Light - %s (#%d)", light->getName().c_str(), light->getID());
+			} else {
+				Entity* entity = dynamic_cast<Entity*>(cursorObject);
+
+				if (entity) {
+					ImGui::Text("Cursor: Entity - %s (#%d)", entity->getName().c_str(), entity->getID());
+				} else {
+					ImGui::Text("Cursor: NaN");
+				}
+			}
+		}
 
 		top += ImGui::GetWindowHeight() + 15;
 		ImGui::End();
@@ -184,12 +227,12 @@ void GUIHandler::fillGUIs() {
 						ImGui::TableNextColumn();
 						ImGui::Text("Vertex Count");
 						ImGui::TableNextColumn();
-						ImGui::Text("%lld", entity->getModel()->getPoints().size());
+						ImGui::Text("%lld", entity->getModel()->getMesh(0)->getVertices().size());
 
 						ImGui::TableNextColumn();
 						ImGui::Text("Indices Count");
 						ImGui::TableNextColumn();
-						ImGui::Text("%lld", entity->getModel()->getIndices().size());
+						ImGui::Text("%lld", entity->getModel()->getMesh(0)->getIndices().size());
 
 						ImGui::TableNextColumn();
 						ImGui::Text("Shader Program");
@@ -239,41 +282,43 @@ void GUIHandler::fillGUIs() {
 		ImGui::SetWindowPos(ImVec2(15, top));
 
 		static bool first = true;
-		for (Light* light: scene->getLightHandler()->getLights()) {
+		for (AbstractLight* light: scene->getLightHandler()->getLights()) {
 			char name[256];
 			sprintf(name, "Color: %s (#%d)", light->getName().c_str(), light->getID());
 
 			if (ImGui::TreeNodeEx(name, first ? ImGuiTreeNodeFlags_DefaultOpen : 0)) {
 				first = false;
 
-				ImVec4 color = ImVec4(light->getColor().x, light->getColor().y, light->getColor().z, 1.0f);
-				ImGui::ColorButton("##color", color, ImGuiColorEditFlags_NoPicker, ImVec2(15, 15));
+//				ImVec4 color = ImVec4(light->getColor().x, light->getColor().y, light->getColor().z, 1.0f);
+//				ImGui::ColorButton("##color", color, ImGuiColorEditFlags_NoPicker, ImVec2(15, 15));
 
 				// Draw Transformation
 				if (ImGui::TreeNodeEx("Transformations")) {
 					if (ImGui::BeginTable("entityTable", 4, ImGuiTableFlags_SizingStretchSame | ImGuiTableFlags_BordersOuter | ImGuiTableFlags_BordersV | ImGuiTableFlags_ContextMenuInBody)) {
 						ImGui::TableSetupColumn("property", ImGuiTableColumnFlags_WidthFixed, 65.0f);
 
-						ImGui::TableNextColumn();
-						ImGui::Text("Position");
-						for (int i = 0; i < 3; i++) {
-							ImGui::TableNextColumn();
-							ImGui::Text("%7.2f", light->getPosition()[i]);
-						}
-
-						ImGui::TableNextColumn();
-						ImGui::Text("Rotation");
-						for (int i = 0; i < 3; i++) {
-							ImGui::TableNextColumn();
-							ImGui::Text("%7.2f", light->getRotation()[i]);
-						}
-
-						ImGui::TableNextColumn();
-						ImGui::Text("Scale");
-						for (int i = 0; i < 3; i++) {
-							ImGui::TableNextColumn();
-							ImGui::Text("%7.2f", light->getScale()[i]);
-						}
+//						Renderable* renderable = dynamic_cast<Renderable*>(light);
+//
+//						ImGui::TableNextColumn();
+//						ImGui::Text("Position");
+//						for (int i = 0; i < 3; i++) {
+//							ImGui::TableNextColumn();
+//							ImGui::Text("%7.2f", renderable->getPosition()[i]);
+//						}
+//
+//						ImGui::TableNextColumn();
+//						ImGui::Text("Rotation");
+//						for (int i = 0; i < 3; i++) {
+//							ImGui::TableNextColumn();
+//							ImGui::Text("%7.2f", renderable->getRotation()[i]);
+//						}
+//
+//						ImGui::TableNextColumn();
+//						ImGui::Text("Scale");
+//						for (int i = 0; i < 3; i++) {
+//							ImGui::TableNextColumn();
+//							ImGui::Text("%7.2f", renderable->getScale()[i]);
+//						}
 
 						ImGui::EndTable();
 					}
@@ -282,23 +327,23 @@ void GUIHandler::fillGUIs() {
 				}
 
 				// Draw Transformation
-				if (ImGui::TreeNodeEx("Transformations")) {
-					if (ImGui::BeginTable("transformationTable", 1, ImGuiTableFlags_SizingStretchSame | ImGuiTableFlags_BordersOuter | ImGuiTableFlags_BordersV | ImGuiTableFlags_ContextMenuInBody)) {
-						if (light->getTransformation()->get()->isEmpty()) {
-							ImGui::TableNextColumn();
-							ImGui::Text("No transformations");
-						} else {
-							ImGui::TableNextColumn();
-							ImGui::Text("Composite:");
-							drawTransformationMatrix(light->getTransformation()->get()->resultMatrix());
-							drawEntityTransformation(light->getTransformation()->get(), 0);
-						}
-
-						ImGui::EndTable();
-					}
-
-					ImGui::TreePop();
-				}
+//				if (ImGui::TreeNodeEx("Transformations")) {
+//					if (ImGui::BeginTable("transformationTable", 1, ImGuiTableFlags_SizingStretchSame | ImGuiTableFlags_BordersOuter | ImGuiTableFlags_BordersV | ImGuiTableFlags_ContextMenuInBody)) {
+//						if (light->getTransformation()->get()->isEmpty()) {
+//							ImGui::TableNextColumn();
+//							ImGui::Text("No transformations");
+//						} else {
+//							ImGui::TableNextColumn();
+//							ImGui::Text("Composite:");
+//							drawTransformationMatrix(light->getTransformation()->get()->resultMatrix());
+//							drawEntityTransformation(light->getTransformation()->get(), 0);
+//						}
+//
+//						ImGui::EndTable();
+//					}
+//
+//					ImGui::TreePop();
+//				}
 
 				ImGui::TreePop();
 			}

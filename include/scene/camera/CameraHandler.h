@@ -13,7 +13,7 @@ class CameraHandler {
 
 		float fov = 60.0f;
 		float aspectRatio = 4.0f / 3.0f;
-		glm::vec2 nearFarPane = {0.01f, 100.0f};
+		glm::vec2 nearFarPane = {0.01f, 1000.0f};
 
 		bool moving = false;
 		float sensitivity = 1.0f;

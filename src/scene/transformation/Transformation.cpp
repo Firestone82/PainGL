@@ -8,6 +8,15 @@ Transformation::~Transformation() {
 	delete this->transform;
 }
 
+Transformation& Transformation::operator= (const Transformation& other) {
+	if (this != &other) {
+		delete this->transform;
+		this->transform = other.transform;
+	}
+
+	return *this;
+}
+
 void Transformation::setTransformation(Transform::Composite* composite) {
 	delete this->transform;
 	this->transform = composite;

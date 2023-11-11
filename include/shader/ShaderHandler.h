@@ -2,6 +2,7 @@
 
 #include "shader/Shader.h"
 #include "shader/ShaderProgram.h"
+#include "utils/FileUtils.hpp"
 
 #include <GL/glew.h>
 #include <string>
@@ -10,21 +11,22 @@
 
 class ShaderHandler {
 	private:
-		std::string path;
+		Path folderPath;
 		std::vector<Shader*> shaders;
 		std::map<std::string, ShaderProgram*> programs;
 
 	public:
-		ShaderHandler(const std::string &path, bool preLoad = false);
+		ShaderHandler(const Path &folderPath, bool preLoad = false);
 		~ShaderHandler();
 
-		void loadShaderFolder(const std::string &folderPath, const std::string &extension);
-		Shader* loadShaderVar(const std::string &name, const char* source, GLenum type);
-		Shader* loadShaderFile(const std::string &name, const std::string &path, GLenum type);
+		void loadShaderFolder(const Path &folderPath);
+		Shader* loadShaderFile(const Path &filePath, GLenum type);
 
 		std::vector<Shader*> getShaders() const;
 		Shader* getShader(const std::string &name);
 
-		ShaderProgram* createProgram(const std::string &fragment, const std::string &vertex);
+		ShaderProgram* createProgram(const std::string &vertex, const std::string &fragment);
 		std::vector<ShaderProgram*> getPrograms() const;
+
+		Path getFolderPath() const;
 };

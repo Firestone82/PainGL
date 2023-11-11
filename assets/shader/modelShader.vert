@@ -13,10 +13,12 @@ out vec4 ex_worldPosition;
 out vec3 ex_worldNormal;
 out vec2 ex_tex;
 
+uniform float scale;
+
 void main(void) {
     ex_worldPosition = modelMatrix * vec4(position, 1.0f);
     ex_worldNormal = normalMatrix * normal;
-    ex_tex = tex;
+    ex_tex = tex * scale;
 
     gl_Position = (projectionMatrix * viewMatrix * modelMatrix) * vec4(position, 1.0f);
 }
