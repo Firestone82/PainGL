@@ -23,6 +23,11 @@ Entity::Builder& Entity::Builder::setShaderProgram(const std::string &vertex, co
 	return *this;
 }
 
+Entity::Builder& Entity::Builder::setShaderProgram(ShaderProgram* shaderProgram) {
+	this->entity->shaderProgram = shaderProgram;
+	return *this;
+}
+
 Entity::Builder& Entity::Builder::setMaterial(Material* material) {
 	this->entity->material = material;
 	return *this;
@@ -35,6 +40,20 @@ Entity::Builder& Entity::Builder::setTransformation(Transform::Composite* compos
 
 Entity::Builder& Entity::Builder::setSimulateFunction(const std::function<void(Entity*, float)>& simulateFunction) {
 	this->entity->simulateFunction = simulateFunction;
+	return *this;
+}
+
+Entity::Builder& Entity::Builder::addTexture(const std::string &texture, TextureType type) {
+	Texture* tex = Engine::getInstance()->getTextureHandler()->getTexture(texture);
+
+	if (tex == nullptr) {
+		Logger::warning("ModelBuilder::addTexture() | Texture \"%s\" not found", texture.c_str());
+		return *this;
+	}
+
+	// Add texture to all model meshes
+
+
 	return *this;
 }
 

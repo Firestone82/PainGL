@@ -3,14 +3,14 @@
 #include "scene/entity/EntityHandler.h"
 #include "scene/light/LightHandler.h"
 #include "scene/camera/CameraHandler.h"
-#include "scene/skybox/SkyBox.h"
+#include "scene/sky/Sky.h"
 
 class Scene : public Object, public Simulable<Scene> {
 	private:
 		EntityHandler* entityHandler;
 		LightHandler* lightHandler;
 		CameraHandler* cameraHandler;
-		SkyBox* skyBox;
+		Sky* sky;
 
 		explicit Scene(const std::string &name);
 
@@ -44,7 +44,7 @@ class Scene : public Object, public Simulable<Scene> {
 				Builder& setCameraPosition(const glm::vec3 &position);
 				Builder& setCameraTarget(const glm::vec3 &rotation);
 				Builder& setSimulateFunction(const std::function<void(Scene*, float)> &simulateFunction);
-				Builder& setSkyBox(const std::string &name, const std::vector<Path> &images);
+				Builder& setSky(Sky* sky);
 
 				Scene* build();
 		};

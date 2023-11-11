@@ -36,15 +36,18 @@ class Renderable : public Transformable {
 			this->shaderProgram->setShaderVariable(this->material->getTextureScale(), "scale");
 
 			for (const Mesh* mesh: this->model->getMeshes()) {
-				this->shaderProgram->setShaderVariable(!mesh->getTextures().empty(), "material.useTexture");
+				std::vector<Texture*> textures;
+				for (int i = 0; i < mesh->getTextures().size(); i++) textures.push_back(mesh->getTextures()[i]);
+				for (int i = 0; i < this->material->getTextures().size(); i++) textures.push_back(this->material->getTextures()[i]);
+
+				this->shaderProgram->setShaderVariable(!textures.empty(), "material.useTexture");
 
 				int diff = 1;
 				int spec = 1;
-				int norm = 1;
-				for (int i = 0; i < mesh->getTextures().size(); i++) {
+				for (int i = 0; i < textures.size(); i++) {
 					std::string varName = "material.texture";
 
-					switch (mesh->getTextures()[i]->getTextureType()) {
+					switch (textures[i]->getTextureType()) {
 						case TextureType::DIFFUSE:
 							varName += "Diffuse" + std::to_string(diff++);
 							break;
@@ -58,7 +61,7 @@ class Renderable : public Transformable {
 					}
 
 					this->shaderProgram->setShaderVariable(i, varName);
-					mesh->getTextures()[i]->bind(i);
+					textures[i]->bind(i);
 				}
 
 				mesh->getVAO()->bind();

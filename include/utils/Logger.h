@@ -2,6 +2,17 @@
 
 #include <string>
 
+#define __THIS_FUNC__ ([]() -> std::string { \
+    std::string methodName = __PRETTY_FUNCTION__; \
+    size_t start = methodName.find("::") + 2; \
+    size_t end = methodName.find("(") - start; \
+    methodName = methodName.substr(start, end); \
+    size_t spacePos = methodName.find(" ") + 1; \
+    return methodName.substr(spacePos); \
+}())
+
+#define __THIS_FUNC_C__ (__THIS_FUNC__.c_str())
+
 class Color {
 	public:
 		// Standard colors
@@ -32,6 +43,14 @@ class Color {
 
 class Logger {
 	public:
+		static bool debugMode;
+
+		/**
+		 * @brief Sets the debug mode.
+		 * @param debugMode The debug mode.
+		 */
+		static void setDebugMode(bool debugMode);
+
 		/**
 		 * @brief Prepares the format string for printing.
 		 * @param format The format string.

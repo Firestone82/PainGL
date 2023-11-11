@@ -6,6 +6,8 @@
 #include <iomanip>
 #include <vector>
 
+bool Logger::debugMode = true;
+
 std::string currentTimestamp() {
 	auto now = std::chrono::system_clock::now();
 	auto in_time_t = std::chrono::system_clock::to_time_t(now);
@@ -49,7 +51,13 @@ void log(const std::string& level, const std::string& levelColor, const std::str
 	}
 }
 
+void Logger::setDebugMode(bool debugMode) {
+	Logger::debugMode = debugMode;
+}
+
 void Logger::debug(std::string format, ...) {
+	if (!Logger::debugMode) return;
+
 	va_list args;
 	va_start(args, format);
 	log("DEBUG", Color::BOLD_GREEN, Color::GREEN, format, args);

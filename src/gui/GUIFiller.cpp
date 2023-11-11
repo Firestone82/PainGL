@@ -186,7 +186,7 @@ void GUIHandler::fillGUIs() {
 		static bool first = true;
 		for (Entity* entity: scene->getEntityHandler()->getEntities()) {
 			char name[256];
-			sprintf(name, "Entity: %s (#%d)", entity->getName().c_str(), entity->getID());
+			sprintf(name, "Entity: %s (#%d)  ", entity->getName().c_str(), entity->getID());
 
 			if (ImGui::TreeNodeEx(name, first ? ImGuiTreeNodeFlags_DefaultOpen : 0)) {
 				first = false;

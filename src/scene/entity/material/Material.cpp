@@ -1,18 +1,6 @@
 #include "scene/entity/material/Material.h"
 #include "Engine.h"
-
-Material::~Material() {
-	this->diffuseTexture = nullptr;
-	this->specularTexture = nullptr;
-}
-
-void Material::setDiffuseTexture(Texture* texture) {
-	this->diffuseTexture = texture;
-}
-
-Texture* Material::getDiffuseTexture() const {
-	return this->diffuseTexture;
-}
+#include "utils/Logger.h"
 
 void Material::setDiffuseColor(glm::vec3 color) {
 	this->diffuseColor = color;
@@ -20,14 +8,6 @@ void Material::setDiffuseColor(glm::vec3 color) {
 
 glm::vec3 Material::getDiffuseColor() const {
 	return this->diffuseColor;
-}
-
-void Material::setSpecularTexture(Texture* texture) {
-	this->specularTexture = texture;
-}
-
-Texture* Material::getSpecularTexture() const {
-	return this->specularTexture;
 }
 
 void Material::setSpecularColor(glm::vec3 color) {
@@ -54,34 +34,33 @@ float Material::getTextureScale() const {
 	return this->textureScale;
 }
 
+void Material::addTexture(const std::string &texture, TextureType type) {
+	Texture* tex = Engine::getInstance()->getTextureHandler()->getTexture(texture);
+
+	if (tex == nullptr) {
+		Logger::warning("%s | Texture \"%s\" not found", __THIS_FUNC_C__, texture.c_str());
+		return;
+	}
+
+	this->overrideTextures.push_back(tex);
+}
+
+void Material::addTexture(Texture* texture) {
+	this->overrideTextures.push_back(texture);
+}
+
+std::vector<Texture*> Material::getTextures() const {
+	return this->overrideTextures;
+}
+
 // -- Builder --
 
 Material::Builder::Builder() {
 	this->material = new Material();
 }
 
-Material::Builder& Material::Builder::setDiffuseTexture(Texture* diffuseTexture) {
-	this->material->diffuseTexture = diffuseTexture;
-	return *this;
-}
-
-Material::Builder& Material::Builder::setDiffuseTexture(const std::string &textureName) {
-	this->material->diffuseTexture = Engine::getInstance()->getTextureHandler()->getTexture(textureName);
-	return *this;
-}
-
 Material::Builder& Material::Builder::setDiffuseColor(glm::vec3 color) {
 	this->material->diffuseColor = color;
-	return *this;
-}
-
-Material::Builder& Material::Builder::setSpecularTexture(Texture* specularTexture) {
-	this->material->specularTexture = specularTexture;
-	return *this;
-}
-
-Material::Builder& Material::Builder::setSpecularTexture(const std::string &textureName) {
-	this->material->specularTexture = Engine::getInstance()->getTextureHandler()->getTexture(textureName);
 	return *this;
 }
 
@@ -97,6 +76,18 @@ Material::Builder& Material::Builder::setShininess(float shininess) {
 
 Material::Builder& Material::Builder::setTextureScale(float scale) {
 	this->material->textureScale = scale;
+	return *this;
+}
+
+Material::Builder& Material::Builder::addTexture(const std::string &texture, TextureType type) {
+	Texture* tex = Engine::getInstance()->getTextureHandler()->getTexture(texture);
+
+	if (tex == nullptr) {
+		Logger::warning("%s | Texture \"%s\" not found", __THIS_FUNC_C__, texture.c_str());
+		return *this;
+	}
+
+	this->material->overrideTextures.push_back(tex);
 	return *this;
 }
 

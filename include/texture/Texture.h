@@ -32,4 +32,5 @@ class Texture {
 
 		GLenum getGLType() const;
 		TextureType getTextureType() const;
+		std::string getTextureTypeString() const;
 };

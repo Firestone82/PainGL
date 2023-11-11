@@ -12,7 +12,7 @@ Model::~Model() {
 }
 
 std::string Model::getName() const {
-	return this->filePath.getFileName();
+	return this->filePath.getFileNameWithoutExtension();
 }
 
 Path Model::getFilePath() const {
