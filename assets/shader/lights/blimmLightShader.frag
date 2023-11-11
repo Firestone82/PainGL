@@ -13,9 +13,6 @@ struct Material {
     vec3 specular;
     sampler2D textureSpecular1;
 
-    int useNormalMap; // 0 = false, 1 = true
-    sampler2D textureNormal1;
-
     bool useTexture; // 0 = false, 1 = true
     float shininess; // Size of the specular highlights
 };
@@ -60,11 +57,6 @@ struct Camera {
 uniform Camera camera;
 
 vec3 calculateLight(Light light, vec3 normal, vec3 viewDir) {
-    if (material.useNormalMap == 1) {
-        normal = texture(material.textureNormal1, ex_tex).rgb * 2.0 - 1.0;
-        normal = normalize(normal);
-    }
-
     vec3 lightDir = light.type == DIRECTIONAL_LIGHT ? normalize(-light.direction) : normalize(light.position - ex_worldPosition.xyz);
     vec3 halfWayDir = normalize(lightDir + viewDir);
     vec3 reflectDir = reflect(-lightDir, normal);

@@ -37,7 +37,6 @@ class Renderable : public Transformable {
 
 			for (const Mesh* mesh: this->model->getMeshes()) {
 				this->shaderProgram->setShaderVariable(!mesh->getTextures().empty(), "material.useTexture");
-				this->shaderProgram->setShaderVariable(false, "material.useNormalMap");
 
 				int diff = 1;
 				int spec = 1;
@@ -54,16 +53,8 @@ class Renderable : public Transformable {
 							varName += "Specular" + std::to_string(spec++);
 							break;
 
-						case TextureType::NORMAL:
-							varName += "Normal" + std::to_string(norm++);
-							break;
-
 						case UNSPECIFIED:
 							break;
-					}
-
-					if (norm == 2) {
-						this->shaderProgram->setShaderVariable(true, "material.useNormalMap");
 					}
 
 					this->shaderProgram->setShaderVariable(i, varName);

@@ -114,7 +114,6 @@ Model* ModelHandler::loadModelFile(const Path &filePath) {
 
 			loadMaterialTextures(material, aiTextureType_DIFFUSE, directory, textures, TextureType::DIFFUSE);
 			loadMaterialTextures(material, aiTextureType_SPECULAR, directory, textures, TextureType::SPECULAR);
-			loadMaterialTextures(material, aiTextureType_NORMALS, directory, textures, TextureType::NORMAL);
 		}
 
 		// Try to load fallback texture

@@ -11,7 +11,6 @@ enum TextureType {
 	UNSPECIFIED,
 	DIFFUSE,
 	SPECULAR,
-	NORMAL,
 };
 
 class Texture {
