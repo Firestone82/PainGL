@@ -7,13 +7,17 @@ class Material {
 	private:
 		std::vector<Texture*> overrideTextures;
 
-		glm::vec3 diffuseColor = glm::vec3(1.0f, 1.0f, 1.0f);
+		glm::vec3 ambientColor = glm::vec3(0.1f, 0.1f, 0.1f);
+		glm::vec3 diffuseColor = glm::vec3(0.8f, 0.8f, 0.8f);
 		glm::vec3 specularColor = glm::vec3(1.0f, 1.0f, 1.0f);
 
 		float textureScale = 1.0f;
 		float shininess = 32.0f;
 
 	public:
+		void setAmbientColor(glm::vec3 color);
+		glm::vec3 getAmbientColor() const;
+
 		void setDiffuseColor(glm::vec3 color);
 		glm::vec3 getDiffuseColor() const;
 
@@ -37,6 +41,7 @@ class Material {
 			public:
 				Builder();
 
+				Builder& setAmbientColor(glm::vec3 color);
 				Builder& setDiffuseColor(glm::vec3 color);
 				Builder& setSpecularColor(glm::vec3 color);
 				Builder& setTextureScale(float scale);

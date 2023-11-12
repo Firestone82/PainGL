@@ -8,7 +8,7 @@ class BezierCurve {
 		std::vector<glm::vec3> controlPoints;
 		std::vector<glm::vec3> curvePoints;
 
-		int resolution = 200;
+		int resolution = 100;
 
 		void calculateCurvePoints();
 
@@ -19,6 +19,7 @@ class BezierCurve {
 		void setResolution(int resolution);
 		int getResolution() const;
 
+		glm::vec3 getPoint(float t) const;
 		std::vector<glm::vec3> getCurvePoints() const;
 		std::vector<glm::vec3> getControlPoints() const;
 };

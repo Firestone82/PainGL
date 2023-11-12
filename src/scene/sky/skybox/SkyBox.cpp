@@ -3,23 +3,36 @@
 #include "Engine.h"
 #include "scene/sky/skybox/SkyBox.h"
 
-SkyBox::SkyBox(const std::string &name, SkyBoxImages images) : Sky(name) {
+SkyBox::SkyBox(const std::string &name, SkyBoxImages* images) : Sky(name) {
 	this->id = 0;
-
 	this->model = Engine::getInstance()->getModelHandler()->getModel("cube");
 	this->shaderProgram = Engine::getInstance()->getShaderHandler()->createProgram("skybox.vert", "skybox.frag");
+	this->images = images;
 
+	this->init();
+}
+
+SkyBox::~SkyBox() {
+	this->model = nullptr;
+	this->shaderProgram = nullptr;
+	delete this->images;
+
+	glDeleteTextures(1, &this->texture);
+	this->texture = 0;
+}
+
+void SkyBox::init() {
 	this->texture = 0;
 	glGenTextures(1, &this->texture);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, this->texture);
 
 	std::vector<Image*> loadedImages;
-	loadedImages.emplace_back(new Image(images.right));
-	loadedImages.emplace_back(new Image(images.left));
-	loadedImages.emplace_back(new Image(images.top));
-	loadedImages.emplace_back(new Image(images.bottom));
-	loadedImages.emplace_back(new Image(images.front));
-	loadedImages.emplace_back(new Image(images.back));
+	loadedImages.emplace_back(new Image(images->right));
+	loadedImages.emplace_back(new Image(images->left));
+	loadedImages.emplace_back(new Image(images->top));
+	loadedImages.emplace_back(new Image(images->bottom));
+	loadedImages.emplace_back(new Image(images->front));
+	loadedImages.emplace_back(new Image(images->back));
 
 	for (GLuint i = 0; i < loadedImages.size(); i++) {
 		Image* image = loadedImages[i];
@@ -35,14 +48,6 @@ SkyBox::SkyBox(const std::string &name, SkyBoxImages images) : Sky(name) {
 	for (Image* image: loadedImages) {
 		delete image;
 	}
-}
-
-SkyBox::~SkyBox() {
-	this->model = nullptr;
-	this->shaderProgram = nullptr;
-
-	glDeleteTextures(1, &this->texture);
-	this->texture = 0;
 }
 
 void SkyBox::draw() {

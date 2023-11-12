@@ -26,6 +26,10 @@ glm::mat4 Transformation::resultMatrix() {
 	return this->transform->resultMatrix();
 }
 
+void Transformation::calculate() {
+	this->transform->calculate();
+}
+
 Transform::Composite* Transformation::get() {
 	return this->transform;
 }

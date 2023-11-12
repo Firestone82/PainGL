@@ -5,6 +5,7 @@
 #include "buffer/EBO.h"
 #include "buffer/Vertex.h"
 #include "texture/Texture.h"
+#include "scene/entity/material/Material.h"
 
 class Mesh {
 	private:

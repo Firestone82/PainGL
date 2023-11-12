@@ -44,6 +44,10 @@ int BezierCurve::getResolution() const {
 	return resolution;
 }
 
+glm::vec3 BezierCurve::getPoint(float t) const {
+	return curvePoints[(int) (this->curvePoints.size() * t)];
+}
+
 std::vector<glm::vec3> BezierCurve::getCurvePoints() const {
 	return curvePoints;
 }

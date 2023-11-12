@@ -28,6 +28,7 @@ void ModelHandler::loadModelFolder(const Path &folderPath) {
 		this->loadModelFile(path);
 	}
 
+	// For blank line
 	Logger::debug("");
 }
 
@@ -123,11 +124,11 @@ Model* ModelHandler::loadModelFile(const Path &filePath) {
 		}
 
 		if (mesh->mMaterialIndex >= 0) {
-			aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
+			aiMaterial* mat = scene->mMaterials[mesh->mMaterialIndex];
 			std::string directory = filePath.getDirectory();
 
-			loadMaterialTextures(material, aiTextureType_DIFFUSE, directory, textures, TextureType::DIFFUSE);
-			loadMaterialTextures(material, aiTextureType_SPECULAR, directory, textures, TextureType::SPECULAR);
+			loadMaterialTextures(mat, aiTextureType_DIFFUSE, directory, textures, TextureType::DIFFUSE);
+			loadMaterialTextures(mat, aiTextureType_SPECULAR, directory, textures, TextureType::SPECULAR);
 		}
 
 		// Try to load fallback texture

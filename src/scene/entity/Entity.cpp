@@ -51,9 +51,6 @@ Entity::Builder& Entity::Builder::addTexture(const std::string &texture, Texture
 		return *this;
 	}
 
-	// Add texture to all model meshes
-
-
 	return *this;
 }
 

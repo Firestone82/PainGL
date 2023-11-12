@@ -4,6 +4,7 @@
 #include "scene/entity/material/Material.h"
 #include "shader/ShaderProgram.h"
 #include "model/Model.h"
+#include "utils/Logger.h"
 
 #include <functional>
 

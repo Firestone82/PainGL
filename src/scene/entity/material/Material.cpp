@@ -2,6 +2,14 @@
 #include "Engine.h"
 #include "utils/Logger.h"
 
+void Material::setAmbientColor(glm::vec3 color) {
+	this->ambientColor = color;
+}
+
+glm::vec3 Material::getAmbientColor() const {
+	return this->ambientColor;
+}
+
 void Material::setDiffuseColor(glm::vec3 color) {
 	this->diffuseColor = color;
 }
@@ -57,6 +65,11 @@ std::vector<Texture*> Material::getTextures() const {
 
 Material::Builder::Builder() {
 	this->material = new Material();
+}
+
+Material::Builder& Material::Builder::setAmbientColor(glm::vec3 color) {
+	this->material->ambientColor = color;
+	return *this;
 }
 
 Material::Builder& Material::Builder::setDiffuseColor(glm::vec3 color) {

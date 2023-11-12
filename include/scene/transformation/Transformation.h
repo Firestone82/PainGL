@@ -1,6 +1,6 @@
 #pragma once
 
-#include "scene/transformation/Transform.h"
+#include "scene/transformation/transform/Composite.h"
 
 class Transformation {
 	private:
@@ -15,5 +15,6 @@ class Transformation {
 		void setTransformation(Transform::Composite* composite);
 		Transform::Composite* get();
 
+		void calculate();
 		glm::mat4 resultMatrix();
 };

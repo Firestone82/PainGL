@@ -1,5 +1,8 @@
 #include "gui/GUIHandler.h"
 #include "Engine.h"
+#include "scene/transformation/transform/Translate.h"
+#include "scene/transformation/transform/Rotation.h"
+#include "scene/transformation/transform/Scale.h"
 
 void drawTransformationMatrix(glm::mat4 mat)  {
 	if (ImGui::IsItemHovered()) {

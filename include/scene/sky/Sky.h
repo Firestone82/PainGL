@@ -26,9 +26,11 @@ class Sky : public Object {
 		Sky(const std::string &name);
 		virtual ~Sky() = default;
 
-		static Sky* createSkyBox(const std::string &name, SkyBoxImages images);
-		static Sky* createSkyBox(const std::string &name, Path folderPath);
-		static Sky * createSkyDome(const std::string &name, Path image);
+		static Sky* createSkyBox(const std::string &name, SkyBoxImages* images);
+		static Sky* createSkyBox(const std::string &name, Path* folderPath);
+		static Sky* createSkyDome(const std::string &name, Path* image);
+		static Sky* createSkySphere(const std::string &name, Path* image);
 
+		virtual void init() = 0;
 		virtual void draw() = 0;
 };

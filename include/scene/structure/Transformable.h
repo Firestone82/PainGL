@@ -13,7 +13,8 @@ class Transformable {
 	public:
 		Transformable() = default;
 		~Transformable() {
-			delete this->transformation;
+			// TODO: TEMPORARY
+//			delete this->transformation;
 		}
 
 		Transformation* getTransformation() {
@@ -25,6 +26,7 @@ class Transformable {
 		}
 
 		void calculateTransformationMatrix() {
+			this->transformation->calculate();
 			this->matrix = this->transformation->resultMatrix();
 		}
 
