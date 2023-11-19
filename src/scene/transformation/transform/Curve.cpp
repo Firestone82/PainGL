@@ -25,4 +25,10 @@ namespace Transform {
 	Component* Curve::clone() {
 		return new Curve(*this);
 	}
+
+	void Curve::draw() {
+		for (auto curve : curves) {
+			curve->draw();
+		}
+	}
 }

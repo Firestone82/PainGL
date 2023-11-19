@@ -13,7 +13,7 @@ class Entity : public Object, public Renderable, public Simulable<Entity> {
 		explicit Entity(const std::string &name) : Object(name) {};
 
 	public:
-		~Entity() override;
+		~Entity() = default;
 
 		class Builder {
 			private:

@@ -102,7 +102,22 @@ void GUIHandler::fillGUIs() {
 		}
 
 		float minFps = 0.0f;
-		float maxFps = engine->getMaxFPS();
+		static float maxFps = engine->getMaxFPS();
+		static int lastVsync = engine->getVsync();
+		static float lastUpdateTime = ImGui::GetTime();
+
+		if (lastUpdateTime + 2.0f < ImGui::GetTime() || lastVsync != engine->getVsync()) {
+			if (maxFps - 25.0F > engine->getMaxFPS()) {
+				maxFps = engine->getMaxFPS();
+			}
+
+			if (maxFps < engine->getCurrentFPS() || lastVsync != engine->getVsync()) {
+				maxFps = engine->getCurrentFPS();
+				lastVsync = engine->getVsync();
+			}
+
+			lastUpdateTime = ImGui::GetTime();
+		}
 
 		Scene* activeScene = engine->getSceneHandler()->getActiveScene();
 		ImGui::Text("Scene: %s (#%d)", activeScene->getName().c_str(), activeScene->getID());
@@ -115,7 +130,7 @@ void GUIHandler::fillGUIs() {
 		sprintf(format, "%0.2f\n\n%0.2f", maxFps, minFps);
 
 		ImGui::PushItemWidth(ImGui::GetWindowWidth() - 50);
-		ImGui::PlotLines(format, values, IM_ARRAYSIZE(values), values_offset, NULL, 0.0f, engine->getMaxFPS() + 5.0f, ImVec2(0, 40));
+		ImGui::PlotLines(format, values, IM_ARRAYSIZE(values), values_offset, NULL, 0.0f, maxFps + 10.0f, ImVec2(0, 40));
 
 		top += ImGui::GetWindowHeight() + 15;
 		ImGui::End();
@@ -207,7 +222,7 @@ void GUIHandler::fillGUIs() {
 		if (scene->getEntityHandler()->getEntities().size() < 10) {
 			flags = flags | ImGuiWindowFlags_AlwaysAutoResize;
 		} else {
-			ImGui::SetNextWindowSize(ImVec2(0, 300));
+			ImGui::SetNextWindowSize(ImVec2(0, 250));
 		}
 
 		ImGui::Begin(gui->getName().c_str(), nullptr, flags);

@@ -230,10 +230,8 @@ void ConsoleHandler::fillCommands() {
 								return;
 							}
 
-							glfwSwapInterval(int(sync));
-							int fps = int(60 / sync);
-
-							this->addLog(false, "\n Vsync changed to %d (%d fps)", static_cast<int>(sync), (sync == 0 ? 2000 : fps));
+							Engine::getInstance()->setVsync(static_cast<int>(sync));
+							this->addLog(false, "\n Vsync changed to %d (%d fps)", static_cast<int>(sync), (sync == 0 ? 2000 : int(60 / sync)));
 						})
 						->build());
 
@@ -281,6 +279,17 @@ void ConsoleHandler::fillCommands() {
 							this->addLog(false, "\n Scene \"%s\" is now active", scene->getName().c_str());
 						})
 						->build());
+
+	this->addCommand(ConsoleCommand::createCommand("bezierCurves")
+	                 ->setDescription("Toggle bezier curves from rendering")
+                     ->setUsage("bezierCurves")
+					 ->setCallback([=](const std::vector<std::string>& args) {
+						 bool state = Engine::getInstance()->getSceneHandler()->getActiveScene()->isShowBezierCurves();
+						 Engine::getInstance()->getSceneHandler()->getActiveScene()->setShowBezierCurves(!state);
+
+						 this->addLog(false, "\n Bezier curves %s", state ? "hidden" : "shown");
+					 })
+					 ->build());
 
 	// TODO: Max FPS command
 

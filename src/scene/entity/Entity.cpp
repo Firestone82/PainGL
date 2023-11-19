@@ -2,10 +2,6 @@
 #include "utils/Logger.h"
 #include "Engine.h"
 
-Entity::~Entity() {
-	// TODO: ???
-}
-
 // -- Builder --
 
 Entity::Builder::Builder(const std::string &name) {

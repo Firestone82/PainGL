@@ -16,5 +16,6 @@ namespace Transform {
 			~Curve() override = default;
 
 			Component* clone() override;
+			void draw();
 	};
 }

@@ -12,6 +12,8 @@ class Scene : public Object, public Simulable<Scene> {
 		CameraHandler* cameraHandler;
 		Sky* sky;
 
+		bool showBezierCurves = false;
+
 		explicit Scene(const std::string &name);
 
 	public:
@@ -28,6 +30,9 @@ class Scene : public Object, public Simulable<Scene> {
 
 		int getObjectIDAt(int posX, int posY) const;
 		Object* getObjectAt(int posX, int posY) const;
+
+		void setShowBezierCurves(bool showBezierCurves);
+		bool isShowBezierCurves() const;
 
 		class Builder {
 			private:

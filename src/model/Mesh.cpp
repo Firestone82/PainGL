@@ -38,11 +38,10 @@ Mesh::~Mesh() {
 	delete this->vbo;
 	this->vbo = nullptr;
 
-	// TODO: Fix crashing
-//	if (this->ebo != nullptr) {
-//		delete this->ebo;
-//		this->ebo = nullptr;
-//	}
+	if (this->ebo != nullptr) {
+		delete this->ebo;
+		this->ebo = nullptr;
+	}
 }
 
 VAO* Mesh::getVAO() const {

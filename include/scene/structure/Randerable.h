@@ -18,7 +18,10 @@ class Renderable : public Transformable {
 		~Renderable() {
 			this->model = nullptr;
 			this->shaderProgram = nullptr;
-			delete this->material;
+
+			if (this->material != nullptr) {
+				delete this->material;
+			}
 		}
 
 	public:
@@ -26,7 +29,6 @@ class Renderable : public Transformable {
 			this->shaderProgram->use();
 
 			// Model
-			// TODO: Make entity static and dynamic
 			this->shaderProgram->setShaderVariable(this->matrix, "modelMatrix");
 			this->shaderProgram->setShaderVariable(glm::transpose(glm::inverse(glm::mat3(this->matrix))), "normalMatrix");
 

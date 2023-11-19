@@ -3,6 +3,7 @@
 #include "event/type/SceneEvents.h"
 #include "event/EventHandler.h"
 #include "Engine.h"
+#include "scene/transformation/transform/Curve.h"
 
 Scene::Scene(const std::string &name) : Object(name) {
 	this->entityHandler = new EntityHandler();
@@ -43,6 +44,15 @@ void Scene::render() {
 		glStencilFunc(GL_ALWAYS, entity->getID() + 1, 0xFF);
 		entity->calculateTransformationMatrix();
 		entity->draw();
+
+		if (this->showBezierCurves) {
+			for (const auto &comp : entity->getTransformation()->get()->get()) {
+				Transform::Curve* curve = dynamic_cast<Transform::Curve*>(comp);
+				if (curve != nullptr) {
+					curve->draw();
+				}
+			}
+		}
 	}
 
 	int entityCount = this->entityHandler->getEntities().size();
@@ -118,6 +128,14 @@ Object* Scene::getObjectAt(int posX, int posY) const {
 	}
 
 	return nullptr;
+}
+
+void Scene::setShowBezierCurves(bool showBezierCurves) {
+	this->showBezierCurves = showBezierCurves;
+}
+
+bool Scene::isShowBezierCurves() const {
+	return this->showBezierCurves;
 }
 
 // -- Builder --
