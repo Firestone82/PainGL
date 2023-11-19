@@ -2,34 +2,27 @@
 #include "Engine.h"
 
 namespace Transform {
-	Curve::Curve(std::vector<glm::vec3> points, float precision) : Component(Transform::Type::CURVE, nullptr) {
-		this->precision = precision;
-		this->speed = 1.0f;
-		this->curve = new BezierCurve(points);
-		this->curve->setResolution(precision);
-		calculate();
-	}
+	Curve::Curve(std::vector<BezierCurve> points, float speed) : Component(Transform::Type::CURVE, nullptr), speed(speed) {
+		for (auto point : points) {
+			this->curves.push_back(new BezierCurve(point));
+		}
 
-	Curve::Curve(std::vector<glm::vec3> points, float precision, float speed) : Component(Transform::Type::CURVE, nullptr) {
-		this->precision = precision;
-		this->speed = speed;
-		this->curve = new BezierCurve(points);
-		this->curve->setResolution(precision);
 		calculate();
 	}
 
 	void Curve::calculate() {
-		if (this->curve == nullptr) return;
-
 		static float time = 0.0f;
-		time += Engine::getInstance()->getDeltaTime() * this->speed;
-		time = fmod(time, 1.0f);
+		time += Engine::getInstance()->getDeltaTime() * speed;
+		time = fmod(time, curves.size());
+
+		int curveID = (int) time;
+		float t = time - curveID;
 
 		this->matrix = glm::mat4(1.0f);
-		this->matrix = glm::translate(this->matrix, this->curve->getPoint(time));
+		this->matrix = glm::translate(this->matrix, curves[curveID]->getPoint(t));
 	}
 
-	BezierCurve& Curve::getCurve() {
-		return *this->curve;
+	Component* Curve::clone() {
+		return new Curve(*this);
 	}
 }

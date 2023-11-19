@@ -51,4 +51,14 @@ namespace Transform {
 			}
 		}
 	}
+
+Component* Composite::clone() {
+		std::vector<Component*> transforms;
+
+		for (auto transform : this->transforms) {
+			transforms.push_back(transform->clone());
+		}
+
+		return new Composite(transforms);
+	}
 }

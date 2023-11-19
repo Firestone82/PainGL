@@ -60,7 +60,6 @@ void Engine::init(int width, int height, const std::string &title) {
 
 	// Set default swap interval to 60 FPS
 	glfwSwapInterval(this->vsync);
-	this->maxFPS = 60;
 
 	this->sceneHandler = new SceneHandler();
 	this->shaderHandler = new ShaderHandler(Path("../assets/shader"), false);
@@ -173,7 +172,11 @@ void Engine::setMaxFPS(int maxFPS) {
 }
 
 int Engine::getMaxFPS() const {
-	return this->maxFPS;
+	if (maxFPS != -1) {
+		return this->maxFPS;
+	}
+
+	return this->vsync == 0 ? (this->getCurrentFPS() + 60.0f) : (60 / this->vsync);
 }
 
 float Engine::getCurrentFPS() const {

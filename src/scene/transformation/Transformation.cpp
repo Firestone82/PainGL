@@ -33,3 +33,7 @@ void Transformation::calculate() {
 Transform::Composite* Transformation::get() {
 	return this->transform;
 }
+
+Transform::Composite* Transformation::clone() {
+	return dynamic_cast<Transform::Composite *>(this->transform->clone());
+}

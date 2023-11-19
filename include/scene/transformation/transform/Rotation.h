@@ -18,5 +18,6 @@ namespace Transform {
 			/* - */ ~Rotation() override = default;
 
 			glm::vec3 getVector();
+			Component* clone() override;
 	};
 }

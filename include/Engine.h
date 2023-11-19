@@ -16,7 +16,7 @@ class Engine {
 
 		// FPS
 		int vsync = 1;
-		int maxFPS = 60;
+		int maxFPS = -1;
 
 		// Time
 		double lastTime = 0;

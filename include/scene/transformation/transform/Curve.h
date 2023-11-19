@@ -6,17 +6,15 @@
 namespace Transform {
 	class Curve : public Component {
 		private:
-			BezierCurve* curve = nullptr;
-			float precision;
-			float speed;
+			std::vector<BezierCurve*> curves;
+			float speed = 1.0f;
 
 			void calculate() override;
 
 		public:
-			Curve(std::vector<glm::vec3> points, float precision);
-			Curve(std::vector<glm::vec3> points, float precision, float speed);
+			Curve(std::vector<BezierCurve> points, float speed = 1.0f);
 			~Curve() override = default;
 
-			BezierCurve& getCurve();
+			Component* clone() override;
 	};
 }

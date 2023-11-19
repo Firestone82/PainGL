@@ -21,5 +21,6 @@ namespace Transform {
 
 			bool isEmpty();
 			void calculate() override;
+			Component* clone() override;
 	};
 };

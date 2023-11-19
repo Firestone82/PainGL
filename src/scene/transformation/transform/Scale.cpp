@@ -54,4 +54,8 @@ namespace Transform {
 	glm::vec3 Scale::getVector() {
 		return this->scaleVector;
 	}
+
+	Component* Scale::clone() {
+		return new Scale(this->scaleVector, this->callback);
+	}
 }

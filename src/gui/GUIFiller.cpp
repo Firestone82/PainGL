@@ -84,11 +84,38 @@ void GUIHandler::fillGUIs() {
 		ImGui::Begin(gui->getName().c_str(), nullptr, defaultFlags | ImGuiWindowFlags_NoTitleBar);
 		ImGui::SetWindowPos(ImVec2(15.0f, top));
 
+		// FPS Graph
+		static float values[100] = {0};
+		static int values_offset = 0;
+		static double refresh_time = 0.0;
+
+		if (refresh_time == 0.0) {
+			refresh_time = ImGui::GetTime();
+		}
+
+		while (refresh_time < ImGui::GetTime()) {
+			float fps = ImGui::GetIO().Framerate;
+			values[values_offset] = fps;
+			values_offset = (values_offset + 1) % IM_ARRAYSIZE(values);
+
+			refresh_time += 1.0f / 60.0f;
+		}
+
+		float minFps = 0.0f;
+		float maxFps = engine->getMaxFPS();
+
 		Scene* activeScene = engine->getSceneHandler()->getActiveScene();
 		ImGui::Text("Scene: %s (#%d)", activeScene->getName().c_str(), activeScene->getID());
 		ImGui::Separator();
 		ImGui::Text("Frame Rate: %0.2f fps (%0.3f ms)", ImGui::GetIO().Framerate, 1000.0f / ImGui::GetIO().Framerate);
 		ImGui::Text("Delta Time: %0.5f ns", engine->getDeltaTime());
+		ImGui::Separator();
+
+		char* format = new char[256];
+		sprintf(format, "%0.2f\n\n%0.2f", maxFps, minFps);
+
+		ImGui::PushItemWidth(ImGui::GetWindowWidth() - 50);
+		ImGui::PlotLines(format, values, IM_ARRAYSIZE(values), values_offset, NULL, 0.0f, engine->getMaxFPS() + 5.0f, ImVec2(0, 40));
 
 		top += ImGui::GetWindowHeight() + 15;
 		ImGui::End();
@@ -227,15 +254,23 @@ void GUIHandler::fillGUIs() {
 					if (ImGui::BeginTable("entityTable2", 2, ImGuiTableFlags_SizingStretchSame | ImGuiTableFlags_BordersOuter | ImGuiTableFlags_BordersV | ImGuiTableFlags_ContextMenuInBody)) {
 						ImGui::TableSetupColumn("property", ImGuiTableColumnFlags_WidthFixed, 100.0f);
 
+						int totalVertices = 0;
+						int totalIndices = 0;
+
+						for (Mesh* mesh: entity->getModel()->getMeshes()) {
+							totalVertices += mesh->getVertices().size();
+							totalIndices += mesh->getIndices().size();
+						}
+
 						ImGui::TableNextColumn();
-						ImGui::Text("Vertex Count");
+						ImGui::Text("Vertices Count");
 						ImGui::TableNextColumn();
-						ImGui::Text("%lld", entity->getModel()->getMesh(0)->getVertices().size());
+						ImGui::Text("%lld", totalVertices);
 
 						ImGui::TableNextColumn();
 						ImGui::Text("Indices Count");
 						ImGui::TableNextColumn();
-						ImGui::Text("%lld", entity->getModel()->getMesh(0)->getIndices().size());
+						ImGui::Text("%lld", totalIndices);
 
 						ImGui::TableNextColumn();
 						ImGui::Text("Shader Program");
@@ -272,6 +307,47 @@ void GUIHandler::fillGUIs() {
 		}
 
 		top += ImGui::GetWindowHeight() + 15;
+		ImGui::End();
+	}));
+
+	this->guis.emplace_back(new GUI("Statistics", [=](GUI* gui, float &top) {
+		Scene* scene = engine->getSceneHandler()->getActiveScene();
+		if (scene == nullptr) return;
+
+		ImGui::Begin(gui->getName().c_str(), nullptr, defaultFlags);
+		ImGui::SetWindowPos(ImVec2(engine->getWindowHandler()->getWidth() - ImGui::GetWindowWidth() - 15, 15));
+
+		float vertices = 0;
+		float indices = 0;
+		for (Entity* entity: scene->getEntityHandler()->getEntities()) {
+			for (Mesh* mesh: entity->getModel()->getMeshes()) {
+				vertices += mesh->getVertices().size();
+				indices += mesh->getIndices().size();
+			}
+		}
+
+		// Create table
+		if (ImGui::BeginTable("statisticsTable", 2, ImGuiTableFlags_SizingStretchSame | ImGuiTableFlags_BordersOuter | ImGuiTableFlags_BordersV | ImGuiTableFlags_ContextMenuInBody)) {
+			ImGui::TableSetupColumn("property", ImGuiTableColumnFlags_WidthFixed, 125.0f);
+
+			ImGui::TableNextColumn();
+			ImGui::Text("Entities / Lights");
+			ImGui::TableNextColumn();
+			ImGui::Text("%d / %d", scene->getEntityHandler()->getEntities().size(), scene->getLightHandler()->getLights().size());
+
+			ImGui::TableNextColumn();
+			ImGui::Text("Total Vertices");
+			ImGui::TableNextColumn();
+			ImGui::Text("%0.0f", vertices);
+
+			ImGui::TableNextColumn();
+			ImGui::Text("Total Indices");
+			ImGui::TableNextColumn();
+			ImGui::Text("%0.0f", indices);
+
+			ImGui::EndTable();
+		}
+
 		ImGui::End();
 	}));
 

@@ -13,8 +13,7 @@ class Transformable {
 	public:
 		Transformable() = default;
 		~Transformable() {
-			// TODO: TEMPORARY
-//			delete this->transformation;
+			delete this->transformation;
 		}
 
 		Transformation* getTransformation() {

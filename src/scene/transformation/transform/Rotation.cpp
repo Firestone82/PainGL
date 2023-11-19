@@ -45,4 +45,8 @@ namespace Transform {
 	glm::vec3 Rotation::getVector() {
 		return this->rotationVector;
 	}
+
+	Component* Rotation::clone() {
+		return new Rotation(this->rotationVector, this->callback);
+	}
 }

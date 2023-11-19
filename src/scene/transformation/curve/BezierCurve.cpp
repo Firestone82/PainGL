@@ -2,54 +2,32 @@
 
 #include <math.h>
 
-BezierCurve::BezierCurve(std::vector<glm::vec3> controlPoints) : controlPoints(controlPoints) {
-	calculateCurvePoints();
+BezierCurve::BezierCurve(std::initializer_list<glm::vec3> points) : controlPoints(points) {
+	// Empty
 }
 
 float binomialCoefficient(int n, int k) {
-	if (k == 0 || k == n) {
-		return 1;
+	float result = 1.0f;
+
+	for (int i = 1; i <= k; i++) {
+		result *= (float) (n - i + 1) / (float) i;
 	}
 
-	return binomialCoefficient(n - 1, k - 1) + binomialCoefficient(n - 1, k);
-}
-
-void BezierCurve::calculateCurvePoints() {
-	curvePoints.clear();
-
-	for (int i = 0; i <= resolution; i++) {
-		float t = (float) i / (float) resolution;
-
-		glm::vec3 point = glm::vec3(0.0f, 0.0f, 0.0f);
-
-		for (int j = 0; j < controlPoints.size(); j++) {
-			float binomial = binomialCoefficient(controlPoints.size() - 1, j);
-			float power1 = pow(1 - t, controlPoints.size() - 1 - j);
-			float power2 = pow(t, j);
-
-			point += binomial * power1 * power2 * controlPoints[j];
-		}
-
-		curvePoints.push_back(point);
-	}
-}
-
-void BezierCurve::setResolution(int resolution) {
-	this->resolution = resolution;
-
-	calculateCurvePoints();
-}
-
-int BezierCurve::getResolution() const {
-	return resolution;
+	return result;
 }
 
 glm::vec3 BezierCurve::getPoint(float t) const {
-	return curvePoints[(int) (this->curvePoints.size() * t)];
-}
+	glm::vec3 point = glm::vec3(0.0f, 0.0f, 0.0f);
 
-std::vector<glm::vec3> BezierCurve::getCurvePoints() const {
-	return curvePoints;
+	for (int j = 0; j < controlPoints.size(); j++) {
+		float binomial = binomialCoefficient(controlPoints.size() - 1, j);
+		float power1 = pow(1 - t, controlPoints.size() - 1 - j);
+		float power2 = pow(t, j);
+
+		point += binomial * power1 * power2 * controlPoints[j];
+	}
+
+	return point;
 }
 
 std::vector<glm::vec3> BezierCurve::getControlPoints() const {

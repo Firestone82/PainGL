@@ -14,7 +14,8 @@ class Transformation {
 
 		void setTransformation(Transform::Composite* composite);
 		Transform::Composite* get();
+		Transform::Composite* clone();
 
-		void calculate();
 		glm::mat4 resultMatrix();
+		void calculate();
 };

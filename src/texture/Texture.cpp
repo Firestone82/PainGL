@@ -1,7 +1,7 @@
 #include "texture/Texture.h"
 #include "utils/Logger.h"
 
-Texture::Texture(const std::string &name, TextureType type, Image *image) : glType(GL_TEXTURE_2D), name(name), type(type) {
+Texture::Texture(const std::string &name, TextureType type, Image* image) : glType(GL_TEXTURE_2D), name(name), type(type) {
 	this->texture = 0;
 	glGenTextures(1, &this->texture);
 	glBindTexture(this->glType, this->texture);

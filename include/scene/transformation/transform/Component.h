@@ -33,5 +33,6 @@ namespace Transform {
 			Component* getParent();
 
 			virtual glm::mat4 resultMatrix();
+			virtual Component* clone() = 0;
 	};
 };

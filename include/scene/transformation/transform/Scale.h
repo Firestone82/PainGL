@@ -20,5 +20,6 @@ namespace Transform {
 			/* - */ ~Scale() override = default;
 
 			glm::vec3 getVector();
+			Component* clone() override;
 	};
 }

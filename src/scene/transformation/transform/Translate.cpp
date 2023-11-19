@@ -37,4 +37,8 @@ namespace Transform {
 	glm::vec3 Translate::getVector() {
 		return this->translationVector;
 	}
+
+	Component* Translate::clone() {
+		return new Translate(this->translationVector, this->callback);
+	}
 }

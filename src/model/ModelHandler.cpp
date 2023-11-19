@@ -74,7 +74,11 @@ Model* ModelHandler::loadModelFile(const Path &filePath) {
 	Logger::debug(R"(Loading model "%s")", filePath.toString().c_str());
 
 	Assimp::Importer importer;
-	const aiScene *scene = importer.ReadFile(filePath.toString().c_str(), aiProcess_Triangulate | aiProcess_FlipUVs);
+	const aiScene *scene = importer.ReadFile(filePath.toString().c_str(), aiProcess_Triangulate
+		| aiProcess_FlipUVs
+		| aiProcess_SplitLargeMeshes
+		| aiProcess_OptimizeMeshes
+	);
 
 	if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
 		Logger::error(R"( - Failed to load model: %s)", importer.GetErrorString());
@@ -132,18 +136,18 @@ Model* ModelHandler::loadModelFile(const Path &filePath) {
 		}
 
 		// Try to load fallback texture
-		if (textures.empty()) {
-			static std::vector<std::string> fallbackTextures = {"_diff", "_spec"};
-
-			for (const std::string &fallbackTexture: fallbackTextures) {
-				Texture* texture = Engine::getInstance()->getTextureHandler()->getTexture(filePath.getFileNameWithoutExtension() + fallbackTexture);
-
-				if (texture != nullptr) {
-					textures.push_back(texture);
-					Logger::debug(R"( - Attaching fallback texture from "%s")", texture->getName().c_str());
-				}
-			}
-		}
+//		if (textures.empty()) {
+//			static std::vector<std::string> fallbackTextures = {"_diff", "_spec"};
+//
+//			for (const std::string &fallbackTexture: fallbackTextures) {
+//				Texture* texture = Engine::getInstance()->getTextureHandler()->getTexture(filePath.getFileNameWithoutExtension() + fallbackTexture);
+//
+//				if (texture != nullptr) {
+//					textures.push_back(texture);
+//					Logger::debug(R"( - Attaching fallback texture from "%s")", texture->getName().c_str());
+//				}
+//			}
+//		}
 
 		model->addMesh(new Mesh(points, indices, textures));
 	}
