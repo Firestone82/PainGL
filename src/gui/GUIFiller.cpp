@@ -288,6 +288,11 @@ void GUIHandler::fillGUIs() {
 						ImGui::Text("%lld", totalIndices);
 
 						ImGui::TableNextColumn();
+						ImGui::Text("Tris Count");
+						ImGui::TableNextColumn();
+						ImGui::Text("%lld", totalIndices / 3);
+
+						ImGui::TableNextColumn();
 						ImGui::Text("Shader Program");
 						ImGui::TableNextColumn();
 						ImGui::Text("%s", entity->getShaderProgram()->toString().c_str());

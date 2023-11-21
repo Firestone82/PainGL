@@ -9,6 +9,8 @@ Model::~Model() {
 	for (Mesh* mesh: this->meshes) {
 		delete mesh;
 	}
+
+	delete this->boundingBox;
 }
 
 std::string Model::getName() const {
@@ -29,4 +31,12 @@ Mesh* Model::getMesh(int index) const {
 
 std::vector<Mesh*> Model::getMeshes() const {
 	return this->meshes;
+}
+
+void Model::setBoundingBox(BoundingBox* boundingBox) {
+	this->boundingBox = boundingBox;
+}
+
+BoundingBox* Model::getBoundingBox() const {
+	return this->boundingBox;
 }

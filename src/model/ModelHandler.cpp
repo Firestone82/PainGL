@@ -135,22 +135,26 @@ Model* ModelHandler::loadModelFile(const Path &filePath) {
 			loadMaterialTextures(mat, aiTextureType_SPECULAR, directory, textures, TextureType::SPECULAR);
 		}
 
-		// Try to load fallback texture
-//		if (textures.empty()) {
-//			static std::vector<std::string> fallbackTextures = {"_diff", "_spec"};
-//
-//			for (const std::string &fallbackTexture: fallbackTextures) {
-//				Texture* texture = Engine::getInstance()->getTextureHandler()->getTexture(filePath.getFileNameWithoutExtension() + fallbackTexture);
-//
-//				if (texture != nullptr) {
-//					textures.push_back(texture);
-//					Logger::debug(R"( - Attaching fallback texture from "%s")", texture->getName().c_str());
-//				}
-//			}
-//		}
-
 		model->addMesh(new Mesh(points, indices, textures));
 	}
+
+
+	glm::vec3 minPoint = {FLT_MAX, FLT_MAX, FLT_MAX};
+	glm::vec3 maxPoint = {-FLT_MAX, -FLT_MAX, -FLT_MAX};
+
+	for (Mesh* mesh : model->getMeshes()) {
+		for (Vertex vertex : mesh->getVertices()) {
+			minPoint.x = std::min(minPoint.x, vertex.position.x);
+			minPoint.y = std::min(minPoint.y, vertex.position.y);
+			minPoint.z = std::min(minPoint.z, vertex.position.z);
+
+			maxPoint.x = std::max(maxPoint.x, vertex.position.x);
+			maxPoint.y = std::max(maxPoint.y, vertex.position.y);
+			maxPoint.z = std::max(maxPoint.z, vertex.position.z);
+		}
+	}
+
+	model->setBoundingBox(new BoundingBox(minPoint, maxPoint));
 
 	Logger::debug(" - Successfully loaded model.");
 	return model;

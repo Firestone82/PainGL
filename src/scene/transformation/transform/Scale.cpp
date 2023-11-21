@@ -7,9 +7,9 @@ namespace Transform {
 	void Scale::innerCalculate(glm::mat4& matrix, glm::vec3 scaleVector) {
 		matrix = glm::mat4(1.0f);
 
-		scaleVector.x = float(fmax(scaleVector.x, 0.1f));
-		scaleVector.y = float(fmax(scaleVector.y, 0.1f));
-		scaleVector.z = float(fmax(scaleVector.z, 0.1f));
+		scaleVector.x = float(fmax(scaleVector.x, 0.01f));
+		scaleVector.y = float(fmax(scaleVector.y, 0.01f));
+		scaleVector.z = float(fmax(scaleVector.z, 0.01f));
 
 		matrix = glm::scale(matrix, glm::vec3(scaleVector.x, scaleVector.y, scaleVector.z));
 	}

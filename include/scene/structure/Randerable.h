@@ -85,6 +85,8 @@ class Renderable : public Transformable {
 			}
 
 			this->shaderProgram->unUse();
+
+			this->model->getBoundingBox()->draw(this->matrix);
 		}
 
 		Model* getModel() const {
@@ -97,5 +99,9 @@ class Renderable : public Transformable {
 
 		Material* getMaterial() {
 			return this->material;
+		}
+
+		BoundingBox getBoundingBox() const {
+			return this->model->getBoundingBox()->get(this->matrix);
 		}
 };

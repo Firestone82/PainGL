@@ -67,3 +67,7 @@ void Camera::setTarget(glm::vec3 target) {
 glm::vec3 Camera::getTarget() const {
 	return this->target;
 }
+
+glm::vec3 Camera::getFront() {
+	return this->target;
+}
